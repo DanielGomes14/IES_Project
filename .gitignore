@@ -127,3 +127,29 @@ buildNumber.properties
 *.code-workspace
 
 # End of https://www.toptal.com/developers/gitignore/api/vscode,intellij,maven
+
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/projWebsite/node_modules
+/projWebsite/.pnp
+/projWebsite/.pnp.js
+
+# testing
+/projWebsite/coverage
+
+# production
+/projWebsite/build
+
+# misc
+/projWebsite/.DS_Store
+/projWebsite/.env.local
+/projWebsite/.env.development.local
+/projWebsite/.env.test.local
+/projWebsite/.env.production.local
+
+/projWebsite/npm-debug.log*
+/projWebsite/yarn-debug.log*
+/projWebsite/yarn-error.log*
+
