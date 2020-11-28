@@ -12,6 +12,7 @@ import Errors from "./views/Errors";
 import ComponentsOverview from "./views/ComponentsOverview";
 import Tables from "./views/Tables";
 import BlogPosts from "./views/BlogPosts";
+import HouseSettings from "./views/HouseSettings"
 
 export default [
   {
@@ -54,5 +55,11 @@ export default [
     path: "/blog-posts",
     layout: DefaultLayout,
     component: BlogPosts
+  },
+  {
+    path: "/house-settings",
+    layout: DefaultLayout,
+    component: HouseSettings
+
   }
 ];
