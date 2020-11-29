@@ -3,7 +3,7 @@ import { Container, Row, Col } from "shards-react";
 
 import PageTitle from "../components/common/PageTitle";
 import HouseSets from "../components/house-settings/HouseSets";
-
+import EditDivision from "../components/house-settings/EditDivision"
 
 const HouseSettings = () => (
   <Container fluid className="main-content-container px-4">
@@ -13,7 +13,11 @@ const HouseSettings = () => (
     <Row>
       <Col lg="4">
         <HouseSets />
-      </Col>
+        </Col>
+        <Col lg="8">
+        <EditDivision/>
+        </Col>
+     
     </Row>
   </Container>
 );

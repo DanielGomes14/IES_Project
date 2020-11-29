@@ -1,10 +1,12 @@
 import React from "react";
 import {
-  Card,
-  CardHeader,
-  ListGroup,
+    Button,
+Card,
+CardHeader,
+ListGroup,
+
 } from "shards-react";
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -20,6 +22,7 @@ const StyledTableCell = withStyles((theme) => ({
       color: theme.palette.common.white,
     },
     body: {
+      
       fontSize: 14,
     },
   }))(TableCell);
@@ -33,12 +36,6 @@ const StyledTableCell = withStyles((theme) => ({
   }))(TableRow);
   
 
-  
-  const useStyles = makeStyles({
-    table: {
-      minWidth: 700,
-    },
-  });
 
 
 class EditDivision extends React.Component{
@@ -54,8 +51,7 @@ class EditDivision extends React.Component{
         this.createData('Bedroom2', this.OPTIONS2),
     ];
     this.state = { checked: false, title: "Edit Current Divisions' Permissions", OPTIONS : this.OPTIONS };
-    //this.handleChange = this.handleChange.bind(this);
-    //this.handleChangeCheckBox = this.handleChangeCheckBox.bind(this);
+    
 }
     createData(name, people, fat, carbs, protein) {
     return { name, people, fat, carbs, protein };
@@ -71,7 +67,7 @@ class EditDivision extends React.Component{
 
   
 render (){
- 
+
 return  (
   <Card small className="mb-4">
     <CardHeader className="border-bottom">
@@ -79,7 +75,7 @@ return  (
     </CardHeader>
     <ListGroup flush>
     <TableContainer component={Paper}>
-      <Table  aria-label="customized table">
+      <Table   aria-label="customized table">
         <TableHead>
           <TableRow>
             <StyledTableCell>Name of Division</StyledTableCell>
@@ -107,8 +103,8 @@ return  (
                     }
                 </ul>
       </StyledTableCell>
-                <StyledTableCell component="th" al scope="col" >{row.people.length}</StyledTableCell>
-              <StyledTableCell component="th" scope="col">umacena</StyledTableCell>
+                <StyledTableCell component="th"  scope="col" >{row.people.length}</StyledTableCell>
+              <StyledTableCell component="th" scope="col"><Button type="button" >Edit</Button></StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
