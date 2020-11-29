@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import {
   Card,
   CardHeader,
@@ -8,17 +7,56 @@ import {
   Row,
   Col,
   Form,
-  FormGroup,
   FormInput,
   FormSelect,
-  FormTextarea,
-  Button
+  Button,
+  FormCheckbox,
 } from "shards-react";
 
-const HouseSets = ({ title }) => (
+
+class HouseSets extends React.Component{
+  constructor() {
+    super();
+    this.OPTIONS = [{id: 1 ,name : "Daniel",checked:true }, {id: 2 , name : "Leandro",checked:true },{ id : 3 , name : "Chico", checked:true }, {id : 4 , name : "Bruno" , checked:true} ];
+    this.state = { checked: false, title: "Add a new Division", OPTIONS : this.OPTIONS };
+    this.handleChange = this.handleChange.bind(this);
+    this.handleChangeCheckBox = this.handleChangeCheckBox.bind(this);
+  }
+  handleChange() {
+
+    this.setState({
+      checked: !this.state.checked
+    })
+  }
+
+
+  handleChangeCheckBox(e, user) {
+    console.log("aaa" +user)
+    var newState =  this.state
+    for(let i = 0; i< this.state.OPTIONS.length;i++){
+      // eslint-disable-next-line
+      if(this.state.OPTIONS[i].id == user){
+        newState.OPTIONS[i].checked =  !this.state.OPTIONS[i].checked;  
+        break;
+      }
+      this.setState({ ...this.state, ...newState });    }
+    
+  }
+render (){
+  const content = this.state.checked 
+  ?  (
+    <Col sm="12" md="4" className="mb-3">
+      <strong className="text-muted d-block mb-2">Checkboxes</strong>
+      <fieldset>
+        {this.state.OPTIONS.map( user => (<div key= {user.name}  ><FormCheckbox  checked= {user.checked} onChange={e => this.handleChangeCheckBox(e,user.id)} >{user.name}</FormCheckbox></div>))}
+      </fieldset>
+    </Col> 
+  )
+  : null;
+return  (
   <Card small className="mb-4">
     <CardHeader className="border-bottom">
-      <h6 className="m-0">{title}</h6>
+      <h6 className="m-0">{this.title}</h6>
     </CardHeader>
     <ListGroup flush>
       <ListGroupItem className="p-3">
@@ -30,80 +68,31 @@ const HouseSets = ({ title }) => (
                 <Col md="6" className="form-group">
                   <label htmlFor="Division Name">Division Name</label>
                   <FormInput
-                    id="feFirstName"
+                    id="feDivs"
                     placeholder="Enter the Name of The Division "
-                    value="Sierra"
-                    onChange={() => {}}
                   />
                 </Col>
               </Row>
               <Row form>
                 {/* Permissions */}
-                <Col md="6" className="form-group">
-                  <label htmlFor="Permissions for This Division">Permissions for This Division</label>
-                  <FormSelect id="feInputState">
-                    <option>Everyone can Configure</option>
-                    <option>...</option>
-                  </FormSelect>
-                </Col>
-                {/* Password */}
-                <Col md="6" className="form-group">
-                  <label htmlFor="fePassword">Password</label>
-                  <FormInput
-                    type="password"
-                    id="fePassword"
-                    placeholder="Password"
-                    value="EX@MPL#P@$$w0RD"
-                    onChange={() => {}}
-                    autoComplete="current-password"
-                  />
-                </Col>
-              </Row>
-              <FormGroup>
-                <label htmlFor="feAddress">Address</label>
-                <FormInput
-                  id="feAddress"
-                  placeholder="Address"
-                  value="1234 Main St."
-                  onChange={() => {}}
-                />
-              </FormGroup>
-              <Row form>
-                {/* City */}
-                <Col md="6" className="form-group">
-                  <label htmlFor="feCity">City</label>
-                  <FormInput
-                    id="feCity"
-                    placeholder="City"
-                    onChange={() => {}}
-                  />
-                </Col>
-                {/* State */}
-                <Col md="4" className="form-group">
-                  <label htmlFor="feInputState">State</label>
-                  <FormSelect id="feInputState">
-                    <option>Choose...</option>
-                    <option>...</option>
-                  </FormSelect>
-                </Col>
-                {/* Zip Code */}
-                <Col md="2" className="form-group">
-                  <label htmlFor="feZipCode">Zip</label>
-                  <FormInput
-                    id="feZipCode"
-                    placeholder="Zip"
-                    onChange={() => {}}
-                  />
-                </Col>
-              </Row>
-              <Row form>
-                {/* Description */}
                 <Col md="12" className="form-group">
-                  <label htmlFor="feDescription">Description</label>
-                  <FormTextarea id="feDescription" rows="5" />
+                  <label htmlFor="Permissions for This Division">Permissions for This Division</label>
+                  <FormSelect id="feInputState" onChange={ this.handleChange }>
+                    <option checked = {this.state.checked}  >Everyone can Configure</option>
+                    <option>Custom</option>
+                  </FormSelect>
                 </Col>
+              </Row>  
+              <Row form>
+              
+                {/* Users Added */}
+                <Col md="12" className="form-group">
+                { content }
+                </Col>
+                </Row>
+                <Row form>
               </Row>
-              <Button theme="accent">Update Account</Button>
+              <Button theme="accent">Add new Division</Button>
             </Form>
           </Col>
         </Row>
@@ -111,16 +100,8 @@ const HouseSets = ({ title }) => (
     </ListGroup>
   </Card>
 );
+}
 
-HouseSets.propTypes = {
-  /**
-   * The component's title.
-   */
-  title: PropTypes.string
-};
-
-HouseSets.defaultProps = {
-  title: "Add a new Division"
-};
+}
 
 export default HouseSets;

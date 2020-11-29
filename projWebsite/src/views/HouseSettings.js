@@ -4,6 +4,7 @@ import { Container, Row, Col } from "shards-react";
 import PageTitle from "../components/common/PageTitle";
 import HouseSets from "../components/house-settings/HouseSets";
 
+
 const HouseSettings = () => (
   <Container fluid className="main-content-container px-4">
     <Row noGutters className="page-header py-4">
