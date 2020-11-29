@@ -60,5 +60,10 @@ export default [
     path: "/login",
     layout: LoginLayout,
     component: Login
+  },
+  {
+    path: "/register",
+    layout: LoginLayout,
+    component: Register
   }
 ];

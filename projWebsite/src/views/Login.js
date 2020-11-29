@@ -5,11 +5,13 @@ import Forms from "../components/components-overview/Forms";
 import FormValidation from "../components/components-overview/FormValidation";
 import CompleteFormExample from "../components/components-overview/CompleteFormExample";
 
+
+
 const Login = () => (
     <Container fluid className="main-content-container px-4">
 
       <Row className="mb-0 page-header py-4 text-sm-center">
-        <LoginPageTitle sm="4" title="Register" className="text-sm-center" />
+        <LoginPageTitle sm="4" title="Log In" className="text-sm-center" />
       </Row> 
 
       <Row className="mb-0 col d-flex justify-content-center">
@@ -20,6 +22,9 @@ const Login = () => (
           <CompleteFormExample />
         </Card>
       </Row>
+
+
+
     </Container>
   );
   
