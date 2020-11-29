@@ -13,6 +13,7 @@ import ComponentsOverview from "./views/ComponentsOverview";
 import Tables from "./views/Tables";
 import BlogPosts from "./views/BlogPosts";
 import Login from "./views/Login";
+import Register from "./views/Register";
 
 export default [
   {
