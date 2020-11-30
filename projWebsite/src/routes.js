@@ -16,45 +16,51 @@ import Dashboard from "./views/Dashboard";
 
 export default [
   {
-    path: "/",
+    path: "/template",
     exact: true,
     layout: DefaultLayout,
-    component: () => <Redirect to="/blog-overview" />
+    component: () => <Redirect to="/template/blog-overview" />
   },
   {
-    path: "/blog-overview",
+    path: "/template/blog-overview",
     layout: DefaultLayout,
     component: BlogOverview
   },
   {
-    path: "/user-profile-lite",
+    path: "/template/user-profile-lite",
     layout: DefaultLayout,
     component: UserProfileLite
   },
   {
-    path: "/add-new-post",
+    path: "/template/add-new-post",
     layout: DefaultLayout,
     component: AddNewPost
   },
   {
-    path: "/errors",
+    path: "/template/errors",
     layout: DefaultLayout,
     component: Errors
   },
   {
-    path: "/components-overview",
+    path: "/template/components-overview",
     layout: DefaultLayout,
     component: ComponentsOverview
   },
   {
-    path: "/tables",
+    path: "/template/tables",
     layout: DefaultLayout,
     component: Tables
   },
   {
-    path: "/blog-posts",
+    path: "/template/blog-posts",
     layout: DefaultLayout,
     component: BlogPosts
+  },
+  {
+    path: "/",
+    exact: true,
+    layout: DefaultLayout,
+    component: () => <Redirect to="/dashboard" />
   },
   {
     path: "/dashboard",
