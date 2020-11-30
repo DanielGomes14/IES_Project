@@ -66,10 +66,10 @@ const NewDevice = ({ title }) => (
                     <Col sm="7" md="8" lg="4">
                         <label htmlFor="deType">Type</label>
                         <FormSelect id="deType">
-                            <option>Light</option>
-                            <option>Temperature</option>
-                            <option>Humidity</option>
-                            <option>Temperature</option>
+                            <option value="Light">Light</option>
+                            <option value="Temperature">Temperature</option>
+                            <option value="Humidity">Humidity</option>
+                            <option value="Eletronic">Eletronic</option>
                         </FormSelect>
                     </Col>
                     <Col sm="5" md="4" lg="3">
