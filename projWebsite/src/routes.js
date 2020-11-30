@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 
 // Layout Types
-import { DefaultLayout } from "./layouts";
+import { DefaultLayout, LoginLayout } from "./layouts";
 
 // Route Views
 import BlogOverview from "./views/BlogOverview";
@@ -13,46 +13,51 @@ import ComponentsOverview from "./views/ComponentsOverview";
 import Tables from "./views/Tables";
 import BlogPosts from "./views/BlogPosts";
 import HouseSettings from "./views/HouseSettings"
+import Dashboard from "./views/Dashboard";
+import Automation from "./views/Automation";
+import Login from "./views/Login";
+import Register from "./views/Register";
+
 
 export default [
   {
-    path: "/",
+    path: "/template",
     exact: true,
     layout: DefaultLayout,
-    component: () => <Redirect to="/blog-overview" />
+    component: () => <Redirect to="/template/blog-overview" />
   },
   {
-    path: "/blog-overview",
+    path: "/template/blog-overview",
     layout: DefaultLayout,
     component: BlogOverview
   },
   {
-    path: "/user-profile-lite",
+    path: "/template/user-profile-lite",
     layout: DefaultLayout,
     component: UserProfileLite
   },
   {
-    path: "/add-new-post",
+    path: "/template/add-new-post",
     layout: DefaultLayout,
     component: AddNewPost
   },
   {
-    path: "/errors",
+    path: "/template/errors",
     layout: DefaultLayout,
     component: Errors
   },
   {
-    path: "/components-overview",
+    path: "/template/components-overview",
     layout: DefaultLayout,
     component: ComponentsOverview
   },
   {
-    path: "/tables",
+    path: "/template/tables",
     layout: DefaultLayout,
     component: Tables
   },
   {
-    path: "/blog-posts",
+    path: "/template/blog-posts",
     layout: DefaultLayout,
     component: BlogPosts
   },
@@ -60,6 +65,31 @@ export default [
     path: "/house-settings",
     layout: DefaultLayout,
     component: HouseSettings
-
+  },
+  {
+    path: "/",
+    exact: true,
+    layout: DefaultLayout,
+    component: () => <Redirect to="/dashboard" />
+  },
+  {
+    path: "/dashboard",
+    layout: DefaultLayout,
+    component: Dashboard  
+  },
+  {    
+    path: "/automation",
+    layout: DefaultLayout,
+    component : Automation
+  },
+  {
+    path: "/login",
+    layout: LoginLayout,
+    component: Login
+  },
+  {
+    path: "/register",
+    layout: LoginLayout,
+    component: Register
   }
 ];
