@@ -12,11 +12,13 @@ import Errors from "./views/Errors";
 import ComponentsOverview from "./views/ComponentsOverview";
 import Tables from "./views/Tables";
 import BlogPosts from "./views/BlogPosts";
+import HouseSettings from "./views/HouseSettings"
 import Dashboard from "./views/Dashboard";
 import Automation from "./views/Automation";
 import NewDevice from "./views/NewDevice";
 import Login from "./views/Login";
 import Register from "./views/Register";
+
 
 export default [
   {
@@ -59,6 +61,11 @@ export default [
     path: "/template/blog-posts",
     layout: DefaultLayout,
     component: BlogPosts
+  },
+  {
+    path: "/house-settings",
+    layout: DefaultLayout,
+    component: HouseSettings
   },
   {
     path: "/",
