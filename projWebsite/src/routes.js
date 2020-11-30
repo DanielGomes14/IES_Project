@@ -15,7 +15,7 @@ import BlogPosts from "./views/BlogPosts";
 import Automation from "./views/Automation";
 import Login from "./views/Login";
 import Register from "./views/Register";
-
+import Stasticis from "./views/Statistics";
 
 export default [
   {
@@ -73,5 +73,10 @@ export default [
     path: "/register",
     layout: LoginLayout,
     component: Register
+  },
+  {
+    path:"/statistics",
+    layout: DefaultLayout,
+    component:Stasticis
   }
 ];
