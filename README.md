@@ -6,7 +6,7 @@ The idea of our project for the assignment of the Introduction to Software Engin
 
 ## Work  Methodology and Backlog Management
 
-The approach for this work will be the Scrum Agile Methods, where we will define to-do features for every member of the group. Every week we will discuss what needs to be done  and what was done, updating the backlog. To manage every sprint and the backlog we will use the Jira Software 
+The approach for this work will be the Scrum Agile Methods, where we will define to-do features for every member of the group. Every week we will discuss what needs to be done  and what was done, updating the backlog. To manage every sprint and the backlog we will use the Jira Software.
 
 
 ## Roles
