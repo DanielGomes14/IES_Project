@@ -12,10 +12,10 @@ import Errors from "./views/Errors";
 import ComponentsOverview from "./views/ComponentsOverview";
 import Tables from "./views/Tables";
 import BlogPosts from "./views/BlogPosts";
+import Dashboard from "./views/Dashboard";
 import Automation from "./views/Automation";
 import Login from "./views/Login";
 import Register from "./views/Register";
-
 
 export default [
   {
@@ -60,6 +60,11 @@ export default [
     component: BlogPosts
   },
   {
+    path: "/dashboard",
+    layout: DefaultLayout,
+    component: Dashboard  
+  },
+  {    
     path: "/automation",
     layout: DefaultLayout,
     component : Automation
