@@ -8,9 +8,14 @@ import {
 
 import ConfigProfile from "../components/automation/ConfigProfile";
 import ConfigDevice from "../components/automation/ConfigDevice";
+import PageTitle from "../components/common/PageTitle";
 
 const automation = ({ profiles,devices }) => (
     <Container fluid className="main-content-container px-4">
+        <Row noGutters className="page-header py-4">
+          <PageTitle sm="4" title="Automation" subtitle="Dashboard" className="text-sm-left" />
+        </Row>
+
         <Container >
             <Row noGutters className="page-header py-2 ">
                 {profiles.map((profile, idx) => (
