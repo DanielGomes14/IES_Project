@@ -1,8 +1,6 @@
 import React from "react";
-import { Container, Row, Col, Form, Card, CardHeader, CardBody, Button, FormGroup, FormFeedback, FormInput, FormSelect } from "shards-react";
+import { Container, Row, Col, Card, CardHeader} from "shards-react";
 import LoginPageTitle from "../components/common/LoginPageTitle";
-import Forms from "../components/components-overview/Forms";
-import FormValidation from "../components/components-overview/FormValidation";
 import RegisterForm from "../components/components-overview/RegisterForm";
 
 

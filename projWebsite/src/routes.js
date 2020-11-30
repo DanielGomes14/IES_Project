@@ -14,6 +14,7 @@ import Tables from "./views/Tables";
 import BlogPosts from "./views/BlogPosts";
 import Dashboard from "./views/Dashboard";
 import Automation from "./views/Automation";
+import NewDevice from "./views/NewDevice";
 import Login from "./views/Login";
 import Register from "./views/Register";
 
@@ -74,6 +75,11 @@ export default [
     path: "/automation",
     layout: DefaultLayout,
     component : Automation
+  },
+  {    
+    path: "/newdevice",
+    layout: DefaultLayout,
+    component : NewDevice
   },
   {
     path: "/login",
