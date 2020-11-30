@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 
 // Layout Types
-import { DefaultLayout } from "./layouts";
+import { DefaultLayout, LoginLayout } from "./layouts";
 
 // Route Views
 import BlogOverview from "./views/BlogOverview";
@@ -13,6 +13,9 @@ import ComponentsOverview from "./views/ComponentsOverview";
 import Tables from "./views/Tables";
 import BlogPosts from "./views/BlogPosts";
 import Dashboard from "./views/Dashboard";
+import Automation from "./views/Automation";
+import Login from "./views/Login";
+import Register from "./views/Register";
 
 export default [
   {
@@ -59,6 +62,21 @@ export default [
   {
     path: "/dashboard",
     layout: DefaultLayout,
-    component: Dashboard
+    component: Dashboard  
+  },
+  {    
+    path: "/automation",
+    layout: DefaultLayout,
+    component : Automation
+  },
+  {
+    path: "/login",
+    layout: LoginLayout,
+    component: Login
+  },
+  {
+    path: "/register",
+    layout: LoginLayout,
+    component: Register
   }
 ];
