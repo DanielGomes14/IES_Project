@@ -37,7 +37,6 @@ class HouseSets extends React.Component{
       // eslint-disable-next-line
       if(this.state.OPTIONS[i].id == user){
         newState.OPTIONS[i].checked =  !this.state.OPTIONS[i].checked;  
-        break;
       }
       this.setState({ ...this.state, ...newState });    }
     

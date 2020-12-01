@@ -1,5 +1,6 @@
 import React from "react";
 import { NavItem, NavLink, Badge, Collapse, DropdownItem } from "shards-react";
+import { FaTemperatureHigh } from "react-icons/fa";
 
 export default class Notifications extends React.Component {
   constructor(props) {
@@ -43,26 +44,22 @@ export default class Notifications extends React.Component {
               </div>
             </div>
             <div className="notification__content">
-              <span className="notification__category">Analytics</span>
+              <span className="notification__category">Device Log <span className="text-black text-semibold">{new Date().toLocaleString()}</span></span>
               <p>
-                Your website’s active users count increased by{" "}
-                <span className="text-success text-semibold">28%</span> in the
-                last week. Great job!
+                Coffe Machine turned <span className="text-success text-semibold">ON</span>.
               </p>
             </div>
           </DropdownItem>
           <DropdownItem>
-            <div className="notification__icon-wrapper">
+            <div className="notification__icon-wrapper" >
               <div className="notification__icon">
-                <i className="material-icons">&#xE8D1;</i>
+                <i className="material-icons">&#xE6E1;</i>
               </div>
             </div>
             <div className="notification__content">
-              <span className="notification__category">Sales</span>
+              <span className="notification__category">Temperature <span className="text-black text-semibold">{new Date().toLocaleString()}</span></span>
               <p>
-                Last week your store’s sales count decreased by{" "}
-                <span className="text-danger text-semibold">5.52%</span>. It
-                could have been worse!
+              <span className="text-black text-semibold">Living Room</span> reached the goal temperature of <span className="text-success text-semibold">28°C</span>.
               </p>
             </div>
           </DropdownItem>

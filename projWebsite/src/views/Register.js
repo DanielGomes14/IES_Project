@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Row, Col, Card, CardHeader} from "shards-react";
-import LoginPageTitle from "../components/common/LoginPageTitle";
-import RegisterForm from "../components/components-overview/RegisterForm";
+import LoginPageTitle from "../components/login-register/LoginPageTitle";
+import RegisterForm from "../components/login-register/RegisterForm";
 
 
 

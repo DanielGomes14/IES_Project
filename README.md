@@ -1,12 +1,17 @@
 # IES_Project -GeniHouse
 
+## Backlog
+
+The tool we used to actively manage the backlog was Jira. [https://geanihouse.atlassian.net/browse/GEAN](https://geanihouse.atlassian.net/browse/GEAN)
+
+
 ## Our Product
 
 The idea of our project for the assignment of the Introduction to Software Engineering course, is the implementation of a system capable of monitoring, configuring a smart House and all its devices.  
 
 ## Work  Methodology and Backlog Management
 
-The approach for this work will be the Scrum Agile Methods, where we will define to-do features for every member of the group. Every week we will discuss what needs to be done  and what was done, updating the backlog. To manage every sprint and the backlog we will use the Jira Software 
+The approach for this work will be the Scrum Agile Methods, where we will define to-do features for every member of the group. Every week we will discuss what needs to be done  and what was done, updating the backlog. To manage every sprint and the backlog we will use the Jira Software.
 
 
 ## Roles
@@ -81,6 +86,10 @@ The web app uses react since the syntax is similar to react native so that we ca
 #### Database:
 
 The database management system in use is MySQL. In the beginning we were thinking about a NoSQL database like Mongodb but since we don’t have much experience with this technology we opt for a relational database system. MySQL might have some scalability problems, however, MySQL has a really high performing database.
+
+#### Entity Relationship Diagram
+
+![](./EntityDiagram.jpg)
 
 #### Message Queues:
 
