@@ -19,7 +19,9 @@ import NewDevice from "./views/NewDevice";
 import Login from "./views/Login";
 import Register from "./views/Register";
 import Stasticis from "./views/Statistics";
+import UserProfile from "./views/UserProfile";
 import NewHouse from "./views/NewHouse";
+
 
 export default [
   {
@@ -108,5 +110,10 @@ export default [
     path:"/statistics",
     layout: DefaultLayout,
     component:Stasticis
+  },
+  {
+    path: "/account",
+    layout:DefaultLayout,
+    component:UserProfile
   }
 ];
