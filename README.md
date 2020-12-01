@@ -89,7 +89,7 @@ The database management system in use is MySQL. In the beginning we were thinkin
 
 #### Entity Relationship Diagram
 
-![](/Users/mario/Desktop/geanie/EntityDiagram.jpg)
+![](./EntityDiagram.jpg)
 
 #### Message Queues:
 
