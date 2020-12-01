@@ -4,7 +4,7 @@ import PageTitle from "../common/PageTitle";
 /*
     Configure Default
 
-    @param : name (device name), division (division name)
+    @param : name (device name), division (division name), type (temp,...),isOn(boolean)
 
     Used in the Automation view
 */
@@ -15,6 +15,8 @@ class ConfigDevice extends React.Component{
     constructor(props){
         super(props)
     }
+
+    
 
     render(){
         return(
@@ -28,7 +30,7 @@ class ConfigDevice extends React.Component{
                 </CardHeader>
                 <CardBody>
                     <div className="px-3">
-                        <FormCheckbox toggle defaultChecked> Off/On </FormCheckbox>
+                        <FormCheckbox toggle checked={this.props.isOn} > Off/On </FormCheckbox>
                     </div>
                 </CardBody>
             </Card>
