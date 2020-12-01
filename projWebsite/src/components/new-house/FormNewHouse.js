@@ -56,14 +56,9 @@ const FormNewHouse = ({ title }) => (
             <Form className="quick-post-form">
 
                 <FormGroup className="row">
-                    <Col sm="5" md="8" lg="9">
+                    <Col sm="12">
                         <label htmlFor="deName">Name</label>    
                         <FormInput placeholder="" if="deName"/>
-                    </Col>
-                    <Col sm="5" md="4" lg="3">
-                        <label htmlFor="deIcon">Icon</label>
-                        <Select options={options} id="deIcon" placeholder="" defaultValue={options[0]}
-                        components={{ Option: CustomSelectOption, SingleValue: CustomSelectValue }} />
                     </Col>
                 </FormGroup>
 
