@@ -22,7 +22,7 @@ class TypeSlider extends React.Component{
         let min = this.props.min_value;
         let max = this.props.max_value;
         let type_conf;
-        if (this.props.type === "temperature") {
+        if (this.props.type === "Temperature") {
 
             type_conf = <Slider
                 theme="danger"
@@ -36,7 +36,7 @@ class TypeSlider extends React.Component{
                 }}
                 range={{ min: 0, max: 50 }}
             />
-        } else if (this.props.type === "humidity") {
+        } else if (this.props.type === "Humidity") {
             type_conf = <Slider
                 connect
                 start={[min, max]}
@@ -48,7 +48,7 @@ class TypeSlider extends React.Component{
                 }}
                 range={{ min: 0, max: 100 }}
             />
-        } else if (this.props.type === "light") {
+        } else if (this.props.type === "Light") {
             type_conf = <Slider
                 theme="warning"
                 connect
@@ -72,6 +72,6 @@ class TypeSlider extends React.Component{
 
     }
 
-
-
 }
+
+export default TypeSlider;

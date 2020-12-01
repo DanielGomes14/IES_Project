@@ -8,7 +8,10 @@ import {
 
 import ConfigProfile from "../components/automation/ConfigProfile";
 import ConfigDevice from "../components/automation/ConfigDevice";
+import TypeSlider from "../components/automation/TypeSlider";
 import PageTitle from "../components/common/PageTitle";
+
+
 
 // https://material-ui.com/pt/components/tabs/
 
@@ -129,6 +132,22 @@ function automation({ divisions }) {
                             <Button className="float-right mx-2 mb-3">Duplicate</Button>
                             <Button className="float-right mx-2 mb-3">Delete</Button>
                             <div className="clearfix"></div>
+
+                            <Row>
+                                {division.configurations.map((configuration,idx_conf) => (
+
+                                    <Col lg="4">
+                                        <h4>{configuration.type}</h4>
+                                        <TypeSlider type={configuration.type} min_value={configuration.min_value}
+                                        max_value={configuration.max_value} />
+                                    </Col>
+
+
+                                ))}
+
+
+                            </Row>
+                            
                             <Row>
 
                                 {division.devices.map((device, idx_dev) => (
@@ -200,8 +219,8 @@ automation.defaultProps = {
         name: "Bedroom",
         configurations: [{
             type: "Temperature",
-            min_value: 10,
-            max_value: 20
+            min_value: 20,
+            max_value: 40
         },
         {
             type: "Light",
@@ -241,7 +260,8 @@ automation.defaultProps = {
         ],
         permissions: [],
         devices:[{
-            name:"TV3"
+            name:"TV3",
+
         }
         ]
     }, {
