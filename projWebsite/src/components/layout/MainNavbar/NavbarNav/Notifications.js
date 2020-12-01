@@ -43,11 +43,10 @@ export default class Notifications extends React.Component {
               </div>
             </div>
             <div className="notification__content">
-              <span className="notification__category">Analytics</span>
+              <span className="notification__category">Device Log</span>
               <p>
-                Your website’s active users count increased by{" "}
-                <span className="text-success text-semibold">28%</span> in the
-                last week. Great job!
+                Coffe Machine turned <span className="text-success text-semibold">ON</span> at {' '}
+                <span className="text-black text-semibold">{new Date().toLocaleString()}</span>.
               </p>
             </div>
           </DropdownItem>
@@ -58,10 +57,9 @@ export default class Notifications extends React.Component {
               </div>
             </div>
             <div className="notification__content">
-              <span className="notification__category">Sales</span>
+              <span className="notification__category">Temperature</span>
               <p>
-                Last week your store’s sales count decreased by{" "}
-                <span className="text-danger text-semibold">5.52%</span>. It
+                Living Room reached the goal temperature of <span className="text-danger text-semibold">5.52%</span>. It
                 could have been worse!
               </p>
             </div>

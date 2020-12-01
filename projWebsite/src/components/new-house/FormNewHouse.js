@@ -16,34 +16,6 @@ import {
   FormCheckbox,
 } from "shards-react";
 import Select, { components } from 'react-select'
-import { FaWarehouse, FaBuilding, FaHouseDamage, FaHome, FaIndustry, FaDumpster } from "react-icons/fa";
-
-
-const { Option } = components
-const CustomSelectOption = props => (
-  <Option {...props} selectProps>
-    {props.data.icon}
-    {props.data.label}
-  </Option>
-)
-
-const CustomSelectValue = props => (
-  <div>
-    {props.data.icon}
-    {props.data.label}
-  </div>
-)
-
-const options = [
-    { value: 'FaWarehouse', icon: <FaWarehouse /> },
-    { value: 'FaBuilding', icon: <FaBuilding /> },
-    { value: 'FaHouseDamage', icon: <FaHouseDamage /> },
-    { value: 'FaHome', icon: <FaHome /> },
-    { value: 'FaIndustry', icon: <FaIndustry /> },
-    { value: 'FaDumpster', icon: <FaDumpster /> },
-    { value: 'tv', icon: <FaDumpster /> },
-  ]
-
 
 const FormNewHouse = ({ title }) => (
         <Card small className="h-100 py-3 col-sm-8">
