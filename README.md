@@ -2,7 +2,8 @@
 
 ## Backlog
 
-The tool we used to actively manage the backlog was Jira. [https://geanihouse.atlassian.net/browse/GEAN]
+The tool we used to actively manage the backlog was Jira. [https://geanihouse.atlassian.net/browse/GEAN](https://geanihouse.atlassian.net/browse/GEAN)
+
 
 ## Our Product
 
