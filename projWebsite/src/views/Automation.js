@@ -3,7 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import {
-    Container, Row, Col, Card, CardBody, Button
+    Container, Row, Col, Card, CardBody, Button, FormCheckbox
 } from "shards-react";
 
 import ConfigProfile from "../components/automation/ConfigProfile";
@@ -128,9 +128,8 @@ function automation({ divisions }) {
                     */}
                     {divisions.map((division, idx_div) => (
                         <TabPanel value={value} index={idx_div}>
-                            <Button className="float-right mx-2 mb-3">Edit</Button>
-                            <Button className="float-right mx-2 mb-3">Duplicate</Button>
-                            <Button className="float-right mx-2 mb-3">Delete</Button>
+                            <Button className="float-right mx-2 mb-3">Set Default</Button>
+                            <Button className="float-right mx-2 mb-3">Set Economics</Button>
                             <div className="clearfix"></div>
 
                             <Row>
@@ -144,8 +143,6 @@ function automation({ divisions }) {
 
 
                                 ))}
-
-
                             </Row>
                             
                             <Row>
@@ -157,9 +154,13 @@ function automation({ divisions }) {
                                                 <h3>
                                                     {device.name}
                                                 </h3>
-                                                <div>
+                                                <Row>
+                                                    <FormCheckbox toggle checked={device.state} > Off/On </FormCheckbox>
+                                                </Row>                                                    
+                                                {device.configurations.map((configuration,idx_conf)=> (
+                                                    <ConfigDevice value={configuration.value} start={configuration.start} end={configuration.end}    />
+                                                ))}
 
-                                                </div>
 
                                             </CardBody>
                                         </Card>
@@ -210,7 +211,21 @@ automation.defaultProps = {
         ],
         permissions: [],
         devices:[{
-            name:"TV1"
+            name:"TV1",
+            configurations:[{
+                start:"00:00",
+                end:"01:00",
+                value:"10"
+            },
+            {
+                start:"03:00",
+                end:"04:00",
+                value:"10"
+            }
+            ],
+            type:"eletronic",
+            state: true
+
         }
         ]
     },
@@ -235,7 +250,15 @@ automation.defaultProps = {
         ],
         permissions: [],
         devices:[{
-            name:"TV2"
+            name:"TV2",
+            configurations:[{
+                start:"00:00",
+                end:"01:00",
+                value:"10",
+            }],
+            type:"eletronic",
+            state:false
+
         }
         ]
     },
@@ -261,7 +284,13 @@ automation.defaultProps = {
         permissions: [],
         devices:[{
             name:"TV3",
-
+            configurations:[{
+                start:"00:00",
+                end:"01:00",
+                value:"10"
+            }],
+            type:"eletronic",
+            state: true
         }
         ]
     }, {
@@ -285,7 +314,14 @@ automation.defaultProps = {
         ],
         permissions: [],
         devices:[{
-            name:"TV4"
+            name:"Air conditioner",
+            configurations:[{
+                start:"00:00",
+                end:"01:00",
+                value:"10"
+            }],
+            type:"Temperature",
+            state:false
         }
         ]
     }

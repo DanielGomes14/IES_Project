@@ -4,8 +4,7 @@ import PageTitle from "../common/PageTitle";
 /*
     Configure Default
 
-    @param : name (device name), division (division name), type (temp,...),isOn(boolean)
-
+    @param : start (time), end(time), value (0 means off) 
     Used in the Automation view
 */
 
@@ -20,72 +19,18 @@ class ConfigDevice extends React.Component {
 
     render() {
 
-        let type_conf;
-        if (this.props.type === "temperature") {
-
-            type_conf = <Slider
-                theme="danger"
-                connect
-                start={[35, 40]}
-                pips={{
-                    mode: "positions",
-                    values: [0, 20, 40, 60, 80, 100],
-                    stepped: true,
-                    density: 5
-                }}
-                range={{ min: 0, max: 50 }}
-            />
-        } else if (this.props.type === "humidity") {
-            type_conf = <Slider
-                connect
-                start={[35, 40]}
-                pips={{
-                    mode: "positions",
-                    values: [0, 25, 50, 75, 100],
-                    stepped: true,
-                    density: 5
-                }}
-                range={{ min: 0, max: 100 }}
-            />
-        }else if(this.props.type === "light" ){
-            type_conf = <Slider
-                theme="warning"
-                connect
-                start={[35, 40]}
-                pips={{
-                    mode: "positions",
-                    values: [0, 25, 50, 75, 100],
-                    stepped: true,
-                    density: 5
-                }}
-                range={{ min: 0, max: 100 }}
-            />
-        } 
-        else {
-            type_conf = <div></div>
-        }
+        
         return (
             /*
                 Don't know why but width 1000 works 
             */
-            <Card style={{ width: 1000 }}>
-                <CardHeader>
-                    <PageTitle title={this.props.name} subtitle={this.props.division} className="text-sm-left" sm="4" />
-                </CardHeader>
-                <CardBody>
-                    <div className="px-3">
+                    <div className="px-3 py-2">
                         <Row>
                             <Col>
-                                <FormCheckbox toggle checked={this.props.isOn} > Off/On </FormCheckbox>
-                            </Col>
-                            <Col>
-                                <h6>{this.props.type}</h6>
-                                {type_conf}
+                                <h5>{this.props.start} to {this.props.end}  with {this.props.value}</h5>
                             </Col>
                         </Row>
                     </div>
-                </CardBody>
-            </Card>
         );
     }
 
