@@ -2,9 +2,8 @@ import React from "react";
 import { Container, Row, Col, Button } from "shards-react";
 
 import PageTitle from "../components/common/PageTitle";
-import UserDetails from "../components/user-profile-lite/UserDetails";
+import UserDetails from "../components/user-profile/UserDetails";
 import InviteModel from "../components/group-settings/InviteModel";
-
 
 
 const GroupSettings = () => (

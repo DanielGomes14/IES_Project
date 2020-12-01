@@ -5,9 +5,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 import {
-  FormGroup,
   FormTextarea,
   Button
 } from "shards-react";
@@ -58,6 +60,29 @@ export default function InviteModel() {
 
           <FormGroup>
             <FormTextarea placeholder="email@example.com" />
+          </FormGroup>
+          <hr></hr>
+          <DialogContentText>
+            Choose the divisions to give permission.
+          </DialogContentText>
+
+          <FormGroup>
+            <FormControlLabel
+              control={<Checkbox checked={true} name="Kitchen" />}
+              label="Kitchen"
+            />
+            <FormControlLabel
+              control={<Checkbox checked={false} name="Living Room" />}
+              label="Living Room"
+            />
+            <FormControlLabel
+              control={<Checkbox checked={true} name="Bedroom #1" />}
+              label="Bedroom #1"
+            />
+            <FormControlLabel
+              control={<Checkbox checked={true} name="Bedroom #1" />}
+              label="Bedroom #2"
+            />
           </FormGroup>
 
         </DialogContent>
