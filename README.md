@@ -1,5 +1,10 @@
 # IES_Project -GeniHouse
 
+## Backlog
+
+The tool we used to actively manage the backlog was Jira. [https://geanihouse.atlassian.net/browse/GEAN](https://geanihouse.atlassian.net/browse/GEAN)
+
+
 ## Our Product
 
 The idea of our project for the assignment of the Introduction to Software Engineering course, is the implementation of a system capable of monitoring, configuring a smart House and all its devices.  
