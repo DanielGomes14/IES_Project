@@ -53,7 +53,7 @@ Como um utilizador registado, o João quer poder customizar a iluminação para 
 
 O João quer estar sempre a par de como a aplicação está a atuar nos dispositivos emparelhados, recebendo sempre notificações da mudança do estado deles.
 
-A Célia, como não percebe muito de tecnologia, quer que todo o processo de aprendizagem da aplicação seja fácil, pelo que necessita de um perfil pré-definido para as necessidades das pessoas na mesma situação que ela.
+A Célia, como não percebe muito de tecnologia, quer que todo o processo de aprendizagem da aplicação seja fácil, pelo que necessita de uma opção que faça as configurações otimizadas para as necessidades dela automaticamente.
 
 A Célia gostava de poder ter algumas das suas tarefas diárias automatizadas para não se desgastar tanto, por exemplo, seria-lhe bastante útil que todas as manhãs, por volta das 9 horas, os estores da casa abrissem automaticamente evitando que esta se tivesse de deslocar pela casa toda.
 
