@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+
 import {
   Card,
   CardHeader,
@@ -35,13 +36,19 @@ const UserDetails = ({ userDetails }) => (
       </div>
       <h4 className="mb-0">{userDetails.name}</h4>
       <span className="text-muted d-block mb-2">Age: {calculate_age(userDetails.birth)}</span>
-      <Badge theme="info">
+      <h5><Badge theme="info">
         {userDetails.email}
-      </Badge>
+      </Badge></h5>
     </CardHeader>
     <ListGroup flush>
-    
+      <ListGroupItem className="p-4">
+        <strong className="text-muted d-block mb-2">
+          Division Permissions:
+        </strong>
+        <span>Kitchen, Living Room, Bedroom #1</span>
+      </ListGroupItem>
     </ListGroup>
+   
   </Card>
 );
 

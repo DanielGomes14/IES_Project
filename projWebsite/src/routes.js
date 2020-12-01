@@ -115,11 +115,11 @@ export default [
   {
     path:"/statistics",
     layout: DefaultLayout,
-    component:Stasticis
+    component: Stasticis
   },
   {
     path: "/account",
-    layout:DefaultLayout,
-    component:UserProfile
+    layout: DefaultLayout,
+    component: UserProfile
   }
 ];
