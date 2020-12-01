@@ -115,7 +115,7 @@ function automation({ profiles }) {
 
                                 <Row className="py-2 px-4">
 
-                                    <ConfigDevice name={device.name} division={device.division} isOn={device.isOn} />
+                                    <ConfigDevice name={device.name} division={device.division} type={device.type} isOn={device.isOn} />
 
                                 </Row>
 
@@ -147,7 +147,7 @@ automation.defaultProps = {
         devices: [{
             name: "Air conditioner",
             division: "Kitchen",
-            type: "",
+            type: "temperature",
             isOn: true
         },
         {
@@ -169,7 +169,7 @@ automation.defaultProps = {
         {
             name: "Door",
             division: "Kitchen",
-            type:"",
+            type:"temperature",
             isOn:false
         }
         ]
