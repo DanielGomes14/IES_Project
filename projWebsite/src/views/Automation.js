@@ -148,14 +148,19 @@ function automation({ divisions }) {
                             <Row>
 
                                 {division.devices.map((device, idx_dev) => (
-                                    <Col lg="4" className="py-3">
+                                    <Col lg="6" className="py-3">
                                         <Card className="">
                                             <CardBody>
                                                 <h3>
                                                     {device.name}
                                                 </h3>
                                                 <Row>
+                                                    <Col lg="7">
                                                     <FormCheckbox toggle checked={device.state} > Off/On </FormCheckbox>
+                                                    </Col>
+                                                    <Col lg="5">
+                                                    <h6 style={{textAlign:"right"}}>{device.type}</h6>
+                                                    </Col>
                                                 </Row>                                                    
                                                 {device.configurations.map((configuration,idx_conf)=> (
                                                     <ConfigDevice value={configuration.value} start={configuration.start} end={configuration.end}    />
@@ -223,7 +228,7 @@ automation.defaultProps = {
                 value:"10"
             }
             ],
-            type:"eletronic",
+            type:"Eletronic",
             state: true
 
         }
@@ -256,7 +261,7 @@ automation.defaultProps = {
                 end:"01:00",
                 value:"10",
             }],
-            type:"eletronic",
+            type:"Eletronic",
             state:false
 
         }
@@ -289,7 +294,7 @@ automation.defaultProps = {
                 end:"01:00",
                 value:"10"
             }],
-            type:"eletronic",
+            type:"Eletronic",
             state: true
         }
         ]
