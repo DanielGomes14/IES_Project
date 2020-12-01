@@ -79,6 +79,7 @@ class ConfigDevice extends React.Component {
                                 <FormCheckbox toggle checked={this.props.isOn} > Off/On </FormCheckbox>
                             </Col>
                             <Col>
+                                <h6>{this.props.type}</h6>
                                 {type_conf}
                             </Col>
                         </Row>

@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-function automation({ profiles }) {
+function automation({ divisions }) {
 
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
@@ -96,13 +96,13 @@ function automation({ profiles }) {
                             aria-label="scrollable auto tabs example">
 
 
-                            {profiles.map((profile, idx) => (
-                                <Tab label={profile.name} {...a11yProps(idx)} />
+                            {divisions.map((division, idx) => (
+                                <Tab label={division.name} {...a11yProps(idx)} />
                             ))}
 
                         </Tabs>
                     </AppBar>
-
+                    {/*
                     {profiles.map((profile, idx_prof) => (
                         //needs a container inside of the map to work
                         // TODO: make it pretty
@@ -122,7 +122,35 @@ function automation({ profiles }) {
                             ))}
                         </TabPanel>
                     ))}
+                    */}
+                    {divisions.map((division, idx_div) => (
+                        <TabPanel value={value} index={idx_div}>
+                            <Button className="float-right mx-2 mb-3">Edit</Button>
+                            <Button className="float-right mx-2 mb-3">Duplicate</Button>
+                            <Button className="float-right mx-2 mb-3">Delete</Button>
+                            <div className="clearfix"></div>
+                            <Row>
 
+                                {division.devices.map((device, idx_dev) => (
+                                    <Col lg="4" className="py-3">
+                                        <Card className="">
+                                            <CardBody>
+                                                <h3>
+                                                    {device.name}
+                                                </h3>
+                                                <div>
+
+                                                </div>
+
+                                            </CardBody>
+                                        </Card>
+                                    </Col>
+                                ))}
+                            </Row>
+
+
+                        </TabPanel>
+                    ))}
 
 
                 </div>
@@ -137,48 +165,112 @@ function automation({ profiles }) {
 };
 
 automation.propTypes = {
-    profiles: PropTypes.array,
-    devices: PropTypes.array
+    devices: PropTypes.array,
+    divisions: PropTypes.array
 };
 
 automation.defaultProps = {
-    profiles: [{
-        name: "Default",
-        devices: [{
-            name: "Air conditioner",
-            division: "Kitchen",
-            type: "temperature",
-            isOn: true
+    divisions: [{
+        id: "1",
+        name: "Kitchen",
+        configurations: [{
+            type: "Temperature",
+            min_value: 10,
+            max_value: 20
         },
         {
-            name: "Lights",
-            division: "Bedroom",
-            type:"light",
-            isOn:true
+            type: "Light",
+            min_value: 10,
+            max_value: 40
+        },
+        {
+            type: "Humidity",
+            min_value: 30,
+            max_value: 60
+        }
+        ],
+        permissions: [],
+        devices:[{
+            name:"TV1"
         }
         ]
     },
     {
-        name: "Economics",
-        devices: [{
-            name: "Air conditioner",
-            division: "Bedroom",
-            type:"humidity",
-            isOn:false
+        id: "2",
+        name: "Bedroom",
+        configurations: [{
+            type: "Temperature",
+            min_value: 10,
+            max_value: 20
         },
         {
-            name: "Door",
-            division: "Kitchen",
-            type:"",
-            isOn:false
+            type: "Light",
+            min_value: 10,
+            max_value: 40
+        },
+        {
+            type: "Humidity",
+            min_value: 30,
+            max_value: 60
+        }
+        ],
+        permissions: [],
+        devices:[{
+            name:"TV2"
         }
         ]
     },
     {
-        name: "Custom",
-        devices: []
+        id: "3",
+        name: "Living Room",
+        configurations: [{
+            type: "Temperature",
+            min_value: 10,
+            max_value: 20
+        },
+        {
+            type: "Light",
+            min_value: 10,
+            max_value: 40
+        },
+        {
+            type: "Humidity",
+            min_value: 30,
+            max_value: 60
+        }
+        ],
+        permissions: [],
+        devices:[{
+            name:"TV3"
+        }
+        ]
+    }, {
+        id: "4",
+        name: "Bedroom 2",
+        configurations: [{
+            type: "Temperature",
+            min_value: 10,
+            max_value: 20
+        },
+        {
+            type: "Light",
+            min_value: 10,
+            max_value: 40
+        },
+        {
+            type: "Humidity",
+            min_value: 30,
+            max_value: 60
+        }
+        ],
+        permissions: [],
+        devices:[{
+            name:"TV4"
+        }
+        ]
     }
-    ]
-};
+]};
+
+
 
 export default automation;
