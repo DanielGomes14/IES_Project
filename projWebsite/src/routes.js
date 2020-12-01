@@ -13,6 +13,7 @@ import ComponentsOverview from "./views/ComponentsOverview";
 import Tables from "./views/Tables";
 import BlogPosts from "./views/BlogPosts";
 import HouseSettings from "./views/HouseSettings"
+import GroupSettings from "./views/GroupSettings";
 import Dashboard from "./views/Dashboard";
 import Automation from "./views/Automation";
 import NewDevice from "./views/NewDevice";
@@ -87,6 +88,11 @@ export default [
     path: "/newdevice",
     layout: DefaultLayout,
     component : NewDevice
+  },
+  {
+    path: "/group-settings",
+    layout: DefaultLayout,
+    component: GroupSettings
   },
   {
     path: "/login",

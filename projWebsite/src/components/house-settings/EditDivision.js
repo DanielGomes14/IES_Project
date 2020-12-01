@@ -41,9 +41,18 @@ const StyledTableCell = withStyles((theme) => ({
 class EditDivision extends React.Component{
   constructor() {
     super();
-    this.OPTIONS = [{ id: 0 , name : "Daniel",checked:true }, {id: 1 , name : "Leandro",checked:true },{ id : 2 , name : "Chico", checked:true }, 
-    {id : 3 , name : "Bruno" , checked:true} ];
-    this.OPTIONS2 = [{id: 0 , name : "Leandro",checked:true },{ id : 1 , name : "Chico", checked:true },  {id : 2 , name : "Bruno" , checked:true}, { id: 3 , name : "Daniel",checked:false }];
+    this.OPTIONS = [
+      { id: 0, name: "Daniel", checked: true },
+      { id: 1, name: "Leandro", checked: true },
+      { id: 2, name: "Chico", checked: true }, 
+      { id: 3, name: "Bruno", checked: true }
+    ];
+    this.OPTIONS2 = [
+      { id: 0, name: "Leandro", checked: true },
+      { id: 1, name: "Chico", checked: true },
+      { id: 2, name: "Bruno", checked: true },
+      { id: 3, name: "Daniel", checked: false }
+    ];
     this.rows = [
         this.createData('Kitchen', this.OPTIONS),
         this.createData('Living Room', this.OPTIONS2),
@@ -52,16 +61,15 @@ class EditDivision extends React.Component{
     ];
     this.state = { checked: false, title: "Edit Current Divisions' Permissions", OPTIONS : this.OPTIONS };
     
-}
-    createData(name, people, fat, carbs, protein) {
+  }
+  createData(name, people, fat, carbs, protein) {
     return { name, people, fat, carbs, protein };
   }
-    getNumChecked(row){
-      let counter=0;
-      for(let i = 0 ; i< row.people.length;i++){
-        if (row.people[i].checked){
-          counter++;}
-
+  getNumChecked(row){
+    let counter=0;
+    for(let i = 0 ; i< row.people.length;i++){
+      if (row.people[i].checked)
+        counter++;
     }
     return counter
   }

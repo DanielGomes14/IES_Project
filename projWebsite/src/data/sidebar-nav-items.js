@@ -1,6 +1,4 @@
 export default function() {
-  console.log(window.location.href);
-  console.log()
   if (window.location.href.includes("/template"))
     return [
       {
@@ -57,6 +55,16 @@ export default function() {
         title: "Statistics",
         htmlBefore: '<i class="material-icons">equalizer</i>',
         to: "/statistics",
+      },
+      {
+        title: "House Settings",
+        htmlBefore: '<i class="material-icons">home</i>',
+        to: "/house-settings",
+      },
+      {
+        title: "Group Settings",
+        htmlBefore: '<i class="material-icons">group</i>',
+        to: "/group-settings",
       }
     ];
 }

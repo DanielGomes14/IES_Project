@@ -30,8 +30,6 @@ const DeviceCard = ({ title, progress, type }) => {
     },
   }
 
-  
-
   return (
     <Card small className="h-100">
       {/* Card Header */}
