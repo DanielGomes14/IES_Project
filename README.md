@@ -82,6 +82,10 @@ The web app uses react since the syntax is similar to react native so that we ca
 
 The database management system in use is MySQL. In the beginning we were thinking about a NoSQL database like Mongodb but since we don’t have much experience with this technology we opt for a relational database system. MySQL might have some scalability problems, however, MySQL has a really high performing database.
 
+#### Entity Relationship Diagram
+
+![](/Users/mario/Desktop/geanie/EntityDiagram.jpg)
+
 #### Message Queues:
 
 RabbitMQ is going to receive the messages from the sensors and pass them to the backend. Our choice comes from the fact that rabbitMQ is one of the most used message brokers which makes it easy to find information about it and is easy to integrate in spring-boot.
