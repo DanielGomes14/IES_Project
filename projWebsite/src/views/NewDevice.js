@@ -1,6 +1,5 @@
 import React from "react";
 import { Container } from "shards-react";
-
 import FormNewDevice from "../components/new-device/FormNewDevice";
 
 
