@@ -153,7 +153,7 @@ automation.defaultProps = {
         {
             name: "Lights",
             division: "Bedroom",
-            type:"",
+            type:"light",
             isOn:true
         }
         ]
@@ -163,13 +163,13 @@ automation.defaultProps = {
         devices: [{
             name: "Air conditioner",
             division: "Bedroom",
-            type:"",
+            type:"humidity",
             isOn:false
         },
         {
             name: "Door",
             division: "Kitchen",
-            type:"temperature",
+            type:"",
             isOn:false
         }
         ]
