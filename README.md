@@ -122,7 +122,7 @@ To access the data we decided to use the JPA, Java Persistence API, since we got
 
 #### Entity Relationship Diagram
 
-![](./architecture-diagram.jpg)
+![](./architecture-diagram.png)
 
 #### Message Queues:
 
