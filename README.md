@@ -91,7 +91,7 @@ A Célia tem o mau hábito de se esquecer de desligar as luzes das divisões que
 
 ![](./architecture-diagram.png)
 
-### Data generation/sensing
+### Data Generation
 
 We will be using a temperature sensor, and for other things like humidity and light, all data will be simulated. To run the scripts to simulate data,send the data streams to our Backend, and for the use of sensors, it will be used a Raspberry Pi. We are using python to communicate with the server. 
 
@@ -124,7 +124,7 @@ To access the data we decided to use the JPA, Java Persistence API, since we got
 
 RabbitMQ is going to receive the messages from the sensors and pass them to the backend. Our choice comes from the fact that rabbitMQ is one of the most used message brokers which makes it easy to find information about it and is easy to integrate in spring-boot.
 
-#### Service layer (API) + Processing & Bizz Logic
+#### Services (API) + Business Logic
 
 For the backend of our System, since we got to know the Spring framework from the practical classes of this course and it was highly recommended by the Teacher, we will use Spring.
 
