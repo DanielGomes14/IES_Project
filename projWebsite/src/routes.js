@@ -22,7 +22,7 @@ import Register from "./views/Register";
 import Stasticis from "./views/Statistics";
 import UserProfile from "./views/UserProfile";
 import NewHouse from "./views/NewHouse";
-
+import NewConfiguration from "./views/NewConfiguration"
 
 export default [
   {
@@ -121,5 +121,10 @@ export default [
     path: "/account",
     layout: DefaultLayout,
     component: UserProfile
+  },
+  {
+    path: "/config-device",
+    layout: DefaultLayout,
+    component: NewConfiguration
   }
 ];
