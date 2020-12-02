@@ -91,6 +91,9 @@ The database management system in use is MySQL. In the beginning we were thinkin
 
 ![](./RelationalSchema.jpg)
 
+#### Data Access
+To access the data we decided to use the JPA, Java Persistence API, since we got to know it from the Practical Classes and it is  really useful to do SQL Queries, an important aspect because we are using a Relational Database, MySQL.
+
 #### Message Queues:
 
 RabbitMQ is going to receive the messages from the sensors and pass them to the backend. Our choice comes from the fact that rabbitMQ is one of the most used message brokers which makes it easy to find information about it and is easy to integrate in spring-boot.
