@@ -91,6 +91,10 @@ The database management system in use is MySQL. In the beginning we were thinkin
 
 ![](./EntityDiagram.jpg)
 
+#### Entity Relationship Diagram
+
+![](./architecture-diagram.jpg)
+
 #### Message Queues:
 
 RabbitMQ is going to receive the messages from the sensors and pass them to the backend. Our choice comes from the fact that rabbitMQ is one of the most used message brokers which makes it easy to find information about it and is easy to integrate in spring-boot.
