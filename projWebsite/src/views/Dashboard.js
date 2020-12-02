@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Container, Row, Col } from "shards-react";
+import { Container, Row } from "shards-react";
 
 import PageTitle from "./../components/common/PageTitle";
 import DeviceGroup from "./../components/dashboard/DeviceGroup";
@@ -12,26 +12,21 @@ const BlogOverview = ({ smallStats }) => (
     <Row noGutters className="page-header py-4">
       <PageTitle title="Dashboard" subtitle="" className="text-sm-left mb-3" />
     </Row>
-
-    <h4 style={{marginLeft: "20px"}}><a href="#" style={{color: "#17c671"}}>Kitchen</a></h4>
-    <DeviceGroup>
+    
+    <DeviceGroup division="Kitchen">
       <DeviceCard title="Lights" progress={95} type="light" />
     </DeviceGroup>
 
-    <h4 style={{marginLeft: "20px"}}><a href="#" style={{color: "#17c671"}}>Living Room</a></h4>
-    <DeviceGroup>
+    <DeviceGroup division="Living Room">
       <DeviceCard title="Air Conditioning" progress={95} type="temperature" />
     </DeviceGroup>
 
-
-    <h4 style={{marginLeft: "20px"}}><a href="#" style={{color: "#17c671"}}>Bedroom #1</a></h4>
-    <DeviceGroup>
+    <DeviceGroup division="Bedroom #1">
       <DeviceCard title="Zumifier" progress={10} type="humidity" />
       <DeviceCard title="Radiator" progress={35} type="temperature" />
     </DeviceGroup>
 
-    <h4 style={{marginLeft: "20px"}}><a href="#" style={{color: "#17c671"}}>Bedroom #2</a></h4>
-    <DeviceGroup>
+    <DeviceGroup division="Bedroom #2">
       <DeviceCard title="Zumifier" progress={55} type="humidity" />
       <DeviceCard title="Radiator" progress={40} type="temperature" />
       <DeviceCard title="Presence Light" progress={5} type="light" />
