@@ -89,7 +89,7 @@ A Célia tem o mau hábito de se esquecer de desligar as luzes das divisões que
 
 ## Architeture
 
-
+![](./architecture-diagram.png)
 
 ### Data generation/sensing
 
@@ -119,10 +119,6 @@ The database management system in use is MySQL. In the beginning we were thinkin
 
 #### Data Access
 To access the data we decided to use the JPA, Java Persistence API, since we got to know it from the Practical Classes and it is  really useful to do SQL Queries, an important aspect because we are using a Relational Database, MySQL.
-
-#### Entity Relationship Diagram
-
-![](./architecture-diagram.jpg)
 
 #### Message Queues:
 
