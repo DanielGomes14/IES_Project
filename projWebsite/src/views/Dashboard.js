@@ -1,6 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { Container, Row, Col } from "shards-react";
+import { Container, Row } from "shards-react";
 
 import PageTitle from "./../components/common/PageTitle";
 import DeviceGroup from "./../components/dashboard/DeviceGroup";
@@ -31,7 +30,7 @@ class Dashboard extends React.Component {
           <PageTitle title="Dashboard" subtitle="" className="text-sm-left mb-3" />
         </Row>
 
-          {this.state.divisions.map(divison => {
+          {this.state.divisions.map((divison) => {
               return (
                 <DeviceGroup division={division.name} >
                   <DeviceCard title="Lights" progress={95} type="light" />
