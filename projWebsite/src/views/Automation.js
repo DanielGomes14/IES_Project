@@ -130,6 +130,7 @@ function automation({ divisions }) {
                         <TabPanel value={value} index={idx_div}>
                             <Button className="float-right mx-2 mb-3">Set Default</Button>
                             <Button className="float-right mx-2 mb-3">Set Economics</Button>
+                            <a href="/config-device"><Button className="float-right mx-2 mb-3">Custom Edit</Button></a>
                             <div className="clearfix"></div>
 
                             <Row>
