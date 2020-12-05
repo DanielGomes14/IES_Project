@@ -1,4 +1,4 @@
-# IES_Project -GeniHouse
+# IES_Project - GeaniHouse
 
 ## Backlog
 
