@@ -5,6 +5,11 @@ package ies.proj.geanihouse.model;
 import javax.persistence.*;
 
 
+/*
+    Created by Bruno Bastos
+    on 5-12-2020
+*/
+
 
 
 @Entity

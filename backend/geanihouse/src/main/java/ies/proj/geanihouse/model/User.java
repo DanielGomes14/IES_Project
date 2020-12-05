@@ -9,6 +9,11 @@ import java.util.HashSet;
 //https://grokonez.com/spring-framework/spring-data/springjpa-save-filesimages-mysql-database-lob-annotation
 //https://www.baeldung.com/spring-security-registration-password-encoding-bcrypt
 
+/*
+    Created by Bruno Bastos
+    on 5-12-2020
+*/
+
 @Entity
 @Table(name = "user")
 public class User{
