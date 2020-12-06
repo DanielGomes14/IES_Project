@@ -31,13 +31,11 @@ class Dashboard extends React.Component {
 
           {this.state.divisions.map((div) => {
               return (
-                <DeviceGroup division={div}>
-                  <DeviceCard title="Lights" progress={95} type="light" />
-                </DeviceGroup>
+                <DeviceGroup division={div} />
               )
           })}
         
-        <DeviceGroup division="Kitchen">
+        {/* <DeviceGroup division="Kitchen">
           <DeviceCard title="Lights" progress={95} type="light" />
         </DeviceGroup>
 
@@ -54,7 +52,7 @@ class Dashboard extends React.Component {
           <DeviceCard title="Zumifier" progress={55} type="humidity" />
           <DeviceCard title="Radiator" progress={40} type="temperature" />
           <DeviceCard title="Presence Light" progress={5} type="light" />
-        </DeviceGroup>
+        </DeviceGroup> */}
       </Container>
     )
   }
