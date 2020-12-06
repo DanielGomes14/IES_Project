@@ -57,8 +57,7 @@ public class Home{
 
     }
 
-    public Home(long id,User admin,String name,String address,String city,String state,String zipCode){
-        this.id = id;
+    public Home(User admin,String name,String address,String city,String state,String zipCode){
         this.admin = admin;
         this.name = name;
         this.address = address;

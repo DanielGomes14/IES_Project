@@ -19,8 +19,11 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+
+
     @GetMapping("/users")
     public  List<User>  getAllUsers(){
+        System.out.println(userRepository.findAll());
         return userRepository.findAll();
     }
 
@@ -29,5 +32,6 @@ public class UserController {
         if (userRepository.findByEmail(user.getEmail()) !=null) throw new ErrorDetails("There is already an user registered with the email \"" + user.getEmail() + "\""  );
         return userRepository.save(user);
     }
+
 
 }
