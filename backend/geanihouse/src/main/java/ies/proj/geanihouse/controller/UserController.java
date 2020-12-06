@@ -14,6 +14,7 @@ import java.util.Map;
     Daniel Gomes on
     6-12-2020
  */
+@RestController
 public class UserController {
     @Autowired
     private UserRepository userRepository;
