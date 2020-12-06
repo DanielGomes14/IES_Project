@@ -11,5 +11,4 @@ import java.util.List;
 
 public interface TypeRepository extends JpaRepository<Type, Long>{
         List<Type> findById(long id);
-        List<Type> findAllByHome_id(long id);
 }
