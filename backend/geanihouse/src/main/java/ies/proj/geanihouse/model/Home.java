@@ -51,7 +51,7 @@ public class Home{
 
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinTable(name = "user_homes",
+    @JoinTable(name = "User_Home",
             joinColumns = {
                     @JoinColumn(name = "home_id", referencedColumnName = "id",
                             nullable = false, updatable = false)},

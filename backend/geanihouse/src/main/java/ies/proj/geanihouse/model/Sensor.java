@@ -1,6 +1,7 @@
 package ies.proj.geanihouse.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table( name = "Sensor")
@@ -20,6 +21,9 @@ public class Sensor {
     @ManyToOne()
     @JoinColumn(name="type_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Type type;
+
+    @OneToMany(mappedBy="sensor")
+    private Set<SensorData> sensor_data;
 
     public Sensor(){
 
@@ -53,6 +57,10 @@ public class Sensor {
     }
     public void setType(Type type){
         this.type = type;
+    }
+
+    public Set<SensorData> getSensorData(){
+        return this.sensor_data;
     }
 
     public String toString(){
