@@ -3,6 +3,7 @@ package ies.proj.geanihouse.model;
 
 
 import javax.persistence.*;
+import java.util.Set;
 
 
 /*
@@ -19,13 +20,18 @@ public class Division{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    
+
     @ManyToOne()
     @JoinColumn(name="home_id", referencedColumnName = "id", insertable = false, updatable = false)    
     private Home home;
 
     @Column(name = "name", nullable = false,length=50)
     private String name ;
+
+    // maybe add this to this annotation (cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="division")
+    private Set<Sensor> sensors;
+
 
     public Division(){
 
@@ -61,6 +67,9 @@ public class Division{
         return this.name;
     }
 
+    public Set<Sensor> getSensors(){
+        return this.sensors;
+    }
 
     public String toString(){
         return this.home.getName()+ " : "+this.name;

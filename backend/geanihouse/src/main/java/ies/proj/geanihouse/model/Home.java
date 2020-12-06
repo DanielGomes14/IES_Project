@@ -22,6 +22,11 @@ public class Home{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    /*
+        Forgot One to Many for divisions
+     */
+
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "admin", referencedColumnName = "id")
     private User admin;
@@ -40,6 +45,10 @@ public class Home{
 
     @Column(name = "zip_code",length=15)
     private String zipCode;
+
+    @OneToMany(mappedBy="home")
+    private Set<Division> divisions;
+
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "user_homes",
@@ -123,6 +132,9 @@ public class Home{
         this.zipCode = zipCode;
     }
 
+    public Set<Division> getDivisions(){
+        return this.divisions;
+    }
 
 
 }
