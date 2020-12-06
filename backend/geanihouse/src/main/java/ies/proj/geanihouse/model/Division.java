@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class Division{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     
     @ManyToOne()
@@ -30,7 +30,8 @@ public class Division{
     public Division(){
 
     }
-    public Division(String name,Home home){
+    public Division(long id,String name,Home home){
+        this.id = id;
         this.name = name;
         this.home = home;
     }
@@ -59,7 +60,12 @@ public class Division{
     public String getName(){
         return this.name;
     }
-    
+
+
+    public String toString(){
+        return this.home.getName()+ " : "+this.name;
+    }
+
 }
 
 

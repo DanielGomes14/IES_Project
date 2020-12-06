@@ -19,7 +19,7 @@ import java.util.HashSet;
 public class Home{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -57,7 +57,8 @@ public class Home{
 
     }
 
-    public Home(User admin,String name,String address,String city,String state,String zipCode){
+    public Home(long id,User admin,String name,String address,String city,String state,String zipCode){
+        this.id = id;
         this.admin = admin;
         this.name = name;
         this.address = address;
