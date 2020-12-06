@@ -30,8 +30,8 @@ public class Division{
     public Division(){
 
     }
-    public Division(long id,String name,Home home){
-        this.id = id;
+    public Division(String name,Home home){
+        this.name = name;
         this.home = home;
     }
    
