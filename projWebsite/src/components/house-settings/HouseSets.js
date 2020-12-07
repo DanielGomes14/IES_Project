@@ -16,7 +16,7 @@ import {
 import DivisionService from "./../../services/DivisionService";
 
 
-class HouseSets extends React.Component{
+class HouseSets extends React.Component {
 	constructor() {
 		super();
 		this.OPTIONS = [
@@ -33,12 +33,13 @@ class HouseSets extends React.Component{
 
 	handleChange(event) {
 		const {name, value} = event.target;
-		this.setState({
-			[name]: value,
-		})
+		if (name == "custom")
+			this.setState({ custom: !this.state.custom });
+		else
+			this.setState({ [name]: value });
 	}
 	
-	handleChangeCheckBox(user) {
+	handleChangeCheckBox(e, user) {
 		var newState = this.state
 		for(let i = 0; i < this.state.OPTIONS.length; i++){
 			if(this.state.OPTIONS[i].id == user)
@@ -48,8 +49,9 @@ class HouseSets extends React.Component{
 	}
 
 	handleSubmit(event) {
-		alert('A name was submitted: ' + this.state.value);
-		DivisionService.addDivisions("1", this.state.name, this.state.OPTIONS);
+		console.log("jdsj")
+		alert('A name was submitted: ' + this.state.name);
+		// DivisionService.addDivisions("1", this.state.name, this.state.OPTIONS);
 		event.preventDefault();
 	}
 
@@ -62,7 +64,7 @@ class HouseSets extends React.Component{
 					{ 
 						this.state.OPTIONS.map(user => (
 							<div key={ user.name }>
-								<FormCheckbox checked={ user.checked } onChange={ this.handleChangeCheckBox(user.id) }>{ user.name }</FormCheckbox>
+								<FormCheckbox checked={ user.checked } onChange={ e => this.handleChangeCheckBox(e, user.id) }>{ user.name }</FormCheckbox>
 							</div>
 						))
 					}
@@ -97,7 +99,7 @@ class HouseSets extends React.Component{
 										{/* Permissions */}
 										<Col md="12" className="form-group">
 											<label htmlFor="Permissions for This Division">Permissions for This Division</label>
-											<FormSelect id="feInputState" onChange={ this.setState({ custom: !this.state.custom }) }>
+											<FormSelect id="feInputState" name="custom" onChange={ this.handleChange }>
 												<option checked={ this.state.custom }>Everyone can Configure</option>
 												<option>Custom</option>
 											</FormSelect>
@@ -111,7 +113,7 @@ class HouseSets extends React.Component{
 									</Row>
 									<Row form>
 									</Row>
-									<Button type="submit" theme="accent">Add new Division</Button>
+									<Button type="submit" theme="accent" value="Submit">Add new Division</Button>
 								</Form>
 							</Col>
 						</Row>
