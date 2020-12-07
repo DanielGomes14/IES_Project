@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 
 
 @Entity
-@Table(name = "Device")
+@Table(name = "Device_Log")
 public class DeviceLog {
 
     @Id

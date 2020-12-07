@@ -29,6 +29,9 @@ public class Device {
     @OneToMany(mappedBy="device")
     private Set<DeviceLog> deviceLogs;
 
+    @OneToMany(mappedBy="device")
+    private Set<DeviceConf> deviceConf;
+
     public Device(){
 
     }
