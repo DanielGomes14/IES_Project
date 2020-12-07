@@ -2,7 +2,11 @@ package ies.proj.geanihouse.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /*
@@ -17,20 +21,44 @@ import javax.persistence.*;
 public class Division{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    
+
     @ManyToOne()
-    @JoinColumn(name="home_id", referencedColumnName = "id", insertable = false, updatable = false)    
+    @JoinColumn(name="home_id", referencedColumnName = "id")
+    @JsonIgnoreProperties("divisions")
     private Home home;
 
     @Column(name = "name", nullable = false,length=50)
     private String name ;
 
+    /*
+    // maybe add this to this annotation (cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="division")
+    private Set<Sensor> sensors;
+
+    @OneToMany(mappedBy="division")
+    private Set<Device> devices;
+
+    @OneToMany(mappedBy="division")
+    private Set<DivisionConf> divisionConf;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "Division_Permissions",
+            joinColumns = {
+                    @JoinColumn(name = "division_id", referencedColumnName = "id",
+                            nullable = false, updatable = false)},
+            inverseJoinColumns = {
+                    @JoinColumn(name = "user_id", referencedColumnName = "id",
+                            nullable = false, updatable = false)})
+    private Set<User> users = new HashSet<>();
+    */
+
     public Division(){
 
     }
-    public Division(String name,Home home){
+    public Division(long id,String name,Home home){
+        this.id = id;
         this.name = name;
         this.home = home;
     }
@@ -59,7 +87,15 @@ public class Division{
     public String getName(){
         return this.name;
     }
-    
+    /*
+    public Set<Sensor> getSensors(){
+        return this.sensors;
+    }
+    */
+    public String toString(){
+        return this.getName();
+    }
+
 }
 
 

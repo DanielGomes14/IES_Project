@@ -1,6 +1,8 @@
 package ies.proj.geanihouse.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
@@ -19,8 +21,13 @@ import java.util.HashSet;
 public class Home{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    /*
+        Forgot One to Many for divisions
+     */
+
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "admin", referencedColumnName = "id")
@@ -41,8 +48,13 @@ public class Home{
     @Column(name = "zip_code",length=15)
     private String zipCode;
 
+    @OneToMany(mappedBy="home")
+    @JsonIgnoreProperties("home")
+    private Set<Division> divisions;
+
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinTable(name = "user_homes",
+    @JoinTable(name = "User_Home",
             joinColumns = {
                     @JoinColumn(name = "home_id", referencedColumnName = "id",
                             nullable = false, updatable = false)},
@@ -123,6 +135,12 @@ public class Home{
         this.zipCode = zipCode;
     }
 
+    public Set<Division> getDivisions(){
+        return this.divisions;
+    }
 
-
+    @Override
+    public String toString(){
+        return this.name + " : " + this.admin;
+    }
 }

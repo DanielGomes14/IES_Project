@@ -1,5 +1,7 @@
 package ies.proj.geanihouse.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.io.Serializable;
@@ -19,7 +21,7 @@ import java.util.HashSet;
 public class User{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "first_name", nullable = false,length=50)
@@ -40,21 +42,21 @@ public class User{
     @Column(name = "password",nullable = false)
     private String password;
 
-
-    
     @Lob
     @Column(name="profilepic")
     private byte[] profilepic;
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("admin")
     private Set<Home> homes = new HashSet<>();
-
 
     public User() {
 
     }
 
-    public User(String firstName, String lastName, String email, java.sql.Date birth, String sex ,String password) {
+    public User(long id,String firstName, String lastName, String email, java.sql.Date birth, String sex ,String password) {
+        this.id = id;
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -113,7 +115,7 @@ public class User{
     
     @Override
     public String toString() {
-        return "Employee [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", emailId=" + email
+        return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", emailId=" + email
                 + "]";
     }
 
