@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface HouseRepository extends  JpaRepository<Home,Long> {
+public interface HomeRepository extends  JpaRepository<Home,Long> {
     Home findById(long idl);
     List<Home> findAllByUsersContains(User user);
 }

@@ -1,5 +1,7 @@
 package ies.proj.geanihouse.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.io.Serializable;
@@ -40,15 +42,13 @@ public class User{
     @Column(name = "password",nullable = false)
     private String password;
 
-
-    
     @Lob
     @Column(name="profilepic")
     private byte[] profilepic;
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("admin")
     private Set<Home> homes = new HashSet<>();
-
 
     public User() {
 

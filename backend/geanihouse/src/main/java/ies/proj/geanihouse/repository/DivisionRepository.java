@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface DivisionRepository extends JpaRepository<Division, Long>{
-    List<Division> findById(long id);
+    Division findById(long id);
     List<Division> findAllByHome_id(long id);
 }

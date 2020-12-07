@@ -10,5 +10,5 @@ import java.util.List;
 
 
 public interface TypeRepository extends JpaRepository<Type, Long>{
-        List<Type> findById(long id);
+        Type findById(long id);
 }

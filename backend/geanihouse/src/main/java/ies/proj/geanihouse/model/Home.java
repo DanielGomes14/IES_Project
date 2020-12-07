@@ -1,6 +1,8 @@
 package ies.proj.geanihouse.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
@@ -47,6 +49,7 @@ public class Home{
     private String zipCode;
 
     @OneToMany(mappedBy="home")
+    @JsonIgnoreProperties("home")
     private Set<Division> divisions;
 
 
@@ -136,5 +139,8 @@ public class Home{
         return this.divisions;
     }
 
-
+    @Override
+    public String toString(){
+        return this.name + " : " + this.admin;
+    }
 }

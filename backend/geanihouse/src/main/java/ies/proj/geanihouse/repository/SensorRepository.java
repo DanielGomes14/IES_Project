@@ -8,5 +8,5 @@ import ies.proj.geanihouse.model.Sensor;
 import java.util.List;
 
 public interface SensorRepository extends JpaRepository<Sensor, Long>{
-    List<Sensor> findById(long id);
+    Sensor findById(long id);
 }

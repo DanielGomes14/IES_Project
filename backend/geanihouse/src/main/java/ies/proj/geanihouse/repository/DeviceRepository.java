@@ -8,5 +8,5 @@ import ies.proj.geanihouse.model.Device;
 import java.util.List;
 
 public interface DeviceRepository extends JpaRepository<Device, Long>{
-    List<Device> findById(long id);
+    Device findById(long id);
 }

@@ -8,5 +8,5 @@ import ies.proj.geanihouse.model.DivisionConf;
 import java.util.List;
 
 public interface DivisionConfRepository extends JpaRepository<DivisionConf, Long>{
-    List<DivisionConf> findById(long id);
+    DivisionConf findById(long id);
 }
