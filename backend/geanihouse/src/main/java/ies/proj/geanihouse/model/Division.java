@@ -32,6 +32,8 @@ public class Division{
     @OneToMany(mappedBy="division")
     private Set<Sensor> sensors;
 
+    @OneToMany(mappedBy="division")
+    private Set<Device> devices;
 
     public Division(){
 

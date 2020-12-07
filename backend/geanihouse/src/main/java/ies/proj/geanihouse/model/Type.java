@@ -17,6 +17,10 @@ public class Type {
     @OneToMany(mappedBy="type")
     private Set<Sensor> sensors;
 
+    @OneToMany(mappedBy="type")
+    private Set<Device> devices;
+
+
     public Type(){
 
     }
