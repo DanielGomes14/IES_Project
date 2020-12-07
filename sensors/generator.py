@@ -57,7 +57,8 @@ class Temperature(Generator):
 
                 for _ in range(10):
                     await asyncio.sleep(0)
-                    sensor_data[sensor].append( random.gauss(mu, cls.sigma) )
+                    sensor_data[sensor].append(
+                        round(random.gauss(mu, cls.sigma), 2))
                 cls.sensor_mu[sensor] = mu
 
             await cls.send_shuffled(sensor_data)
@@ -85,7 +86,8 @@ class Luminosity(Generator):
 
                 for _ in range(10):
                     await asyncio.sleep(0)
-                    sensor_data[sensor].append( random.gauss(mu * window_opened, cls.sigma) )
+                    sensor_data[sensor].append(
+                        round(random.gauss(mu, cls.sigma), 2))
                 cls.sensor_mu[sensor] = mu
 
             await cls.send_shuffled(sensor_data)
@@ -112,7 +114,8 @@ class Humidity(Generator):
 
                 for _ in range(10):
                     await asyncio.sleep(0)
-                    sensor_data[sensor].append( random.gauss(mu, cls.sigma) )
+                    sensor_data[sensor].append( 
+                        round(random.gauss(mu, cls.sigma), 2))
                 cls.sensor_mu[sensor] = mu
 
             await cls.send_shuffled(sensor_data)
@@ -153,7 +156,7 @@ client.loop_start()
 
 print("Device registered successfully!")
 
-client.subscribe("sensors")
+client.subscribe("Sensors")
 
 
 loop = asyncio.get_event_loop()
