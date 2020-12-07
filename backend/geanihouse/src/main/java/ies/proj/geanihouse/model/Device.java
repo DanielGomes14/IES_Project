@@ -1,7 +1,7 @@
 package ies.proj.geanihouse.model;
 
 import javax.persistence.*;
-
+import java.util.Set;
 
 
 @Entity
@@ -25,6 +25,9 @@ public class Device {
     @ManyToOne()
     @JoinColumn(name="division_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Division division;
+
+    @OneToMany(mappedBy="device")
+    private Set<DeviceLog> deviceLogs;
 
     public Device(){
 

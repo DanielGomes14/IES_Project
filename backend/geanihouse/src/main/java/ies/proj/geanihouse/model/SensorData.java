@@ -19,7 +19,7 @@ public class SensorData {
     private Sensor sensor;
 
     @CreationTimestamp
-    @Column(name = "timestamp_data")
+    @Column(name = "timestamp_date")
     private Timestamp timestampDate;
 
     @Column(name = "data")
