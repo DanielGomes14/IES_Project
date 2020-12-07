@@ -3,7 +3,6 @@ import { Container, Row } from "shards-react";
 
 import PageTitle from "./../components/common/PageTitle";
 import DeviceGroup from "./../components/dashboard/DeviceGroup";
-import DeviceCard from "./../components/dashboard/DeviceCard";
 
 import DivisionService from "./../services/DivisionService";
 
@@ -21,12 +20,19 @@ class Dashboard extends React.Component {
 		DivisionService.getDivisions()
 			.then(data => { this.setState({ 
 					loading: false,
-					divisions : data 
+					divisions: data 
 				}) 
 			});
 	}
   
 	render() {
+		const content = this.state.loading 
+			? (
+				this.state.divisions.map(div => (
+					<DeviceGroup division={ div } />
+				))
+			) : "LOADING...";
+
 		return (
 			<Container fluid className="main-content-container px-4">
 				{/* Page Header */}
@@ -34,14 +40,9 @@ class Dashboard extends React.Component {
 					<PageTitle title="Dashboard" subtitle="" className="text-sm-left mb-3" />
 				</Row>
 
-				{this.state.loading 
-					? this.state.divisions.map(div => {
-						return (
-							<DeviceGroup division={div} />
-						)
-					})
-					: "LOADING..."
-				}
+				{ content }
+
+				
 
 				{/* <DeviceGroup division="Kitchen">
 				<DeviceCard title="Lights" progress={95} type="light" />
