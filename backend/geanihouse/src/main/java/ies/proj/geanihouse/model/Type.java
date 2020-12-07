@@ -20,6 +20,8 @@ public class Type {
     @OneToMany(mappedBy="type")
     private Set<Device> devices;
 
+    @OneToMany(mappedBy="type")
+    private Set<DivisionConf> divisionConf;
 
     public Type(){
 

@@ -35,6 +35,9 @@ public class Division{
     @OneToMany(mappedBy="division")
     private Set<Device> devices;
 
+    @OneToMany(mappedBy="division")
+    private Set<DivisionConf> divisionConf;
+
     public Division(){
 
     }
