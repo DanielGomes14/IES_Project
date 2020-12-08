@@ -37,9 +37,7 @@ public class User{
     @Column(name = "role",nullable = false)
     private String role;                   //add new roles maybe (admin)
 
-    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("admin")
-    private Set<Home> homes = new HashSet<>();
+
 
     //OneToOne Client
     @OneToOne(mappedBy = "user")

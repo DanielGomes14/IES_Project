@@ -1,6 +1,6 @@
 import baseURL from "./../data/base-url";
 
-const DIVISIONS_REST_API_URL = "homes/"
+const DIVISIONS_REST_API_URL = "1/divisions/"
 
 class DivisionService {
 
@@ -14,8 +14,7 @@ class DivisionService {
                     authorization: 'Basic ' + window.btoa('chico' + ":" + 'randomquerty')
                 }
             })
-            .then(res => res.json())
-            .then(data => console.log(data));
+            .then(res => res.json());
     }
 
     addDivisions(home_id, name, users_id) {

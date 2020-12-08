@@ -22,11 +22,11 @@ class Dashboard extends React.Component {
 					loading: false,
 					divisions: data
 				}) 
-			})
+			});
 	}
   
 	render() {
-		const content = this.state.loading 
+		const content = true
 			? (
 				this.state.divisions.map(div => (
 					<DeviceGroup division={ div } />

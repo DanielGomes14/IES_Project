@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface ClientRepository extends  JpaRepository<Client,Long> {
     Client findById(long idl);
+    Client findByEmail(String email);
 }
