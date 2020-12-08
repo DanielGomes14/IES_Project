@@ -6,7 +6,6 @@ import DeviceGroup from "./../components/dashboard/DeviceGroup";
 import DeviceCard from "./../components/dashboard/DeviceCard";
 
 import DivisionService from "./../services/DivisionService";
-import DivisionGraph from "../components/statistics/DivisionGraph";
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -30,15 +29,13 @@ class Dashboard extends React.Component {
           <PageTitle title="Dashboard" subtitle="" className="text-sm-left mb-3" />
         </Row>
 
-          {this.state.divisions.map((divison) => {
+          {this.state.divisions.map((div) => {
               return (
-                <DeviceGroup division={division.name} >
-                  <DeviceCard title="Lights" progress={95} type="light" />
-                </DeviceGroup>
+                <DeviceGroup division={div} />
               )
           })}
         
-        <DeviceGroup division="Kitchen">
+        {/* <DeviceGroup division="Kitchen">
           <DeviceCard title="Lights" progress={95} type="light" />
         </DeviceGroup>
 
@@ -55,7 +52,7 @@ class Dashboard extends React.Component {
           <DeviceCard title="Zumifier" progress={55} type="humidity" />
           <DeviceCard title="Radiator" progress={40} type="temperature" />
           <DeviceCard title="Presence Light" progress={5} type="light" />
-        </DeviceGroup>
+        </DeviceGroup> */}
       </Container>
     )
   }
