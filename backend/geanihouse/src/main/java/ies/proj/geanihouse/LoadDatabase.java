@@ -15,22 +15,27 @@ class LoadDatabase {
 
 
     @Bean
-    CommandLineRunner initDatabase(UserRepository users, HomeRepository homes,
+    CommandLineRunner initDatabase(UserRepository users,ClientRepository clients, HomeRepository homes,
                        DivisionRepository divisions, TypeRepository types,
                        SensorRepository sensors) {
 
         return args -> {
 
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            User user = new User("chico",encoder.encode("randomquerty"),"Admin");
+            User user = new User(1,"chico",encoder.encode("randomquerty"),"Admin");
             users.save(user);
+
+            Client c = new Client(1,"Chiquit","Silva","teste@gmail.com","Male",user);
+            clients.save(c);
+            homes.save(new Home(1,clients.findByEmail("teste@gmail.com"),"Casa do Chico","ali","ok","adeus","zip"));
+            divisions.save(new Division(1,"sala",homes.findById(1)));
+            divisions.save(new Division(2,"WC",homes.findById(1)));
 
             /*
             users.save(new User(1,"Chico", "Silva", "ace@cs.go",null,"Alpha Male","randomquerty"));
             users.save(new User(2,"Leandro", "Silva", "bot@cs.go",null,"Female","pass"));
             homes.save(new Home(1,users.findById(1),"Casa do Chico","ali","ok","adeus","zip"));
-            divisions.save(new Division(1,"sala",homes.findById(1)));
-            divisions.save(new Division(2,"WC",homes.findById(1)));
+
             types.save(new Type(1,"Temperature"));
             sensors.save(new Sensor(1,divisions.findById(1),types.findById(1)));
             */

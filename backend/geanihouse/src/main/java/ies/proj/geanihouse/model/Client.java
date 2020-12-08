@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.TypeAlias;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Client")
@@ -39,14 +41,22 @@ public class Client {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    public Client(long id,String firstName, String lastName, String email, java.sql.Date birth, String sex) {
+    @ManyToMany(mappedBy = "clients", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("admin")
+    private Set<Home> homes = new HashSet<>();
+
+    public  Client(){
+
+    }
+    public Client(long id,String firstName, String lastName, String email, String sex, User user) {
         this.id = id;
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.birth=birth;
+        //this.birth=birth;
         this.sex=sex;
+        this.user=user;
     }
 
     public java.sql.Date getStartDate() {
