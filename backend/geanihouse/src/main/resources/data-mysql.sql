@@ -1,0 +1,1 @@
+INSERT INTO user (first_name, last_name,email,sex,birth,password,profilepic)  VALUES ('chico','silva','chicohacker@ua.pt', 'Male', '17-06-2000', 'pwd',null);
