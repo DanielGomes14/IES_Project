@@ -24,11 +24,6 @@ public class Home{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    /*
-        Forgot One to Many for divisions
-     */
-
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "admin", referencedColumnName = "id")
     private User admin;
