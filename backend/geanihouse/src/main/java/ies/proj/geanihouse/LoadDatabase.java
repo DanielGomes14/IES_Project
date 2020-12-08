@@ -24,6 +24,7 @@ class LoadDatabase {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             User user = new User("chico",encoder.encode("randomquerty"),"Admin");
             users.save(user);
+
             /*
             users.save(new User(1,"Chico", "Silva", "ace@cs.go",null,"Alpha Male","randomquerty"));
             users.save(new User(2,"Leandro", "Silva", "bot@cs.go",null,"Female","pass"));
