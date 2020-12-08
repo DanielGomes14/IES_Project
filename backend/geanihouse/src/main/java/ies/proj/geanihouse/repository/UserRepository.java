@@ -8,6 +8,7 @@ import ies.proj.geanihouse.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long>{
+
     User findById(long idl);
     //User findByEmail(String email);
 
