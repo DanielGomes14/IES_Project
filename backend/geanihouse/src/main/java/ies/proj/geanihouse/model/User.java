@@ -50,6 +50,11 @@ public class User{
 
     }
 
+    public User( String username, String password,String role){
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
     public User(long id, String username, String password,String role){
         this.id = id;
         this.username = username;
@@ -97,5 +102,6 @@ public class User{
     public void setRoles(String role) {
         this.role = role;
     }
+    public Client getClient(){return client;}
 
 }

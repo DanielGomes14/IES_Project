@@ -29,7 +29,7 @@ public class UserController {
 
     @PostMapping("/register")
     public User registerUser(@Valid @RequestBody User user) throws ErrorDetails {
-        if (userRepository.findByEmail(user.getEmail()) !=null) throw new ErrorDetails("There is already an user registered with the email \"" + user.getEmail() + "\""  );
+        if (userRepository.findByUsername(user.getUsername()) !=null) throw new ErrorDetails("There is already an user registered with the username \"" + user.getUsername() + "\""  );
         return userRepository.save(user);
     }
 
