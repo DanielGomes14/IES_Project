@@ -56,6 +56,7 @@ public class Home{
             inverseJoinColumns = {
                     @JoinColumn(name = "client_id", referencedColumnName = "id",
                             nullable = false, updatable = false)})
+    @JsonIgnoreProperties("homes")
     private Set<Client> clients = new HashSet<>();
 
     public Set<Client> getClients(){

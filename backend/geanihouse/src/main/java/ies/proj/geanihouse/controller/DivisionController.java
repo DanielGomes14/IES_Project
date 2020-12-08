@@ -1,6 +1,7 @@
 package ies.proj.geanihouse.controller;
 import ies.proj.geanihouse.exception.ErrorDetails;
 import ies.proj.geanihouse.model.Division;
+import ies.proj.geanihouse.model.Home;
 import ies.proj.geanihouse.model.User;
 import ies.proj.geanihouse.repository.DivisionRepository;
 import ies.proj.geanihouse.repository.UserRepository;
@@ -18,12 +19,12 @@ public class DivisionController {
     private DivisionRepository divisionRepository;
     @Autowired
     private  UserRepository userRepository;
-    @GetMapping("/divisions/")
-    public List<Division> getAllHomeDivisions(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(authentication.getName());
+    @GetMapping("/{id}/divisions/")
+    public List<Division> getAllHomeDivisions(@PathVariable(value = "id") Long id)  {
+        List <Division> divisions = divisionRepository.findAllByHome_id(id);
+        System.out.println(divisions);
 
-        return  divisionRepository.findAll();
+        return  divisions;
     }
 
     @PostMapping("/divisions")

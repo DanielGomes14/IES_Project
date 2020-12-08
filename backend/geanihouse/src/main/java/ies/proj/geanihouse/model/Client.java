@@ -1,6 +1,7 @@
 package ies.proj.geanihouse.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.TypeAlias;
 
@@ -42,7 +43,7 @@ public class Client {
     private User user;
 
     @ManyToMany(mappedBy = "clients", fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("admin")
+    @JsonIgnore
     private Set<Home> homes = new HashSet<>();
 
     public  Client(){
@@ -106,11 +107,15 @@ public class Client {
         this.profilepic = pic;
     }
 
+    public Set<Home> getHomes() {
+        return homes;
+    }
     @Override
     public String toString() {
         return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", emailId=" + email
                 + "]";
     }
+
 
 
 }
