@@ -22,7 +22,7 @@ class LoadDatabase {
         return args -> {
 
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            User user = new User("chico",encoder.encode("randomquerty"),"Admin");
+            User user = new User(1,"chico",encoder.encode("randomquerty"),"Admin");
             users.save(user);
 
             /*

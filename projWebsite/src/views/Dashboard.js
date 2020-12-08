@@ -23,7 +23,6 @@ class Dashboard extends React.Component {
 					divisions: data
 				}) 
 			})
-			.then(data => console.log(data.length));
 	}
   
 	render() {
@@ -43,7 +42,6 @@ class Dashboard extends React.Component {
 
 				{ content }
 				
-				value: { this.state.loading }
 				
 
 				{/* <DeviceGroup division="Kitchen">

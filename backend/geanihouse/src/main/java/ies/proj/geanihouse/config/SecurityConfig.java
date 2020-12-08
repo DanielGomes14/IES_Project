@@ -18,7 +18,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-
     private static final String[] AUTH_WHITELIST = {
             "/homes", "/users"
     };
