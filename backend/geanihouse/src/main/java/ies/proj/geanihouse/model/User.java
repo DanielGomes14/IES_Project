@@ -24,99 +24,78 @@ public class User{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "first_name", nullable = false,length=50)
-    private String firstName;
+    @Column(name = "username",nullable = false)
+    private String username;
 
-    @Column(name = "last_name", nullable = false,length=50)
-    private String lastName;
-    
-    @Column(name = "email", nullable = false,length=320) 
-    private String email;
-
-    @Column(name = "sex" ,length=10)
-    private String sex;
-    
-    @Column(name = "birth")
-    private java.sql.Date birth;
-
-    @Column(name = "password",nullable = false)
+    //@ToString.Exclude             needs lombok
+    @Column(name = "password")
     private String password;
 
-    @Lob
-    @Column(name="profilepic")
-    private byte[] profilepic;
+    @Column(name = "is_active",nullable = false)
+    private boolean active = true;
+
+    @Column(name = "role",nullable = false)
+    private String role;                   //add new roles maybe (admin)
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
     @JsonIgnoreProperties("admin")
     private Set<Home> homes = new HashSet<>();
 
-    public User() {
+    //OneToOne Client
+    @OneToOne(mappedBy = "user")
+    private Client client;
+
+
+    public User(){
 
     }
 
-    public User(long id,String firstName, String lastName, String email, java.sql.Date birth, String sex ,String password) {
+    public User(long id, String username, String password,String role){
         this.id = id;
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.birth=birth;
-        this.sex=sex;
-        this.password=password;
-
+        this.username = username;
+        this.password = password;
+        this.role = role;
     }
 
-    public java.sql.Date getStartDate() {
-        return birth;
-    }
-    
-    public void setStartDate(java.sql.Date birth) {
-    this.birth = birth;
-    }
-
-    private void setSex( String sex){
-        this.sex=sex;
-    }
 
     public long getId() {
         return id;
     }
+
     public void setId(long id) {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public String getUsername() {
+        return username;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
+    public String getPassword() {
+        return password;
     }
 
-    public byte[] getPic(){
-        return this.profilepic;
+    public void setPassword(String password) {
+        this.password = password;
     }
-    public void setPic(byte[] pic){
-        this.profilepic = pic;
+
+    public boolean isActive() {
+        return active;
     }
-    
-    @Override
-    public String toString() {
-        return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", emailId=" + email
-                + "]";
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String getRoles() {
+        return role;
+    }
+
+    public void setRoles(String role) {
+        this.role = role;
     }
 
 }
