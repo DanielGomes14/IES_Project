@@ -1,6 +1,6 @@
 package ies.proj.geanihouse.controller;
 import ies.proj.geanihouse.model.Home;
-import ies.proj.geanihouse.repository.HouseRepository;
+import ies.proj.geanihouse.repository.HomeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import ies.proj.geanihouse.repository.UserRepository;
 
@@ -9,12 +9,12 @@ import java.util.List;
 @RestController
 public class HouseController {
     @Autowired
-    private HouseRepository houseRepository;
+    private HomeRepository homeRepository;
 
 
     @GetMapping("/homes")
     public  List<Home> getAllUserHomes(){
-        return  houseRepository.findAll();
+        return  homeRepository.findAll();
     }
 
 }
