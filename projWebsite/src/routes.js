@@ -23,6 +23,7 @@ import Stasticis from "./views/Statistics";
 import UserProfile from "./views/UserProfile";
 import NewHouse from "./views/NewHouse";
 import NewConfiguration from "./views/NewConfiguration"
+import NewSensor from "./views/NewSensor";
 
 export default [
   {
@@ -91,6 +92,11 @@ export default [
     path: "/newdevice",
     layout: DefaultLayout,
     component : NewDevice
+  },
+  {    
+    path: "/newsensor",
+    layout: DefaultLayout,
+    component : NewSensor
   },
   {
     path: "/group-settings",
