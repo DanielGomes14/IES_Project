@@ -1,5 +1,4 @@
 import random
-import time
 import asyncio
 import paho.mqtt.client as mqtt
 import json
@@ -30,14 +29,14 @@ class Generator:
                 'sensor_id': sensor_id,
                 'type': str.lower(cls.__name__), 
                 'value': round(value, 2),
-                'timestamp': str(datetime.now())
+                'timestamp': datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
             })
             # send data to rabbit
             publish(topic=cls.__name__, message=json.dumps( {
                 'sensor_id': sensor_id,
                 'type': str.lower(cls.__name__), 
                 'value': round(value, 2),
-                'timestamp': str(datetime.now())
+                'timestamp': datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
             } ))
 
             if sensor_id not in cls.sensor_mu:
