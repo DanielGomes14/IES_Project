@@ -26,7 +26,7 @@ public class Home{
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "admin", referencedColumnName = "id")
-    private User admin;
+    private Client admin;
 
     @Column(name = "name", nullable = false,length=100)
     private String name;
@@ -49,22 +49,25 @@ public class Home{
 
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    @JoinTable(name = "User_Home",
+    @JoinTable(name = "Client_Home",
             joinColumns = {
                     @JoinColumn(name = "home_id", referencedColumnName = "id",
                             nullable = false, updatable = false)},
             inverseJoinColumns = {
-                    @JoinColumn(name = "user_id", referencedColumnName = "id",
+                    @JoinColumn(name = "client_id", referencedColumnName = "id",
                             nullable = false, updatable = false)})
-    private Set<User> users = new HashSet<>();
+    @JsonIgnoreProperties("homes")
+    private Set<Client> clients = new HashSet<>();
 
-
+    public Set<Client> getClients(){
+        return clients;
+    }
     
     public Home(){
 
     }
 
-    public Home(long id,User admin,String name,String address,String city,String state,String zipCode){
+    public Home(long id,Client admin,String name,String address,String city,String state,String zipCode){
         this.id = id;
         this.admin = admin;
         this.name = name;
@@ -82,11 +85,11 @@ public class Home{
         this.id = id;
     }
 
-    public User getAdmin(){
+    public Client getAdmin(){
         return this.admin;
     }
 
-    public void setAdmin(User admin){
+    public void setAdmin(Client admin){
         this.admin = admin;
     }
 

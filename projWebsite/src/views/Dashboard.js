@@ -20,13 +20,13 @@ class Dashboard extends React.Component {
 		DivisionService.getDivisions()
 			.then(data => { this.setState({ 
 					loading: false,
-					divisions: data 
+					divisions: data
 				}) 
 			});
 	}
   
 	render() {
-		const content = this.state.loading 
+		const content = true
 			? (
 				this.state.divisions.map(div => (
 					<DeviceGroup division={ div } />
@@ -41,7 +41,7 @@ class Dashboard extends React.Component {
 				</Row>
 
 				{ content }
-
+				
 				
 
 				{/* <DeviceGroup division="Kitchen">
