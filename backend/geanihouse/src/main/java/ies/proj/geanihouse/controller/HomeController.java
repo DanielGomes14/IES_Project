@@ -4,6 +4,9 @@ import ies.proj.geanihouse.model.Client;
 import ies.proj.geanihouse.model.Home;
 import ies.proj.geanihouse.model.User;
 import ies.proj.geanihouse.repository.HomeRepository;
+import org.apache.juli.logging.Log;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import ies.proj.geanihouse.repository.UserRepository;
 
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 @RestController
 public class HomeController {
+    private static final Logger LOG = LogManager.getLogger(HomeController.class);
     @Autowired
     private HomeRepository homeRepository;
     @Autowired
@@ -21,20 +25,23 @@ public class HomeController {
     @GetMapping("/homes")
     public  List<Home> getAllUserHomes(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        LOG.info(authentication.getName());
         //ver melhor
-        if(authentication.getName()!=null) {
+        LOG.info("GET Request to /homes ");
+        if(!authentication.getName().equals("anonymousUser")) {
+            LOG.debug("User is authenticated");
             User user = userRepository.findByUsername(authentication.getName());
-            System.out.println(user);
             Client c = user.getClient();
-            System.out.println(c);
+
             List<Home> homes = homeRepository.findAll();
-            System.out.println("-!->" + c.getHomes());
+
             for (Home home : homes) {
-                System.out.println("-->" + home.getClients());
+                LOG.info("-->" + home.getClients());
             }
             System.out.println(homeRepository.findAllByClients_id(c.getId()));
             return homeRepository.findAllByClients_id(c.getId());
         }
+        LOG.error("User not authenticated!");
        return  null;
 
     }
