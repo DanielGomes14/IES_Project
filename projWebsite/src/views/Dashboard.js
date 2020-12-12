@@ -17,8 +17,10 @@ class Dashboard extends React.Component {
 
 	componentDidMount() {
 		this.setState({ loading: true });
-		DivisionService.getDivisions()
-			.then(data => { this.setState({ 
+		DivisionService.getDivisions(1)
+			.then(data => { 
+				console.log(data);
+				this.setState({ 
 					loading: false,
 					divisions: data
 				}) 
@@ -26,10 +28,10 @@ class Dashboard extends React.Component {
 	}
   
 	render() {
-		const content = true
+		const content = !this.state.loading
 			? (
 				this.state.divisions.map(div => (
-					<DeviceGroup division={ div } />
+					<DeviceGroup key={ div.id } division={ div } />
 				))
 			) : "LOADING...";
 
@@ -41,8 +43,6 @@ class Dashboard extends React.Component {
 				</Row>
 
 				{ content }
-				
-				
 
 				{/* <DeviceGroup division="Kitchen">
 				<DeviceCard title="Lights" progress={95} type="light" />

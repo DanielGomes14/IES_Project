@@ -3,6 +3,7 @@ import time
 import asyncio
 import paho.mqtt.client as mqtt
 import json
+from datetime import datetime
 
 # client, user and device details
 serverUrl   = "crow.rmq.cloudamqp.com"
@@ -19,14 +20,23 @@ class Generator:
     @classmethod
     async def send_shuffled(cls, sensor_data):
         while sensor_data:
-            await asyncio.sleep(1)
+            await asyncio.sleep(5)
             rnd_sensor = random.choice(list(sensor_data.keys()))
 
             value = sensor_data[rnd_sensor].pop(0)
-            print(cls.__name__, {'sensor_id': rnd_sensor, 'value': value})
+            print(cls.__name__, {
+                'sensor_id': rnd_sensor,
+                'type': str.lower(cls.__name__), 
+                'value': round(value, 2),
+                'timestamp': str(datetime.now())
+            })
             # send data to rabbit
-            publish(topic=cls.__name__, 
-                message=json.dumps( {'sensor_id': rnd_sensor, 'value': value} ))
+            publish(topic=cls.__name__, message=json.dumps( {
+                'sensor_id': rnd_sensor,
+                'type': str.lower(cls.__name__), 
+                'value': round(value, 2),
+                'timestamp': str(datetime.now())
+            } ))
 
             if rnd_sensor not in cls.sensor_mu:
                 # deleted my rabbitMQ meanwhile
@@ -153,7 +163,7 @@ client.loop_start()
 
 print("Device registered successfully!")
 
-client.subscribe("sensors")
+client.subscribe("sensors", qos=0)
 
 
 loop = asyncio.get_event_loop()

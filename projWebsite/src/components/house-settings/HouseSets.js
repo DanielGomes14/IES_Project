@@ -17,8 +17,8 @@ import DivisionService from "./../../services/DivisionService";
 
 
 class HouseSets extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.OPTIONS = [
 			{ id: 1, name: "Daniel", checked: true },
 			{ id: 2, name: "Leandro", checked: true },
@@ -49,10 +49,13 @@ class HouseSets extends React.Component {
 	}
 
 	handleSubmit(event) {
-		console.log("jdsj")
-		alert('A name was submitted: ' + this.state.name);
-		// DivisionService.addDivisions("1", this.state.name, this.state.OPTIONS);
-		event.preventDefault();
+		alert('A name was submitted: ' + this.state.OPTIONS.filter(function(opt) {if (opt.checked) return opt.id;}).map(opt => opt.id + opt.name + opt.checked));
+		// DivisionService.addDivisions(
+		// 	1, this.state.name,
+		// 	this.state.OPTIONS.filter(function(opt) {
+		// 		if (opt.checked) return opt.id;
+		// 	})
+		// );
 	}
 
 	render() {
@@ -113,7 +116,7 @@ class HouseSets extends React.Component {
 									</Row>
 									<Row form>
 									</Row>
-									<Button type="submit" theme="accent" value="Submit">Add new Division</Button>
+									<Button theme="accent" value="Submit" onClick={ this.handleSubmit }>Add new Division</Button>
 								</Form>
 							</Col>
 						</Row>
