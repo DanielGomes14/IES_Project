@@ -78,6 +78,7 @@ public class DeviceConf {
         this.device = device;
     }
 
+
     public String toString(){
         return this.device.getName() + " : "+ this.timeBegin.toString() ;
     }

@@ -59,6 +59,10 @@ public class SensorData {
         this.timestampDate = timestampDate;
     }
 
+    public double getData() {
+        return data;
+    }
+
     public String toString(){
         return this.sensor.getDivision().getName() + ", Type  " + this.sensor.getType().getName()
                 + ", Time: " + this.timestampDate.toString();

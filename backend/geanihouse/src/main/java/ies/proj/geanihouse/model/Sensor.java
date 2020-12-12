@@ -63,6 +63,10 @@ public class Sensor {
         return this.sensor_data;
     }
 
+    public Set<SensorData> getSensor_data() {
+        return sensor_data;
+    }
+
     public String toString(){
         return this.division.getName() + ": "+ this.type.getName();
     }

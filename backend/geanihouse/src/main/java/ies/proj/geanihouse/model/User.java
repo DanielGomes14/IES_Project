@@ -93,7 +93,7 @@ public class User{
         this.active = active;
     }
 
-    public String getRoles() {
+    public String getRole() {
         return role;
     }
 
