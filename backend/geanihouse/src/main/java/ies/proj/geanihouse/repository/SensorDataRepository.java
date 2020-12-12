@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface SensorDataRepository extends JpaRepository<SensorData, Long>{
     SensorData findById(long id);
+    List<SensorData> findAllBySensor_Division_Home_Id(long id);
 }
