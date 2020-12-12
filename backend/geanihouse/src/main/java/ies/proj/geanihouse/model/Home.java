@@ -137,6 +137,7 @@ public class Home{
         return this.divisions;
     }
 
+
     @Override
     public String toString(){
         return this.name + " : " + this.admin;

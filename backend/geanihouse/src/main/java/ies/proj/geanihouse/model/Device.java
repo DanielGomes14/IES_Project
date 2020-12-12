@@ -44,6 +44,18 @@ public class Device {
         this.division = division;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public Set<DeviceLog> getDeviceLogs() {
+        return deviceLogs;
+    }
+
+    public Set<DeviceConf> getDeviceConf() {
+        return deviceConf;
+    }
+
     public String getName(){
         return this.name;
     }

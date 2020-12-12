@@ -54,5 +54,11 @@ public class Type {
         return "Type: "+this.name;
     }
 
+    public Set<Device> getDevices() {
+        return devices;
+    }
 
+    public Set<DivisionConf> getDivisionConf() {
+        return divisionConf;
+    }
 }

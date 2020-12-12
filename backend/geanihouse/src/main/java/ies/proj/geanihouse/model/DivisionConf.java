@@ -76,6 +76,7 @@ public class DivisionConf {
         this.type = type;
     }
 
+
     public String toString(){
         return this.division.getName() + " : " + this.minValue + " - " + this.maxValue + " > " + this.type.getName();
     }
