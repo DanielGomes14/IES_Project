@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.TypeAlias;
 
 import javax.persistence.*;
+import java.sql.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,6 +41,7 @@ public class Client {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnore
     private User user;
 
     @ManyToMany(mappedBy = "clients", fetch = FetchType.LAZY)
@@ -105,6 +107,22 @@ public class Client {
     }
     public void setPic(byte[] pic){
         this.profilepic = pic;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public Date getBirth() {
+        return birth;
+    }
+
+    public byte[] getProfilepic() {
+        return profilepic;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public Set<Home> getHomes() {

@@ -69,6 +69,8 @@ public class DeviceLog {
         this.id = id;
     }
 
+
+
     public String toString(){
         return this.device.getName() + " : " + this.timestampDate.toString()+ " : " + this.data;
     }

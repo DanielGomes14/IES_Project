@@ -32,7 +32,7 @@ public class Division{
     @Column(name = "name", nullable = false,length=50)
     private String name ;
 
-    /*
+
     // maybe add this to this annotation (cascade = CascadeType.ALL, orphanRemoval = true)
     @OneToMany(mappedBy="division")
     private Set<Sensor> sensors;
@@ -52,7 +52,8 @@ public class Division{
                     @JoinColumn(name = "user_id", referencedColumnName = "id",
                             nullable = false, updatable = false)})
     private Set<User> users = new HashSet<>();
-    */
+
+
 
     public Division(){
 
@@ -87,11 +88,24 @@ public class Division{
     public String getName(){
         return this.name;
     }
-    /*
+
     public Set<Sensor> getSensors(){
         return this.sensors;
     }
-    */
+
+    public Set<Device> getDevices(){
+        return this.devices;
+    }
+
+    public Set<DivisionConf> getDivisionConf() {
+        return divisionConf;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+
     public String toString(){
         return this.getName();
     }
