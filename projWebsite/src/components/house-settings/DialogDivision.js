@@ -75,15 +75,15 @@ export default function MaxWidthDialog({content,al}) {
           <FormControl component="fieldset" className={classes.formControl}>
                 <FormGroup>
                 {
-                    state.users.map((person) => {
-                        return (
-                            <FormControlLabel
+                    state.users.map(person => (
+                        <div key={person.id}>
+                          <FormControlLabel
                             control={<Checkbox checked={person.checked}  color="primary" onChange={e => handleChange(e,person.id)} name="gilad" />}
                             label={person.name}
-                        />
-                        );
-                    })
-                    }
+                          />
+                        </div>
+                    ))
+                  }
                 </FormGroup>
                 </FormControl>
         </DialogContent>
