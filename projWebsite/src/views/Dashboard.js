@@ -10,31 +10,42 @@ class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			loading: false,
+			loading: 0,
 			divisions: []
 		}
   	}
 
 	componentDidMount() {
-		this.setState({ loading: true });
+		this.setState({ loading: 1 });
 		DivisionService.getDivisions(1)
 			.then(data => { 
 				console.log(data);
 				this.setState({ 
-					loading: false,
+					loading: 0,
 					divisions: data
 				}) 
+			})
+			.catch(error => {
+				console.log(error) ;
+				this.setState({ loading: 2 })
 			});
 	}
   
 	render() {
-		const content = !this.state.loading
-			? (
-				this.state.divisions.map(div => (
+		var content = ""
+		switch(this.state.loading) {
+			case 0:
+				content = this.state.divisions.map(div => (
 					<DeviceGroup key={ div.id } division={ div } />
 				))
-			) : "LOADING...";
-
+				break;
+			case 1:
+				content = "Loading...";
+				break;
+			case 2:
+				content = "Ups! Something Went Wrong...";
+				break;
+		}
 		return (
 			<Container fluid className="main-content-container px-4">
 				{/* Page Header */}

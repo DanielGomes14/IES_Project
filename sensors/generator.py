@@ -165,11 +165,7 @@ client.loop_start()
 
 print("Device registered successfully!")
 
-<<<<<<< HEAD
-client.subscribe("sensors")
-=======
 client.subscribe("sensors", qos=0)
->>>>>>> cd111361fbf5e56525f05169808f624c9606ae18
 
 
 loop = asyncio.get_event_loop()
