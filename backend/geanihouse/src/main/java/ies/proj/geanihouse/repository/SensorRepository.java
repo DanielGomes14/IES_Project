@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import ies.proj.geanihouse.model.Sensor;
 
 import java.util.List;
-
+@Repository
 public interface SensorRepository extends JpaRepository<Sensor, Long>{
     Sensor findById(long id);
     List<Sensor> findAllByDivision_id(long id);

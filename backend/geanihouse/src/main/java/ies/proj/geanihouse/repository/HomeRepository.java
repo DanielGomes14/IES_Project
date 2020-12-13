@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface HomeRepository extends  JpaRepository<Home,Long> {
     Home findById(long idl);
     List<Home> findAllByClients_id(long id);
