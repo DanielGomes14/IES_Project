@@ -1,5 +1,7 @@
 package ies.proj.geanihouse.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -23,6 +25,7 @@ public class Sensor {
     private Type type;
 
     @OneToMany(mappedBy="sensor")
+    @JsonIgnore
     private Set<SensorData> sensor_data;
 
     public Sensor(){
@@ -68,7 +71,7 @@ public class Sensor {
     }
 
     public String toString(){
-        return this.division.getName() + ": "+ this.type.getName();
+        return this.division + ": "+ this.type;
     }
 
 
