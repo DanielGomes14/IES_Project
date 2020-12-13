@@ -17,6 +17,31 @@ import { FaLightbulb, FaTemperatureHigh, FaPlayCircle, FaCoffee, FaWifi, FaWind,
 import { IoWater } from "react-icons/io5";
 
 
+class FormNewSensor extends React.Component {
+
+	constructor(props) {
+		super(props);
+	}
+
+	handleChange(event) {
+		const {name, value} = event.target;
+		// if (name == "custom")
+		// 	this.setState({ custom: !this.state.custom });
+		// else
+		// 	this.setState({ [name]: value });
+	}
+	
+	handleSubmit(event) {
+		alert('A name was submitted: ' + '');
+		// DivisionService.addDivisions(
+		// 	1, this.state.name,
+		// 	this.state.OPTIONS.filter(function(opt) {
+		// 		if (opt.checked) return opt.id;
+		// 	})
+		// );
+	}
+
+
 const { Option } = components
 const CustomSelectOption = props => (
   <Option {...props} selectProps>
@@ -69,12 +94,12 @@ const FormNewDevice = ({ title }) => (
         </Card>
 );
 
-FormNewDevice.propTypes = {
+FormNewSensor.propTypes = {
     title: PropTypes.string
 };
 
-FormNewDevice.defaultProps = {
+FormNewSensor.defaultProps = {
 title: "Add Sensor To Division"
 };
 
-export default FormNewDevice;
+export default FormNewSensor;
