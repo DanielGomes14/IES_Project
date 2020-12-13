@@ -7,6 +7,7 @@ import ies.proj.geanihouse.model.DeviceConf;
 
 import java.util.List;
 
+@Repository
 public interface DeviceConfRepository extends JpaRepository<DeviceConf, Long>{
     DeviceConf findById(long id);
 }

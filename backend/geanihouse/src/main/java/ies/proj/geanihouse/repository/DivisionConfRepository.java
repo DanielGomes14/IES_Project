@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import ies.proj.geanihouse.model.DivisionConf;
 
 import java.util.List;
-
+@Repository
 public interface DivisionConfRepository extends JpaRepository<DivisionConf, Long>{
     DivisionConf findById(long id);
 }
