@@ -50,12 +50,9 @@ class HouseSets extends React.Component {
 
 	handleSubmit(event) {
 		alert('A name was submitted: ' + this.state.OPTIONS.filter(function(opt) {if (opt.checked) return opt.id;}).map(opt => opt.id + opt.name + opt.checked));
-		// DivisionService.addDivisions(
-		// 	1, this.state.name,
-		// 	this.state.OPTIONS.filter(function(opt) {
-		// 		if (opt.checked) return opt.id;
-		// 	})
-		// );
+		DivisionService.addDivisions(
+			1, this.state.name
+		);
 	}
 
 	render() {
