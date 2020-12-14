@@ -41,12 +41,9 @@ class LoadDatabase {
             Type type = new Type(1,"Temperature");
             types.save(type);
             Division division = new Division(1,"sala",homes.findById(1));
-
-
             divisions.save(division);
-            Sensor sensor = new Sensor(1,divisions.findById(1),types.findById(1));
-
             divisions.save(new Division(2,"WC",homes.findById(1)));
+            Sensor sensor = new Sensor(1,divisions.findById(1),types.findById(1));
             sensors.save(sensor);
 
         };

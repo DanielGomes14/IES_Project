@@ -16,7 +16,7 @@ public class SensorData {
     private long id;
 
     @ManyToOne()
-    @JoinColumn(name="sensor_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name="sensor_id", referencedColumnName = "id")
     private Sensor sensor;
 
     @CreationTimestamp
