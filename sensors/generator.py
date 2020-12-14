@@ -1,8 +1,8 @@
 import random
-import time
 import asyncio
 import paho.mqtt.client as mqtt
 import json
+from datetime import datetime
 
 # client, user and device details
 serverUrl   = "crow.rmq.cloudamqp.com"
@@ -15,29 +15,41 @@ receivedMessages = []
 
 class Generator:
     sigma = 0.5
+    time_per_pub = 5
 
     @classmethod
     async def send_shuffled(cls, sensor_data):
+        count = 0
         while sensor_data:
-            await asyncio.sleep(1)
-            rnd_sensor = random.choice(list(sensor_data.keys()))
+            await asyncio.sleep(cls.time_per_pub/len(sensor_data))
+            sensor_id = list(sensor_data.keys())[count % len(sensor_data)]
 
-            value = sensor_data[rnd_sensor].pop(0)
-            print(cls.__name__, {'sensor_id': rnd_sensor, 'value': value})
+            value = sensor_data[sensor_id].pop(0)
+            print(cls.__name__, {
+                'sensor_id': sensor_id,
+                'type': str.lower(cls.__name__), 
+                'value': round(value, 2),
+                'timestamp': datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+            })
             # send data to rabbit
-            publish(topic=cls.__name__, 
-                message=json.dumps( {'sensor_id': rnd_sensor, 'value': value} ))
+            publish(topic=cls.__name__, message=json.dumps( {
+                'sensor_id': sensor_id,
+                'type': str.lower(cls.__name__), 
+                'value': round(value, 2),
+                'timestamp': datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+            } ))
 
-            if rnd_sensor not in cls.sensor_mu:
+            if sensor_id not in cls.sensor_mu:
                 # deleted my rabbitMQ meanwhile
-                del sensor_data[rnd_sensor]
-            if not sensor_data[rnd_sensor]:
+                del sensor_data[sensor_id]
+            if not sensor_data[sensor_id]:
                 # already empty
-                del sensor_data[rnd_sensor]
+                del sensor_data[sensor_id]
+            count += 1
 
 
 class Temperature(Generator):
-    sensor_mu = {1: 25, 2: 10}
+    sensor_mu = {1: 25, 2: 10, 3: 30}
     decrease = False
     MIN, MAX = 0, 37
 
@@ -57,14 +69,15 @@ class Temperature(Generator):
 
                 for _ in range(10):
                     await asyncio.sleep(0)
-                    sensor_data[sensor].append( random.gauss(mu, cls.sigma) )
+                    sensor_data[sensor].append(
+                        round(random.gauss(mu, cls.sigma), 2))
                 cls.sensor_mu[sensor] = mu
 
             await cls.send_shuffled(sensor_data)
 
 
 class Luminosity(Generator):
-    sensor_mu = {1: 50, 2: 40}
+    sensor_mu = {4: 50, 5: 40}
     decrease = False
     MIN, MAX = 0, 90
 
@@ -85,14 +98,15 @@ class Luminosity(Generator):
 
                 for _ in range(10):
                     await asyncio.sleep(0)
-                    sensor_data[sensor].append( random.gauss(mu * window_opened, cls.sigma) )
+                    sensor_data[sensor].append(
+                        round(random.gauss(mu, cls.sigma), 2))
                 cls.sensor_mu[sensor] = mu
 
             await cls.send_shuffled(sensor_data)
 
 
 class Humidity(Generator):
-    sensor_mu = {1: 50, 2: 60}
+    sensor_mu = {6: 50, 7: 60}
     decrease = False
     MIN, MAX = 30, 70
 
@@ -112,7 +126,8 @@ class Humidity(Generator):
 
                 for _ in range(10):
                     await asyncio.sleep(0)
-                    sensor_data[sensor].append( random.gauss(mu, cls.sigma) )
+                    sensor_data[sensor].append( 
+                        round(random.gauss(mu, cls.sigma), 2))
                 cls.sensor_mu[sensor] = mu
 
             await cls.send_shuffled(sensor_data)
@@ -153,7 +168,7 @@ client.loop_start()
 
 print("Device registered successfully!")
 
-client.subscribe("sensors")
+client.subscribe("sensors", qos=0)
 
 
 loop = asyncio.get_event_loop()
