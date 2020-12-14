@@ -1,10 +1,9 @@
 package ies.proj.geanihouse.controller;
-import ies.proj.geanihouse.exception.ErrorDetails;
+import ies.proj.geanihouse.exception.ResourceNotFoundException;
 import ies.proj.geanihouse.model.Division;
 import ies.proj.geanihouse.model.Home;
-import ies.proj.geanihouse.model.User;
 import ies.proj.geanihouse.repository.DivisionRepository;
-import ies.proj.geanihouse.repository.UserRepository;
+import ies.proj.geanihouse.repository.HomeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,9 +25,10 @@ public class DivisionController {
     @Autowired
     private DivisionRepository divisionRepository;
     @Autowired
-    private  UserRepository userRepository;
+    private HomeRepository homeRepository;
     @GetMapping("/{id}/divisions/")
-    public ResponseEntity<List<Division>> getAllHomeDivisions(@PathVariable(value = "id") Long id)  {
+    public ResponseEntity<?> getAllHomeDivisions(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
+        Home h = this.homeRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Could not Found home with id" + id));
         List <Division> divisions = divisionRepository.findAllByHome_id(id);
         System.out.println(divisions);
 
