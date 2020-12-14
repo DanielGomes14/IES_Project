@@ -2,6 +2,7 @@ package ies.proj.geanihouse.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -33,9 +34,11 @@ public class Division{
     private String name ;
 
     @OneToMany(mappedBy="division")
+    @JsonIgnore
     private Set<Sensor> sensors = new HashSet<>();
 
     @OneToMany(mappedBy="division")
+    @JsonIgnore
     private Set<Device> devices = new HashSet<>();
 
     @OneToMany(mappedBy="division")
