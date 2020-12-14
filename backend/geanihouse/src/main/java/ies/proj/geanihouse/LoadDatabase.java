@@ -37,8 +37,8 @@ class LoadDatabase {
             homes.save(h1);
             Home h2 = new Home(2,clients.findByEmail("mongo@gmail.com"),"Casa do Lionel","ali","ok","adeus","zip");
             homes.save(h2);
-            divisions.save(new Division(1,"sala",homes.findById(1)));
-            divisions.save(new Division(2,"WC",homes.findById(1)));
+            divisions.save(new Division(1,"sala",h1));
+            divisions.save(new Division(2,"WC",h1));
 
             /*
             users.save(new User(1,"Chico", "Silva", "ace@cs.go",null,"Alpha Male","randomquerty"));
