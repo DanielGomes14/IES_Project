@@ -45,7 +45,6 @@ class LoadDatabase {
             divisions.save(new Division(2,"WC",homes.findById(1)));
             Sensor sensor = new Sensor(1,divisions.findById(1),types.findById(1));
             sensors.save(sensor);
-
         };
     }
 }
