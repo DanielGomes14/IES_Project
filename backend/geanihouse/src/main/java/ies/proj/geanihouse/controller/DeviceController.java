@@ -1,9 +1,9 @@
 package ies.proj.geanihouse.controller;
 import ies.proj.geanihouse.exception.ResourceNotFoundException;
 import ies.proj.geanihouse.model.Division;
-import ies.proj.geanihouse.model.Home;
+import ies.proj.geanihouse.model.Device;
+import ies.proj.geanihouse.repository.DeviceRepository;
 import ies.proj.geanihouse.repository.DivisionRepository;
-import ies.proj.geanihouse.repository.HomeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,27 +16,30 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.util.Set;
 
 
 @CrossOrigin(origins={ "http://localhost:3000" }, allowedHeaders = "*")
 @RestController
-public class DivisionController {
+public class DeviceController {
     @Autowired
     private DivisionRepository divisionRepository;
-    @Autowired
-    private HomeRepository homeRepository;
-    @GetMapping("/{id}/divisions/")
-    public ResponseEntity<?> getAllHomeDivisions(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
-        Home h = this.homeRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Could not Found home with id" + id));
-        List <Division> divisions = divisionRepository.findAllByHome_id(id);
-        System.out.println(divisions);
 
-        return  ResponseEntity.ok().body(divisions);
+    @Autowired
+    private DeviceRepository deviceRepository;
+
+    @GetMapping("/{id}/devices/")
+    public ResponseEntity<?> getAllHomeDivisions(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
+        Division division = this.divisionRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Could not find division with id" + id));
+        Set <Device> devices = division.getDevices();
+
+        System.out.println(devices);
+
+        return ResponseEntity.ok().body(devices);
     }
 
-    @PostMapping("/divisions")
-    public  Division addDivision(@Valid @RequestBody Division division){
-       return divisionRepository.save(division);
+    @PostMapping("/devices")
+    public Device addDevice(@Valid @RequestBody Device device) {
+       return deviceRepository.save(device);
     }
 }
