@@ -1,5 +1,7 @@
 package ies.proj.geanihouse.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -23,6 +25,7 @@ public class DeviceConf {
 
     @ManyToOne()
     @JoinColumn(name="device_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
     private Device device;
 
 
