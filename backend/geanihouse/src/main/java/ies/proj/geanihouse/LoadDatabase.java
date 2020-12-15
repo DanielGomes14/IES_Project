@@ -15,11 +15,9 @@ import java.util.HashSet;
 @Configuration
 class LoadDatabase {
 
-
-
     @Bean
     CommandLineRunner initDatabase(UserRepository users,ClientRepository clients, HomeRepository homes,
-                       DivisionRepository divisions, TypeRepository types,
+                       DivisionRepository divisions, TypeRepository types, DeviceRepository devices,
                        SensorRepository sensors) {
 
         return args -> {
@@ -38,13 +36,24 @@ class LoadDatabase {
             homes.save(h1);
             Home h2 = new Home(2,clients.findByEmail("mongo@gmail.com"),"Casa do Lionel","ali","ok","adeus","zip");
             homes.save(h2);
-            Type type = new Type(1,"Temperature");
-            types.save(type);
+
+            Type temperature = new Type(1,"Temperature");
+            Type humidity = new Type(2,"Humidity");
+            Type luminosity = new Type(3,"Luminosity");
+            Type eletronic = new Type(4,"Eletronic");
+            types.save(temperature);
+            types.save(humidity);
+            types.save(luminosity);
+            types.save(eletronic);
+
             Division division = new Division(1,"sala",h1);
             divisions.save(division);
             divisions.save(new Division(2,"WC",h1));
-            Sensor sensor = new Sensor(1,division,type);
+            Sensor sensor = new Sensor(1, division, temperature);
             sensors.save(sensor);
+
+            Device device = new Device(1, "Máquina de Café", 0.0, eletronic, division);
+            devices.save(device);
         };
     }
 }

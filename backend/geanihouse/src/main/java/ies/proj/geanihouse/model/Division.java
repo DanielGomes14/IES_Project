@@ -18,6 +18,7 @@ import java.util.Set;
 
 @Entity
 @Table(name="Division")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "devices"})
 public class Division{
 
     @Id
