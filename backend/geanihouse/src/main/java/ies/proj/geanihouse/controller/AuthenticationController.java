@@ -4,7 +4,6 @@ import ies.proj.geanihouse.exception.ErrorDetails;
 import ies.proj.geanihouse.model.Client;
 import ies.proj.geanihouse.model.User;
 import ies.proj.geanihouse.repository.ClientRepository;
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +27,7 @@ public class AuthenticationController {
     private UserRepository userRepository;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody User user) throws ErrorDetails{
+    public ResponseEntity<User> register(@Valid @RequestBody User user) throws ErrorDetails{
 
         Client client = user.getClient();
 
@@ -46,10 +45,8 @@ public class AuthenticationController {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-        byte[] encodedBytes = Base64.encodeBase64("Test".getBytes());
-        String token = "Basic "+encodedBytes;
 
-        return ResponseEntity.ok().body(token);
+        return ResponseEntity.ok().body(user);
     }
 
     @PostMapping("/login")
