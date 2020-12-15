@@ -15,13 +15,13 @@ public class Sensor {
 
     // There must be a @OneToMany on Division
     @ManyToOne()
-    @JoinColumn(name="division_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name="division_id", referencedColumnName = "id")
     private Division division;
 
 
     // There must be a @OneToMany on Type
     @ManyToOne()
-    @JoinColumn(name="type_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name="type_id", referencedColumnName = "id")
     private Type type;
 
     @OneToMany(mappedBy="sensor")

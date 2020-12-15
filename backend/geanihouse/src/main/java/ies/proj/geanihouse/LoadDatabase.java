@@ -40,10 +40,10 @@ class LoadDatabase {
             homes.save(h2);
             Type type = new Type(1,"Temperature");
             types.save(type);
-            Division division = new Division(1,"sala",homes.findById(1));
+            Division division = new Division(1,"sala",h1);
             divisions.save(division);
-            divisions.save(new Division(2,"WC",homes.findById(1)));
-            Sensor sensor = new Sensor(1,divisions.findById(1),types.findById(1));
+            divisions.save(new Division(2,"WC",h1));
+            Sensor sensor = new Sensor(1,division,type);
             sensors.save(sensor);
         };
     }

@@ -2,6 +2,7 @@ package ies.proj.geanihouse;
 
 
 import ies.proj.geanihouse.controller.HomeController;
+import ies.proj.geanihouse.exception.ResourceNotFoundException;
 import ies.proj.geanihouse.model.ReceivedSensorData;
 import ies.proj.geanihouse.model.Sensor;
 import ies.proj.geanihouse.model.SensorData;
@@ -31,10 +32,10 @@ public class MessageConsumer {
     private SensorRepository sensorRepository;
 
     @StreamListener(Sink.INPUT)
-    public void log(ReceivedSensorData msg){
+    public void log(ReceivedSensorData msg) throws ResourceNotFoundException {
         long sensor_id = msg.getSensor_id();
 
-        Sensor sensor = sensorRepository.findById(sensor_id);
+        Sensor sensor = sensorRepository.findById(sensor_id).orElseThrow(() -> new ResourceNotFoundException("Sensor with id " + sensor_id + " not found"));
         if (sensor==null){
             LOG.info("Id is not valid");
             return;

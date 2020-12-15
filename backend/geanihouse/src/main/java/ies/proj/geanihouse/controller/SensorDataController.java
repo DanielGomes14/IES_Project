@@ -31,6 +31,14 @@ public class SensorDataController {
         return ResponseEntity.ok().body(data);
     }
 
+    @GetMapping("/sensordata")
+    public ResponseEntity<?>    getHouseSensor() {
+        List<SensorData> data = sensorDataRepository.findAll();
+        LOG.info(data);
+        return ResponseEntity.ok().body(data);
+    }
+
+
 
 
 
