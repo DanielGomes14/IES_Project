@@ -1,5 +1,8 @@
 package ies.proj.geanihouse.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
@@ -18,10 +21,12 @@ public class DivisionConf {
 
     @ManyToOne()
     @JoinColumn(name="division_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
     private Division division;
 
     @ManyToOne()
     @JoinColumn(name="type_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
     private Type type;
 
     public DivisionConf(){
