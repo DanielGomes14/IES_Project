@@ -4,7 +4,6 @@ import ies.proj.geanihouse.exception.ErrorDetails;
 import ies.proj.geanihouse.model.Client;
 import ies.proj.geanihouse.model.User;
 import ies.proj.geanihouse.repository.ClientRepository;
-import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import  ies.proj.geanihouse.repository.UserRepository;
 
 import javax.validation.Valid;
+import java.util.Base64;
 
 // import javax.validation.Valid;
 // import java.util.List;
@@ -28,7 +28,7 @@ public class AuthenticationController {
     private UserRepository userRepository;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody User user) throws ErrorDetails{
+    public ResponseEntity<User> register(@Valid @RequestBody User user) throws ErrorDetails{
 
         Client client = user.getClient();
 
@@ -46,20 +46,23 @@ public class AuthenticationController {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-        byte[] encodedBytes = Base64.encodeBase64("Test".getBytes());
-        String token = "Basic "+encodedBytes;
 
-        return ResponseEntity.ok().body(token);
+        return ResponseEntity.ok().body(user);
     }
 
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestHeader("Authorization") String auth) {
 
-        //verificar como passar isto
-        String email = "aisdjas";
-        String password = "asdasd";
+        String base64Credentials = auth.substring("Basic".length()).trim();
+        String[] decoded = new String(Base64.getDecoder().decode(base64Credentials)).split(":", 2);
+        String email = decoded[0];
+        String password = decoded[1];
         User user = userRepository.findByClientEmailAndPassword(email,password);
-        return ResponseEntity.ok().body(user);
+        if (user!=null){
+            return ResponseEntity.ok().body(user);
+        }
+        return  ResponseEntity.status(400).body(null);
+
     }
 
     @GetMapping("/logout")
