@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import  ies.proj.geanihouse.repository.UserRepository;
 
@@ -17,7 +16,6 @@ import javax.validation.Valid;
 // import javax.validation.Valid;
 // import java.util.List;
 
-@CrossOrigin(origins={ "http://localhost:3000" }, allowedHeaders = "*")
 @RestController
 public class AuthenticationController {
     @Autowired
