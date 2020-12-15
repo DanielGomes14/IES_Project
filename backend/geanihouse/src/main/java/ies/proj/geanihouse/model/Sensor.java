@@ -64,10 +64,6 @@ public class Sensor {
         this.type = type;
     }
 
-    public Set<SensorData> getSensorData(){
-        return this.sensor_data;
-    }
-
     public Set<SensorData> getSensor_data() {
         return sensor_data;
     }
