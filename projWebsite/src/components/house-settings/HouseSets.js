@@ -41,8 +41,8 @@ class HouseSets extends React.Component {
 	
 	handleChangeCheckBox(e, user) {
 		var newState = this.state
-		for(let i = 0; i < this.state.OPTIONS.length; i++){
-			if(this.state.OPTIONS[i].id == user)
+		for (let i = 0; i < this.state.OPTIONS.length; i++) {
+			if (this.state.OPTIONS[i].id == user)
 				newState.OPTIONS[i].checked = !this.state.OPTIONS[i].checked;  
 			this.setState({ ...this.state, ...newState });
 		}

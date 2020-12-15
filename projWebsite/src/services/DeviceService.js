@@ -16,15 +16,15 @@ class DeviceService {
             .then(res => res.json());
     }
 
-    addDevices(home_id, name, type, icon, notes) {
-        return fetch(baseURL + (home_id + '/') + DEVICES_REST_API_URL, {
+    addDevices(division_id, type_id, name) {
+        return fetch(baseURL + DEVICES_REST_API_URL, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
                     authorization: 'Basic ' + window.btoa('chico' + ":" + 'randomquerty')
                 },
-                body: JSON.stringify({ name: name, type: type, icon: icon, notes: notes })
+                body: JSON.stringify({ name: name, type: {id: type_id}, division: {id: division_id} })
             })
             .then(res => res.json());
     }

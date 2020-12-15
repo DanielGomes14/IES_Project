@@ -16,15 +16,15 @@ class SensorService {
             .then(res => res.json());
     }
 
-    addSensors(home_id, _) {
-        return fetch(baseURL + (home_id + '/') + SENSORS_REST_API_URL, {
+    addSensors(division_id, type_id) {
+        return fetch(baseURL + SENSORS_REST_API_URL, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
                     authorization: 'Basic ' + window.btoa('chico' + ":" + 'randomquerty')
                 },
-                body: JSON.stringify({ _:_ })
+                body: JSON.stringify({division: {id: division_id}, type: {id: type_id}})
             })
             .then(res => res.json());
     }
