@@ -4,6 +4,7 @@ package ies.proj.geanihouse.model;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.sql.Time;
 import java.sql.Timestamp;
 
 @Entity
@@ -15,7 +16,7 @@ public class SensorData {
     private long id;
 
     @ManyToOne()
-    @JoinColumn(name="sensor_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name="sensor_id", referencedColumnName = "id")
     private Sensor sensor;
 
     @CreationTimestamp
@@ -29,10 +30,17 @@ public class SensorData {
 
     }
 
-    public SensorData(long id,Sensor sensor, Timestamp timestampDate){
+    public SensorData(long id,Sensor sensor, Timestamp timestampDate, double data){
         this.id = id;
         this.sensor = sensor;
         this.timestampDate = timestampDate;
+        this.data = data;
+    }
+
+    public SensorData(Sensor sensor, Timestamp timestampDate, double data){
+        this.sensor = sensor;
+        this.timestampDate = timestampDate;
+        this.data = data;
     }
 
     public long getId(){
@@ -63,9 +71,13 @@ public class SensorData {
         return data;
     }
 
+    /*
     public String toString(){
         return this.sensor.getDivision().getName() + ", Type  " + this.sensor.getType().getName()
                 + ", Time: " + this.timestampDate.toString();
     }
-
+    */
+    public String toString(){
+        return "not null";
+    }
 }
