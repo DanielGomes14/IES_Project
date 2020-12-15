@@ -24,7 +24,7 @@ public class SensorDataController {
     //House id!
     @GetMapping("/{id}/sensordata/")
     public ResponseEntity<?>    getHouseSensorData(@PathVariable(value = "id") long id) throws ResourceNotFoundException {
-        Home h =this.homeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Could not found home with id"+ id));
+        Home h = this.homeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Could not found home with id"+ id));
         List<SensorData> data = sensorDataRepository.findAllBySensor_Division_Home_Id(id);
 
         for(SensorData d: data) LOG.info(d);
