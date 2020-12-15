@@ -143,11 +143,13 @@ def on_message(client, userdata, message):
     elif topic == 'CONFIG':
         ...
 
+
 def publish(topic, message, waitForAck=False):
     mid = client.publish(topic, message)[1]
     if (waitForAck):
         while mid not in receivedMessages:
             time.sleep(0.25)
+
 
 def on_publish(client, userdata, mid):
     print('on_publish')

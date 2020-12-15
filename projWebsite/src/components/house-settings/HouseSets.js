@@ -50,9 +50,10 @@ class HouseSets extends React.Component {
 
 	handleSubmit(event) {
 		alert('A name was submitted: ' + this.state.OPTIONS.filter(function(opt) {if (opt.checked) return opt.id;}).map(opt => opt.id + opt.name + opt.checked));
-		DivisionService.addDivisions(
+		DivisionService.addDivision(
 			1, this.state.name
 		);
+		event.preventDefault();
 	}
 
 	render() {
@@ -82,7 +83,7 @@ class HouseSets extends React.Component {
 					<ListGroupItem className="p-3">
 						<Row>
 							<Col>
-								<Form>
+								<Form onSubmit={ this.handleSubmit }>
 									<Row form>
 										{/* Name of the Division */}
 										<Col md="6" className="form-group">
@@ -113,7 +114,7 @@ class HouseSets extends React.Component {
 									</Row>
 									<Row form>
 									</Row>
-									<Button theme="accent" value="Submit" onClick={ this.handleSubmit }>Add new Division</Button>
+									<Button type="submit" theme="accent" value="Submit">Add new Division</Button>
 								</Form>
 							</Col>
 						</Row>

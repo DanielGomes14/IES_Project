@@ -75,7 +75,7 @@ class FormNewSensor extends React.Component {
                 <FormGroup className="row">
                     <Col sm="12">
                         <label htmlFor="deIcon">Sensor Type:</label>
-                        <Select options={options} id="deIcon" placeholder="" defaultValue={options[0]}
+                        <Select options={ options } id="deIcon" placeholder="" defaultValue={ options[0] }
                         components={{ Option: CustomSelectOption, SingleValue: CustomSelectValue }} />
                     </Col>
                 </FormGroup>

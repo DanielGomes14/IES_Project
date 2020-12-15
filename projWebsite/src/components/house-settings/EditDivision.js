@@ -16,27 +16,26 @@ import Paper from '@material-ui/core/Paper';
 import MaxWidthDialog from "./DialogDivision"
 import { Button } from "@material-ui/core";
 
+import DivisionService from "./../../services/DivisionService";
+
 const StyledTableCell = withStyles((theme) => ({
-		head: {
-			backgroundColor: theme.palette.common.black,
-			color: theme.palette.common.white,
-		},
-		body: {
-			
-			fontSize: 14,
-		},
-	}))(TableCell);
+	head: {
+		backgroundColor: theme.palette.common.black,
+		color: theme.palette.common.white,
+	},
+	body: {
+		
+		fontSize: 14,
+	},
+}))(TableCell);
 	
-	const StyledTableRow = withStyles((theme) => ({
-		root: {
-			'&:nth-of-type(odd)': {
-				backgroundColor: theme.palette.action.hover,
-			},
+const StyledTableRow = withStyles((theme) => ({
+	root: {
+		'&:nth-of-type(odd)': {
+			backgroundColor: theme.palette.action.hover,
 		},
-	}))(TableRow);
-	
-
-
+	},
+}))(TableRow);
 
 class EditDivision extends React.Component{
 	constructor() {
@@ -60,7 +59,7 @@ class EditDivision extends React.Component{
 			loading: 0,
 			divisions: []
 		};
-		this.handleRemoveDivision.bind(this);
+		this.handleRemoveDivision = this.handleRemoveDivision.bind(this);
 		
 	}
 
@@ -80,7 +79,7 @@ class EditDivision extends React.Component{
 			});
 	}
 	
-	getNumChecked(row){
+	getNumChecked(row) {
 		let counter=0;
 		for(let i = 0 ; i< row.people.length;i++){
 			if (row.people[i].checked)
@@ -95,10 +94,19 @@ class EditDivision extends React.Component{
 			checked: !this.state.checked
 		})
 	}
-*/
+	*/
 
+	handleRemoveDivision(division_id) {
+		DivisionService.deleteDivision(1, division_id)
+			.then(data => { 
+				console.log(data);
+			})
+			.catch(error => {
+				console.log(error) ;
+			});
+	}
 		
-	render (){
+	render() {
 		return  (
 			<Card small className="mb-4">
 				<CardHeader className="border-bottom">
@@ -106,39 +114,38 @@ class EditDivision extends React.Component{
 				</CardHeader>
 				<ListGroup flush>
 				<TableContainer component={Paper}>
-					<Table   aria-label="customized table">
+					<Table aria-label="customized table">
 						<TableHead>
 							<TableRow>
 								<StyledTableCell>Name of Division</StyledTableCell>
 								<StyledTableCell>People with Permission</StyledTableCell>
-								<StyledTableCell >Number of Members with Permission&nbsp;</StyledTableCell>
+								<StyledTableCell>Number of Members with Permission&nbsp;</StyledTableCell>
 								<StyledTableCell>Edit Division&nbsp;</StyledTableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
-							{this.rows.map((row) => (
-								<StyledTableRow key={row.name}>
+							{this.state.divisions.map((row) => (
+								<StyledTableRow key={ row.name }>
 									<StyledTableCell component="th" scope="col">
-										{row.name}
+										{ row.name }
 									</StyledTableCell>
-									<StyledTableCell component="th" scope="col" > 
+									<StyledTableCell component="th" scope="col" > {/* remove */}
 										<ul>
 											{
-												row.people.map((person) => {
-													
-														return person.checked ? (
-														<li key={person.name}>
+												this.OPTIONS2.map((person) => {
+													return person.checked ? (
+														<li key={ person.name }>
 																{ person.name }
 														</li>
-														): null;
+													): null;
 												})
 											}
 										</ul>
 									</StyledTableCell>
-									<StyledTableCell component="th" scope="col">{ this.getNumChecked(row) }</StyledTableCell>
+									<StyledTableCell component="th" scope="col">{/* this.getNumChecked(row) */}</StyledTableCell>
 									<StyledTableCell scope="col">
-										<MaxWidthDialog content={ row } /> 
-										<Button variant="outlined" color="secondary" onClick={ this.handleRemoveDivision }>Remove</Button>
+										{/* <MaxWidthDialog content={ row } />  */}
+										<Button variant="outlined" color="secondary" onClick={ this.handleRemoveDivision(row.id) }>Remove</Button>
 									</StyledTableCell>
 								</StyledTableRow>
 							))}
@@ -149,7 +156,6 @@ class EditDivision extends React.Component{
 			</Card>
 		);
 	}
-
 }
 
 export default EditDivision;
