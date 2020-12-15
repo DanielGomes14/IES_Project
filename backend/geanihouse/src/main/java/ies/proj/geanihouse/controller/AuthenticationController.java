@@ -31,6 +31,8 @@ public class AuthenticationController {
     public ResponseEntity<User> register(@Valid @RequestBody User user) throws ErrorDetails{
 
         Client client = user.getClient();
+        System.out.println("client:" + client);
+        System.out.println("user:" + user);
 
         // Verifies if there is an user with that email or username
         if(userRepository.findByUsername(user.getUsername())!=null){
@@ -39,30 +41,22 @@ public class AuthenticationController {
         if(clientRepository.findByEmail(user.getClient().getEmail())!=null){
             throw new ErrorDetails("There is already an user registered with that email.");
         }
-
-        clientRepository.save(client);
-
+        
+        
         // Encrypts password to be stored in the database
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        // userRepository.save(user);
+        client.setUser(user);
+        clientRepository.save(client);
+        
 
         return ResponseEntity.ok().body(user);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestHeader("Authorization") String auth) {
-
-        String base64Credentials = auth.substring("Basic".length()).trim();
-        String[] decoded = new String(Base64.getDecoder().decode(base64Credentials)).split(":", 2);
-        String email = decoded[0];
-        String password = decoded[1];
-        User user = userRepository.findByClientEmailAndPassword(email,password);
-        if (user!=null){
-            return ResponseEntity.ok().body(user);
-        }
-        return  ResponseEntity.status(400).body(null);
-
+    public ResponseEntity<?> login(@RequestHeader("Authorization") String auth) {
+        return ResponseEntity.ok().body("Login Successful!");
     }
 
     @GetMapping("/logout")

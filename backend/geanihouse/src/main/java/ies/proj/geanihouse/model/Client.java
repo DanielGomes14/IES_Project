@@ -122,6 +122,9 @@ public class Client {
     public User getUser() {
         return user;
     }
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public Set<Home> getHomes() {
         return homes;

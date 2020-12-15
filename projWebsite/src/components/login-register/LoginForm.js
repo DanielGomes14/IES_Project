@@ -20,9 +20,6 @@ class LoginForm extends React.Component {
 		super(props);
 		this.state = {
 			loggedIn: false,
-			firstName: "",
-			lastName: "",
-			email: "",
 			username: "",
 			password: ""
 		}
@@ -49,14 +46,11 @@ class LoginForm extends React.Component {
 			.then((response) => {
 				console.log(response);
 				if (response.ok) {
-					var json = response.json();
 					console.log("Login successfull:");
-					console.log(json);
 					localStorage.setItem('token', auth);
 					this.setState({loggedIn: true});
 				} else if (response.status == "400") {
 					console.log("400: ");
-					console.log(response.json());
 				}
 			});
 		event.preventDefault();
@@ -70,31 +64,21 @@ class LoginForm extends React.Component {
 				<ListGroupItem className="p-6">
 					<Row>
 						<Col>
-							<Form>
+							<Form onSubmit={this.handleSubmit}>
 								<Row form className="form-group">
 									<label htmlFor="feUsername">Username</label>
 									<FormInput
-										id="feUsername"
-										placeholder="Username"
+										id="feUsername" name="username"
+										value={this.state.username} onChange={this.handleChange}
 										required
-									/>
-								</Row>
-								<Row form className="form-group">
-									<label htmlFor="feEmailAddress">Email</label>
-									<FormInput
-										id="feEmailAddress"
-										type="email"
-										required
-										placeholder="Email"
 									/>
 								</Row>
 								<Row form className="form-group">
 									<label htmlFor="fePassword">Password</label>
 									<FormInput
-										id="fePassword"
-										type="password"
+										id="fePassword" type="password" name="password"
+										value={this.state.password} onChange={this.handleChange}
 										required
-										placeholder="Password"
 									/>
 								</Row>
 

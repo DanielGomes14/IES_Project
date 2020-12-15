@@ -47,7 +47,7 @@ class RegisterForm extends React.Component {
 		+ '\n' + this.state.password
 		);
 		var auth = 'Basic ' + window.btoa(this.state.username + ":" + this.state.password);
-		AuthenticationService.login(
+		AuthenticationService.register(
 			this.state.firstName, 
 			this.state.lastName,
 			this.state.email, 
@@ -56,14 +56,11 @@ class RegisterForm extends React.Component {
 		).then((response) => {
 			console.log(response);
 			if (response.ok) {
-				var json = response.json();
-				console.log("Login successfull:");
-				console.log(json);
+				console.log("Register successfull:");
 				localStorage.setItem('token', auth);
 				this.setState({loggedIn: true});
 			} else if (response.status == "400") {
 				console.log("400: ");
-				console.log(response.json());
 			}
 		});
 		event.preventDefault();
