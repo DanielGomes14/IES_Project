@@ -10,6 +10,33 @@ import {
   Button,
 } from "shards-react";
 
+import AuthenticationService from "./../../services/AuthenticationService";
+import { Redirect } from "react-router-dom";
+
+
+handleSubmit(event) {
+  alert('Register :\n '
+  + '\n' + this.state.username
+  + '\n' + this.state.password
+  );
+  var auth = 'Basic ' + window.btoa(this.state.username + ":" + this.state.password);
+  AuthenticationService.login(auth)
+    .then((response) => {
+      console.log(response);
+      if (response.ok) {
+        var json = response.json();
+        console.log("Login successfull:");
+        console.log(json);
+        localStorage.setItem('token', auth);
+        this.setState({loggedIn: true});
+      } else if (response.status == "400") {
+        console.log("400: ");
+        console.log(response.json());
+      }
+    });
+  event.preventDefault();
+};
+
 const LoginForm = () => (
   <ListGroup flush>
     <ListGroupItem className="p-6">

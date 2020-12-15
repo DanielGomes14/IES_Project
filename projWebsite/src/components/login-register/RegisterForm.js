@@ -46,7 +46,7 @@ class RegisterForm extends React.Component {
 		+ '\n' + this.state.username
 		+ '\n' + this.state.password
 		);
-		AuthenticationService.register(
+		AuthenticationService.login(
 			this.state.firstName, 
 			this.state.lastName,
 			this.state.email, 
@@ -55,12 +55,15 @@ class RegisterForm extends React.Component {
 		).then((response) => {
 			console.log(response);
 			if (response.ok) {
-				console.log("Login successfull");
+				var json = response.json();
+				console.log("Login successfull:");
+				console.log(json);
+				localStorage.setItem('token', json);
 				this.setState({loggedIn: true});
 			} else if (response.status == "400") {
-				console.log("400: " + response.json());
+				console.log("400: ");
+				console.log(response.json());
 			}
-
 		});
 		event.preventDefault();
 	};
@@ -80,43 +83,43 @@ class RegisterForm extends React.Component {
 									<Col sm="6">
 										<label htmlFor="feFirstName">First Name</label>
 										<FormInput
-												id="feFirstName" name="firstName"
-												value={this.state.firstName} onChange={this.handleChange}
-												required
+											id="feFirstName" name="firstName"
+											value={this.state.firstName} onChange={this.handleChange}
+											required
 										/>
 									</Col>
 									<Col sm="6">
 										<label htmlFor="feLastName">Last Name</label>
-												<FormInput
-														id="feLastName" name="lastName"
-														value={this.state.lastName} onChange={this.handleChange}
-														required
-												/>
-										</Col>
-								</Row>
-								<Row form className="form-group py-1">
-										<label htmlFor="feUsername">Username</label>
 										<FormInput
-												id="feUsername" name="username"
-												value={this.state.username} onChange={this.handleChange}
-												required
-										/>
-								</Row>
-								<Row form className="form-group py-1">
-										<label htmlFor="feEmailAddress">Email</label>
-										<FormInput
-											id="feEmailAddress" type="email" name="email"
-											value={this.state.email} onChange={this.handleChange}
+											id="feLastName" name="lastName"
+											value={this.state.lastName} onChange={this.handleChange}
 											required
 										/>
+									</Col>
 								</Row>
 								<Row form className="form-group py-1">
-										<label htmlFor="fePassword">Password</label>
-										<FormInput
-											id="fePassword" type="password" name="password"
-											value={this.state.password} onChange={this.handleChange}
+									<label htmlFor="feUsername">Username</label>
+									<FormInput
+											id="feUsername" name="username"
+											value={this.state.username} onChange={this.handleChange}
 											required
-										/>
+									/>
+								</Row>
+								<Row form className="form-group py-1">
+									<label htmlFor="feEmailAddress">Email</label>
+									<FormInput
+										id="feEmailAddress" type="email" name="email"
+										value={this.state.email} onChange={this.handleChange}
+										required
+									/>
+								</Row>
+								<Row form className="form-group py-1">
+									<label htmlFor="fePassword">Password</label>
+									<FormInput
+										id="fePassword" type="password" name="password"
+										value={this.state.password} onChange={this.handleChange}
+										required
+									/>
 								</Row>
 								<Row form>
 									<Col md="12" className="form-group">
@@ -141,11 +144,11 @@ class RegisterForm extends React.Component {
 									</Col>
 								</Row>
 								<Row form>
-										<Col className="text-sm-center py-3">
-												<a href="#">
-														Create New Account
-												</a>
-										</Col>
+									<Col className="text-sm-center py-3">
+										<a href="#">
+											Create New Account
+										</a>
+									</Col>
 								</Row>
 							</Form>
 						</Col>

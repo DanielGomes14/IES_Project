@@ -25,7 +25,6 @@ class AuthenticationService {
                 },
                 body: JSON.stringify({ username: username, password: password, role: "", client: {firstName: firstName, lastName: lastName, email: email} })
             })
-            .then(res => res.json())
 }
 
 }
