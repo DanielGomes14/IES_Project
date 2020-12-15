@@ -53,11 +53,9 @@ public class Client {
     }
     public Client(long id,String firstName, String lastName, String email, String sex, User user) {
         this.id = id;
-        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        //this.birth=birth;
         this.sex=sex;
         this.user=user;
     }
@@ -123,6 +121,9 @@ public class Client {
 
     public User getUser() {
         return user;
+    }
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Set<Home> getHomes() {
