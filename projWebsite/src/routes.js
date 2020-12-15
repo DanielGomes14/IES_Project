@@ -68,11 +68,6 @@ export default [
     component: BlogPosts
   },
   {
-    path: "/house-settings",
-    layout: DefaultLayout,
-    component: HouseSettings
-  },
-  {
     path: "/",
     exact: true,
     layout: DefaultLayout,
@@ -97,6 +92,11 @@ export default [
     path: "/newsensor",
     layout: DefaultLayout,
     component : NewSensor
+  },
+  {
+    path: "/house-settings",
+    layout: DefaultLayout,
+    component: HouseSettings
   },
   {
     path: "/group-settings",

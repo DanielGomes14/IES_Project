@@ -10,12 +10,18 @@ import {
   Button,
 } from "shards-react";
 
+import AuthenticationService from "./../../services/AuthenticationService";
+
+handleSubmit() {
+
+}
+
 const RegisterForm = () => (
   <ListGroup flush>
     <ListGroupItem className="p-6">
       <Row>
         <Col>
-          <Form>
+          <Form onSubmit={handleSubmit}>
             <Row form className="form-group py-1">
               <Col sm="6">
                 <label htmlFor="feFirstName">First Name</label>
