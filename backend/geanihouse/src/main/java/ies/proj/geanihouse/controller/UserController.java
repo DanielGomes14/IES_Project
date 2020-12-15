@@ -31,7 +31,10 @@ public class UserController {
         return userRepository.findAll();
     }
 
-   
+    @GetMapping("/clients")
+    public  List<Client>  getAllClients(){
+        return clientRepository.findAll();
+    }
 
 
 }
