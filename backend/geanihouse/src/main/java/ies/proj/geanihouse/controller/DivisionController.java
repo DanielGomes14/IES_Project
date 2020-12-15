@@ -37,7 +37,6 @@ public class DivisionController {
 
     @PostMapping("/divisions")
     public  Division addDivision(@Valid @RequestBody Division division){
-       return  divisionRepository.save(division);
-        
+       return divisionRepository.save(division);
     }
 }
