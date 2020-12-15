@@ -48,16 +48,13 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Client> login(@RequestHeader("Authorization") String auth) {
-        /*
-        String base64Credentials = auth.substring("Basic".length()).trim();
-        String email = new String(Base64.getDecoder().decode(base64Credentials)).split(":", 2)[0];
-        Client client = clientRepository.findByPerson_Email(email);
-        client.setLastLogin(new java.sql.Timestamp(Calendar.getInstance().getTime().getTime()));
-        clientRepository.save(client);
-        return ResponseEntity.ok().body(client);
-        */
-        return null;
+    public ResponseEntity<User> login(@RequestHeader("Authorization") String auth) {
+
+        //verificar como passar isto
+        String email = "aisdjas";
+        String password = "asdasd";
+        User user = userRepository.findByClientEmailAndPassword(email,password);
+        return ResponseEntity.ok().body(user);
     }
 
     @GetMapping("/logout")

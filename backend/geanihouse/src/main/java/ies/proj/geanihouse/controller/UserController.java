@@ -31,18 +31,7 @@ public class UserController {
         return userRepository.findAll();
     }
 
-    @PostMapping("/register")
-    public User registerUser(@Valid @RequestBody User user) throws ErrorDetails {
-        if (userRepository.findByUsername(user.getUsername()) !=null) throw new ErrorDetails("There is already an user registered with the username \"" + user.getUsername() + "\""  );
-        Client client = user.getClient();
-        if(clientRepository.findByEmail(client.getEmail()) != null)  throw new ErrorDetails("There is already an user registered with the email \"" + client.getEmail() + "\""  );
-
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String pass = user.getPassword();
-        user.setPassword(encoder.encode(pass));
-        clientRepository.save(client);
-        return userRepository.save(user);
-    }
+   
 
 
 }
