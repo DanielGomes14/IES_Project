@@ -106,7 +106,8 @@ fabric.properties
 .idea/codestream.xml
 
 ### Maven ###
-target/
+
+\!/**/target/geanihouse-0.0.1-SNAPSHOT.jar
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup

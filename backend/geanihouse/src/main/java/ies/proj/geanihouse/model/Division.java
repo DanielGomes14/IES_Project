@@ -2,6 +2,7 @@ package ies.proj.geanihouse.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -27,7 +28,7 @@ public class Division{
 
     @ManyToOne()
     @JoinColumn(name="home_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("divisions")
+    @JsonIgnore
     private Home home;
 
     @Column(name = "name", nullable = false,length=50)

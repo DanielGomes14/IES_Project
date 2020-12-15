@@ -1,5 +1,8 @@
 package ies.proj.geanihouse.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -21,11 +24,13 @@ public class Device {
     private double state;
 
     @ManyToOne()
-    @JoinColumn(name="type_id", referencedColumnName = "id")
+    @JoinColumn(name="type_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
     private Type type;
 
     @ManyToOne()
-    @JoinColumn(name="division_id", referencedColumnName = "id")
+    @JoinColumn(name="division_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonIgnore
     private Division division;
 
     @OneToMany(mappedBy="device")

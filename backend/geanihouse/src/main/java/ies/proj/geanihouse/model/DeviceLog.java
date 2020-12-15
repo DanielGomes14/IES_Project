@@ -15,6 +15,7 @@ public class DeviceLog {
 
     @ManyToOne()
     @JoinColumn(name="device_id", referencedColumnName = "id", insertable = false, updatable = false)
+
     private Device device;
 
     @CreationTimestamp
