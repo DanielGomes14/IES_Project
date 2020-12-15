@@ -58,7 +58,11 @@ public class AuthenticationController {
         String email = decoded[0];
         String password = decoded[1];
         User user = userRepository.findByClientEmailAndPassword(email,password);
-        return ResponseEntity.ok().body(user);
+        if (user!=null){
+            return ResponseEntity.ok().body(user);
+        }
+        return  ResponseEntity.status(400).body(null);
+
     }
 
     @GetMapping("/logout")
