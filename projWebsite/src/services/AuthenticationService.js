@@ -3,8 +3,8 @@ import baseURL from "./../data/base-url";
 
 class AuthenticationService {
 
-    login(home_id) {
-        return fetch(baseURL + 'login/', {
+    login(_) {
+        return fetch(baseURL + 'login', {
                 method: 'GET',
                 mode: 'cors',
                 headers: {
@@ -15,7 +15,7 @@ class AuthenticationService {
             .then(res => res.json());
     }
 
-    register(first_name, last_name, email, username, password) {
+    register(firstName, lastName, email, username, password) {
         return fetch(baseURL + 'register/', {
                 method: 'POST',
                 mode: 'cors',
@@ -23,7 +23,7 @@ class AuthenticationService {
                     'Content-Type': 'application/json',
                     authorization: 'Basic ' + window.btoa('chico' + ":" + 'randomquerty')
                 },
-                body: JSON.stringify({ username: username, password: password, client: {first_name: first_name, last_name: last_name, email: email} })
+                body: JSON.stringify({ username: username, password: password, role: "", client: {firstName: firstName, lastName: lastName, email: email} })
             })
             .then(res => res.json())
 }
