@@ -2,6 +2,7 @@ package ies.proj.geanihouse.model;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -22,26 +23,24 @@ public class Division{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private long id ;
 
     @ManyToOne()
     @JoinColumn(name="home_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("divisions")
+    @JsonIgnore
     private Home home;
 
     @Column(name = "name", nullable = false,length=50)
     private String name ;
 
-
-    // maybe add this to this annotation (cascade = CascadeType.ALL, orphanRemoval = true)
     @OneToMany(mappedBy="division")
-    private Set<Sensor> sensors;
+    private Set<Sensor> sensors = new HashSet<>();
 
     @OneToMany(mappedBy="division")
-    private Set<Device> devices;
+    private Set<Device> devices = new HashSet<>();
 
     @OneToMany(mappedBy="division")
-    private Set<DivisionConf> divisionConf;
+    private Set<DivisionConf> divisionConf = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "Division_Permissions",
@@ -105,12 +104,14 @@ public class Division{
         return users;
     }
 
+    public void setSensors(Set<Sensor> sensors) {
+        this.sensors = sensors;
+    }
 
     public String toString(){
         return this.getName();
     }
 
 }
-
 
 

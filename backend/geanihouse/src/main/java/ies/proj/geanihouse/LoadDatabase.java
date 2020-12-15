@@ -10,15 +10,14 @@ import ies.proj.geanihouse.model.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 @Configuration
 class LoadDatabase {
 
-
-
     @Bean
     CommandLineRunner initDatabase(UserRepository users,ClientRepository clients, HomeRepository homes,
-                       DivisionRepository divisions, TypeRepository types,
+                       DivisionRepository divisions, TypeRepository types, DeviceRepository devices,
                        SensorRepository sensors) {
 
         return args -> {
@@ -37,17 +36,28 @@ class LoadDatabase {
             homes.save(h1);
             Home h2 = new Home(2,clients.findByEmail("mongo@gmail.com"),"Casa do Lionel","ali","ok","adeus","zip");
             homes.save(h2);
-            divisions.save(new Division(1,"sala",homes.findById(1)));
-            divisions.save(new Division(2,"WC",homes.findById(1)));
 
-            /*
-            users.save(new User(1,"Chico", "Silva", "ace@cs.go",null,"Alpha Male","randomquerty"));
-            users.save(new User(2,"Leandro", "Silva", "bot@cs.go",null,"Female","pass"));
-            homes.save(new Home(1,users.findById(1),"Casa do Chico","ali","ok","adeus","zip"));
+            Type temperature = new Type(1,"Temperature");
+            Type humidity = new Type(2,"Humidity");
+            Type luminosity = new Type(3,"Luminosity");
+            Type eletronic = new Type(4,"Eletronic");
+            types.save(temperature);
+            types.save(humidity);
+            types.save(luminosity);
+            types.save(eletronic);
 
-            types.save(new Type(1,"Temperature"));
-            sensors.save(new Sensor(1,divisions.findById(1),types.findById(1)));
-            */
+            Division division = new Division(1,"sala",h1);
+            divisions.save(division);
+            divisions.save(new Division(2,"WC",h1));
+            
+            Sensor sensor = new Sensor(1, division, temperature);
+            sensors.save(sensor);
+
+            Device light_bulb = new Device(1, "Lampada", 0.0, eletronic, division);
+            Device coffe_machine = new Device(2, "Máquina de Café", 0.0, eletronic, division);
+            devices.save(light_bulb);
+            devices.save(coffe_machine);
+
         };
     }
 }

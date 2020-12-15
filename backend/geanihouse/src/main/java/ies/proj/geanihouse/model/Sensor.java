@@ -1,5 +1,8 @@
 package ies.proj.geanihouse.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -13,13 +16,15 @@ public class Sensor {
 
     // There must be a @OneToMany on Division
     @ManyToOne()
-    @JoinColumn(name="division_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name="division_id", referencedColumnName = "id")
+    @JsonIgnore
     private Division division;
 
 
     // There must be a @OneToMany on Type
     @ManyToOne()
-    @JoinColumn(name="type_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name="type_id", referencedColumnName = "id")
+    @JsonIgnore
     private Type type;
 
     @OneToMany(mappedBy="sensor")
@@ -59,16 +64,12 @@ public class Sensor {
         this.type = type;
     }
 
-    public Set<SensorData> getSensorData(){
-        return this.sensor_data;
-    }
-
     public Set<SensorData> getSensor_data() {
         return sensor_data;
     }
 
     public String toString(){
-        return this.division.getName() + ": "+ this.type.getName();
+        return this.division + ": "+ this.type;
     }
 
 
