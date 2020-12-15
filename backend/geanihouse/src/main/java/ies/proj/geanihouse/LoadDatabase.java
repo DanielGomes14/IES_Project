@@ -49,11 +49,15 @@ class LoadDatabase {
             Division division = new Division(1,"sala",h1);
             divisions.save(division);
             divisions.save(new Division(2,"WC",h1));
+            
             Sensor sensor = new Sensor(1, division, temperature);
             sensors.save(sensor);
 
-            Device device = new Device(1, "Máquina de Café", 0.0, eletronic, division);
-            devices.save(device);
+            Device light_bulb = new Device(1, "Lampada", 0.0, eletronic, division);
+            Device coffe_machine = new Device(2, "Máquina de Café", 0.0, eletronic, division);
+            devices.save(light_bulb);
+            devices.save(coffe_machine);
+
         };
     }
 }

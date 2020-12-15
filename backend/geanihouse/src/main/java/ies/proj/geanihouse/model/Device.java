@@ -5,12 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.Set;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 @Entity
 @Table(name = "Device")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "division"})
 public class Device {
 
     @Id
@@ -24,12 +22,12 @@ public class Device {
     private double state;
 
     @ManyToOne()
-    @JoinColumn(name="type_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name="type_id", referencedColumnName = "id")
     @JsonIgnore
     private Type type;
 
     @ManyToOne()
-    @JoinColumn(name="division_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name="division_id", referencedColumnName = "id")
     @JsonIgnore
     private Division division;
 
