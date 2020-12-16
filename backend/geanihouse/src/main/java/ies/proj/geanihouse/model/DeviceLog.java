@@ -1,4 +1,6 @@
 package ies.proj.geanihouse.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -14,8 +16,7 @@ public class DeviceLog {
     private long id;
 
     @ManyToOne()
-    @JoinColumn(name="device_id", referencedColumnName = "id", insertable = false, updatable = false)
-
+    @JoinColumn(name="device_id", nullable = false)
     private Device device;
 
     @CreationTimestamp

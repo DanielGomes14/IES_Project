@@ -44,7 +44,8 @@ public class Home{
     @Column(name = "zip_code",length=15)
     private String zipCode;
 
-    @OneToMany(mappedBy="home")
+    @OneToMany(mappedBy="home",cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Division> divisions;
 
 

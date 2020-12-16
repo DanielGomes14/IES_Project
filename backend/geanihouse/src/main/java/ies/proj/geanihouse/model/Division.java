@@ -26,20 +26,22 @@ public class Division{
     private long id ;
 
     @ManyToOne()
-    @JoinColumn(name="home_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("divisions")
+    @JoinColumn(name="home_id",nullable = false)
     private Home home;
 
     @Column(name = "name", nullable = false,length=50)
     private String name ;
 
-    @OneToMany(mappedBy="division")
+    @OneToMany(mappedBy="division",cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<Sensor> sensors = new HashSet<>();
 
-    @OneToMany(mappedBy="division")
+    @OneToMany(mappedBy="division",cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<Device> devices = new HashSet<>();
 
-    @OneToMany(mappedBy="division")
+    @OneToMany(mappedBy="division",cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<DivisionConf> divisionConf = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
