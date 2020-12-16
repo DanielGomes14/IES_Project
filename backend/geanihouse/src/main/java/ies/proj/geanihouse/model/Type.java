@@ -17,13 +17,16 @@ public class Type {
     @Column(name = "name", nullable = false,length=50)
     private String name;
 
-    @OneToMany(mappedBy="type")
+    @OneToMany(mappedBy="type",cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Sensor> sensors;
 
-    @OneToMany(mappedBy="type")
+    @OneToMany(mappedBy="type",cascade = CascadeType.ALL )
+    @JsonIgnore
     private Set<Device> devices;
 
-    @OneToMany(mappedBy="type")
+    @OneToMany(mappedBy="type",cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<DivisionConf> divisionConf;
 
     public Type(){
