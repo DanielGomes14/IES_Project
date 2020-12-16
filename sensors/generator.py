@@ -69,8 +69,7 @@ class Temperature(Generator):
 
                 for _ in range(10):
                     await asyncio.sleep(0)
-                    sensor_data[sensor].append(
-                        round(random.gauss(mu, cls.sigma), 2))
+                    sensor_data[sensor].append( random.gauss(mu, cls.sigma) )
                 cls.sensor_mu[sensor] = mu
 
             await cls.send_shuffled(sensor_data)
@@ -98,8 +97,7 @@ class Luminosity(Generator):
 
                 for _ in range(10):
                     await asyncio.sleep(0)
-                    sensor_data[sensor].append(
-                        round(random.gauss(mu, cls.sigma), 2))
+                    sensor_data[sensor].append( random.gauss(mu * window_opened, cls.sigma) )
                 cls.sensor_mu[sensor] = mu
 
             await cls.send_shuffled(sensor_data)
@@ -126,8 +124,7 @@ class Humidity(Generator):
 
                 for _ in range(10):
                     await asyncio.sleep(0)
-                    sensor_data[sensor].append( 
-                        round(random.gauss(mu, cls.sigma), 2))
+                    sensor_data[sensor].append( random.gauss(mu, cls.sigma) )
                 cls.sensor_mu[sensor] = mu
 
             await cls.send_shuffled(sensor_data)
@@ -146,11 +143,13 @@ def on_message(client, userdata, message):
     elif topic == 'CONFIG':
         ...
 
+
 def publish(topic, message, waitForAck=False):
     mid = client.publish(topic, message)[1]
     if (waitForAck):
         while mid not in receivedMessages:
             time.sleep(0.25)
+
 
 def on_publish(client, userdata, mid):
     print('on_publish')

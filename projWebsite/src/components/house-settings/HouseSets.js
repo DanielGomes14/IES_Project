@@ -17,8 +17,8 @@ import DivisionService from "./../../services/DivisionService";
 
 
 class HouseSets extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 		this.OPTIONS = [
 			{ id: 1, name: "Daniel", checked: true },
 			{ id: 2, name: "Leandro", checked: true },
@@ -41,17 +41,18 @@ class HouseSets extends React.Component {
 	
 	handleChangeCheckBox(e, user) {
 		var newState = this.state
-		for(let i = 0; i < this.state.OPTIONS.length; i++){
-			if(this.state.OPTIONS[i].id == user)
+		for (let i = 0; i < this.state.OPTIONS.length; i++) {
+			if (this.state.OPTIONS[i].id == user)
 				newState.OPTIONS[i].checked = !this.state.OPTIONS[i].checked;  
 			this.setState({ ...this.state, ...newState });
 		}
 	}
 
 	handleSubmit(event) {
-		console.log("jdsj")
-		alert('A name was submitted: ' + this.state.name);
-		// DivisionService.addDivisions("1", this.state.name, this.state.OPTIONS);
+		alert('A name was submitted: ' + this.state.OPTIONS.filter(function(opt) {if (opt.checked) return opt.id;}).map(opt => opt.id + opt.name + opt.checked));
+		DivisionService.addDivision(
+			1, this.state.name
+		);
 		event.preventDefault();
 	}
 
@@ -82,7 +83,7 @@ class HouseSets extends React.Component {
 					<ListGroupItem className="p-3">
 						<Row>
 							<Col>
-								<Form>
+								<Form onSubmit={ this.handleSubmit }>
 									<Row form>
 										{/* Name of the Division */}
 										<Col md="6" className="form-group">

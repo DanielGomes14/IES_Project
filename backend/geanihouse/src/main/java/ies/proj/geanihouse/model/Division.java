@@ -27,7 +27,7 @@ public class Division{
 
     @ManyToOne()
     @JoinColumn(name="home_id", referencedColumnName = "id")
-    @JsonIgnore
+    @JsonIgnoreProperties("divisions")
     private Home home;
 
     @Column(name = "name", nullable = false,length=50)
