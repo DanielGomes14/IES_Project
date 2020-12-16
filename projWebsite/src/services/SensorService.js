@@ -1,6 +1,6 @@
 import baseURL from "./../data/base-url";
 
-const SENSORS_REST_API_URL = "sensors/"
+const SENSORS_REST_API_URL = "newsensor"
 
 class SensorService {
 
@@ -13,10 +13,10 @@ class SensorService {
                     authorization: 'Basic ' + window.btoa('chico' + ":" + 'randomquerty')
                 }
             })
-            .then(res => res.json());
     }
 
-    addSensors(division_id, type_id) {
+    addSensor(division_id, type_id) {
+        console.log('div ' + division_id + ' typ ' + type_id);
         return fetch(baseURL + SENSORS_REST_API_URL, {
                 method: 'POST',
                 mode: 'cors',
@@ -26,7 +26,6 @@ class SensorService {
                 },
                 body: JSON.stringify({division: {id: division_id}, type: {id: type_id}})
             })
-            .then(res => res.json());
     }
 }
 

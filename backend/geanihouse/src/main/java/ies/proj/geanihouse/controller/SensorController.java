@@ -9,11 +9,14 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import javax.validation.Valid;
 import java.util.List;
 
-@RestController
+
+@CrossOrigin(origins={ "http://localhost:3000" })
 @EnableBinding(Source.class)
+@RestController
 public class SensorController {
     @Autowired
     private SensorRepository sensorRepository;

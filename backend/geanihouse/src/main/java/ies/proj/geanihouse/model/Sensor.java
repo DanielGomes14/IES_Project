@@ -17,14 +17,14 @@ public class Sensor {
     // There must be a @OneToMany on Division
     @ManyToOne()
     @JoinColumn(name="division_id", referencedColumnName = "id")
-    @JsonIgnore
+    @JsonIgnoreProperties("sensors")
     private Division division;
 
 
     // There must be a @OneToMany on Type
     @ManyToOne()
     @JoinColumn(name="type_id", referencedColumnName = "id")
-    @JsonIgnore
+    @JsonIgnoreProperties("sensors")
     private Type type;
 
     @OneToMany(mappedBy="sensor")

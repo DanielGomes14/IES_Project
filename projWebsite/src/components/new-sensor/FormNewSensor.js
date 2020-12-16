@@ -62,42 +62,42 @@ class FormNewSensor extends React.Component {
 	
 	handleSubmit(event) {
 		alert('Sensor submitted: ' + this.state.selectedType.id);
-		// SensorService.addSensor(
-		// 	1, this.state.selectedType.id
-		// );
+		SensorService.addSensor(
+			1, this.state.selectedType.id
+		);
 		event.preventDefault();
 	}
 
 	render() {
 		return (
-				<Card small className="h-100 py-3 col-sm-4">
+			<Card small className="h-100 py-3 col-sm-4">
 
-						<CardHeader className="border-bottom">
-						<h5 className="m-0">{ this.props.title }</h5>
-						</CardHeader>
+				<CardHeader className="border-bottom">
+				<h5 className="m-0">{ this.props.title }</h5>
+				</CardHeader>
 
-						<CardBody className="d-flex flex-column">
-						<Form className="quick-post-form" onSubmit={ this.handleSubmit }>
+				<CardBody className="d-flex flex-column">
+				<Form className="quick-post-form" onSubmit={ this.handleSubmit }>
 
-								<FormGroup className="row">
-										<Col sm="12">
-												<label htmlFor="deIcon">Sensor Type:</label>
-												<Select options={ options } id="deIcon" placeholder="" defaultValue={ options[0] }
-												components={{ Option: CustomSelectOption, SingleValue: CustomSelectValue }}
-												value={ this.state.selectedType } onChange={ this.handleSelect } />
-										</Col>
-								</FormGroup>
+					<FormGroup className="row">
+						<Col sm="12">
+							<label htmlFor="deIcon">Sensor Type:</label>
+							<Select options={ options } id="deIcon" placeholder="" defaultValue={ options[0] }
+							components={{ Option: CustomSelectOption, SingleValue: CustomSelectValue }}
+							value={ this.state.selectedType } onChange={ this.handleSelect } />
+						</Col>
+					</FormGroup>
 
-								<FormGroup className="mb-0 d-flex justify-content-center mt-3">
-										<Button theme="accent" type="submit" className="bg-primary text-white text-center rounded"
-										 style={{ boxShadow: "inset 0 0 5px rgba(0,0,0,.2)", fontSize: "16px", width:  "150px", height:  "40px" }}>
-												Add Sensor
-										</Button>
-								</FormGroup>
+					<FormGroup className="mb-0 d-flex justify-content-center mt-3">
+						<Button theme="accent" type="submit" className="bg-primary text-white text-center rounded"
+							style={{ boxShadow: "inset 0 0 5px rgba(0,0,0,.2)", fontSize: "16px", width:  "150px", height:  "40px" }}>
+								Add Sensor
+						</Button>
+					</FormGroup>
 
-						</Form>
-						</CardBody>
-				</Card>
+				</Form>
+				</CardBody>
+			</Card>
 		);
 	}
 }

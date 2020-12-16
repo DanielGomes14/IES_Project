@@ -97,13 +97,13 @@ class EditDivision extends React.Component{
 	*/
 
 	handleRemoveDivision(division_id) {
-		DivisionService.deleteDivision(1, division_id)
-			.then(data => { 
-				console.log(data);
-			})
-			.catch(error => {
-				console.log(error) ;
-			});
+		// DivisionService.deleteDivision(1, division_id)
+		// 	.then(data => { 
+		// 		console.log(data);
+		// 	})
+		// 	.catch(error => {
+		// 		console.log(error) ;
+		// 	});
 	}
 		
 	render() {
