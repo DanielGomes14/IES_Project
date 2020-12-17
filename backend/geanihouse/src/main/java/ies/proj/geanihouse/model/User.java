@@ -8,16 +8,11 @@ import java.io.Serializable;
 import java.util.Set;
 import java.util.HashSet;
 
-//https://grokonez.com/spring-framework/spring-data/springjpa-save-filesimages-mysql-database-lob-annotation
-//https://www.baeldung.com/spring-security-registration-password-encoding-bcrypt
-
-/*
-    Created by Bruno Bastos
-    on 5-12-2020
-*/
+import lombok.*;
 
 @Entity
 @Table(name = "User")
+@Getter @Setter
 public class User{
 
     @Id
@@ -60,46 +55,5 @@ public class User{
         this.role = role;
     }
 
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRoles(String role) {
-        this.role = role;
-    }
-    public Client getClient(){return client;}
 
 }

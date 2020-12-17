@@ -1,5 +1,8 @@
 package ies.proj.geanihouse.model;
 
+import lombok.*;
+
+@Getter @Setter
 public class Transaction {
     int orderId;
     int itemId;
@@ -16,38 +19,4 @@ public class Transaction {
         this.orderQty = orderQty;
         this.region = region;
     }
-
-    public int getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
-
-    public int getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(int itemId) {
-        this.itemId = itemId;
-    }
-
-    public int getOrderQty() {
-        return orderQty;
-    }
-
-    public void setOrderQty(int orderQty) {
-        this.orderQty = orderQty;
-    }
-
-    public String getRegion() {
-        return region;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
-    }
-
-
 }
