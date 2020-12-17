@@ -27,17 +27,17 @@ public class Division{
     @Column(name = "name", nullable = false,length=50)
     private String name ;
 
-    @OneToMany(mappedBy="division",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="division",cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<Sensor> sensors = new HashSet<>();
+    private Set<Sensor> sensors ;
 
-    @OneToMany(mappedBy="division",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="division",cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<Device> devices = new HashSet<>();
+    private Set<Device> devices ;
 
-    @OneToMany(mappedBy="division",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="division",cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<DivisionConf> divisionConf = new HashSet<>();
+    private Set<DivisionConf> divisionConf ;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "Division_Permissions",

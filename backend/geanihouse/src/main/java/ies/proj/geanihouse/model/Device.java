@@ -32,11 +32,11 @@ public class Device {
     @JoinColumn(name="division_id", referencedColumnName = "id",nullable=false)
     private Division division;
 
-    @OneToMany(mappedBy="device",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="device",cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<DeviceLog> deviceLogs;
 
-    @OneToMany(mappedBy="device",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="device",cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<DeviceConf> deviceConf;
 
