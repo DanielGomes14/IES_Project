@@ -8,4 +8,4 @@ jobs:
      # with credentials stored in the UI
 
      # build the application image
-     - run: docker-compose up
+     - run: docker-compose up -d
