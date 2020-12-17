@@ -4,8 +4,8 @@ const DEVICES_REST_API_URL = "devices/"
 
 class DeviceService {
 
-    getDevices(home_id) {
-        return fetch(baseURL + (home_id + '/') + DEVICES_REST_API_URL, {
+    getDevices(division_id) {
+        return fetch(baseURL + (division_id + '/') + DEVICES_REST_API_URL, {
                 method: 'GET',
                 mode: 'cors',
                 headers: {
