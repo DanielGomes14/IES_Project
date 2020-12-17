@@ -9,8 +9,11 @@ import javax.persistence.*;
 import java.sql.Time;
 import java.sql.Timestamp;
 
+import lombok.*;
+
 @Entity
 @Table( name = "Sensor_Data")
+@Setter @Getter
 public class SensorData {
 
     @Id
@@ -45,41 +48,4 @@ public class SensorData {
         this.data = data;
     }
 
-    public long getId(){
-        return this.id;
-    }
-
-    public void setId(long id){
-        this.id = id;
-    }
-
-    public Sensor getSensor(){
-        return this.sensor;
-    }
-
-    public void setSensor(Sensor sensor){
-        this.sensor = sensor;
-    }
-
-    public Timestamp getTimestampDate(){
-        return this.timestampDate;
-    }
-
-    public void setTimestampDate(Timestamp timestampDate){
-        this.timestampDate = timestampDate;
-    }
-
-    public double getData() {
-        return data;
-    }
-
-    /*
-    public String toString(){
-        return this.sensor.getDivision().getName() + ", Type  " + this.sensor.getType().getName()
-                + ", Time: " + this.timestampDate.toString();
-    }
-    */
-    public String toString(){
-        return "not null";
-    }
 }
