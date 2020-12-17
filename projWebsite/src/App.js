@@ -8,10 +8,16 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./shards-dashboard/styles/shards-dashboards.1.1.0.min.css";
 import "./assets/style.css";
 
+import PrivateRoute from "./PrivateRoute";
+
+
+// <PrivateRoute authed={this.state.authed} path='/dashboard' component={Dashboard} />
+
 export default () => (
   <Router basename={process.env.REACT_APP_BASENAME || ""}>
     <div>
       {routes.map((route, index) => {
+        // var routeRoute = (route.private ? PrivateRoute : Route );
         return (
           <Route
             key={index}
