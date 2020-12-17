@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.util.Set;
 
 
-@CrossOrigin(origins={ "http://localhost:3000" }, allowedHeaders = "*")
+@CrossOrigin(origins={ "*" }, allowedHeaders = "*")
 @RestController
 public class DeviceController {
     @Autowired
