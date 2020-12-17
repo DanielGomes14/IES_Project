@@ -20,13 +20,11 @@ public class DivisionConf {
     private double maxValue;
 
     @ManyToOne()
-    @JoinColumn(name="division_id", referencedColumnName = "id", insertable = false, updatable = false)
-    @JsonIgnore
+    @JoinColumn(name="division_id", nullable = false)
     private Division division;
 
     @ManyToOne()
-    @JoinColumn(name="type_id", referencedColumnName = "id", insertable = false, updatable = false)
-    @JsonIgnore
+    @JoinColumn(name="type_id", nullable = false)
     private Type type;
 
     public DivisionConf(){

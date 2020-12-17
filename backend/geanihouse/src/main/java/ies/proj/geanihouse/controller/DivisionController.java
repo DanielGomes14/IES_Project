@@ -37,6 +37,7 @@ public class DivisionController {
 
     @PostMapping("/divisions")
     public  Division addDivision(@Valid @RequestBody Division division){
+        System.out.println("--->" + division.getSensors());
         return divisionRepository.save(division);
     }
 }

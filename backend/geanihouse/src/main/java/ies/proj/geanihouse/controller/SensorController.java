@@ -24,11 +24,13 @@ public class SensorController {
     @Autowired
     Source source;
 
+
     @PostMapping("/newsensor")
     public Sensor addSensorToDivision(@Valid @RequestBody Sensor sensor){
+        System.out.println("-->"+ sensor.getDivision());
         //publish to RabbitMQ the presence of a new Sensor
-        MQMessage msg = new MQMessage(sensor.getId(),sensor.getType().getName());
-        source.output().send(MessageBuilder.withPayload(msg).build());
+        //MQMessage msg = new MQMessage(sensor.getId(),sensor.getType().getName());
+        //  source.output().send(MessageBuilder.withPayload(msg).build());
         return  sensorRepository.save(sensor);
     }
 

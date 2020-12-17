@@ -2,6 +2,7 @@ package ies.proj.geanihouse.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -17,8 +18,7 @@ public class SensorData {
     private long id;
 
     @ManyToOne()
-    @JoinColumn(name="sensor_id", referencedColumnName = "id")
-    @JsonIgnore
+    @JoinColumn(name="sensor_id")
     private Sensor sensor;
 
     @CreationTimestamp

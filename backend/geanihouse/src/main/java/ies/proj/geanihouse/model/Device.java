@@ -22,19 +22,19 @@ public class Device {
     private double state;
 
     @ManyToOne()
-    @JoinColumn(name="type_id", referencedColumnName = "id")
-    @JsonIgnore
+    @JoinColumn(name="type_id",nullable = false)
     private Type type;
 
     @ManyToOne()
-    @JoinColumn(name="division_id", referencedColumnName = "id")
-    @JsonIgnore
+    @JoinColumn(name="division_id", referencedColumnName = "id",nullable=false)
     private Division division;
 
-    @OneToMany(mappedBy="device")
+    @OneToMany(mappedBy="device",cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<DeviceLog> deviceLogs;
 
-    @OneToMany(mappedBy="device")
+    @OneToMany(mappedBy="device",cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private Set<DeviceConf> deviceConf;
 
     public Device(){
