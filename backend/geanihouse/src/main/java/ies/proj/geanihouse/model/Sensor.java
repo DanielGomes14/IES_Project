@@ -19,16 +19,16 @@ public class Sensor {
 
     // There must be a @OneToMany on Division
     @ManyToOne()
-    @JoinColumn(name="division_id",nullable = false)
+    @JoinColumn(name="division_id")
     private Division division;
 
 
     // There must be a @OneToMany on Type
     @ManyToOne()
-    @JoinColumn(name="type_id",nullable = false)
+    @JoinColumn(name="type_id")
     private Type type;
 
-    @OneToMany(mappedBy="sensor",cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy="sensor",cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<SensorData> sensor_data;
 
