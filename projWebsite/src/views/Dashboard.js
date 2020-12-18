@@ -20,22 +20,11 @@ class Dashboard extends React.Component {
 		this.setState({ loading: 1 });
 
 		DivisionService.getDivisions(1)
-			.then(data => { 
-				data.map((div) => {
-					DeviceService.getDevices(div.id)
-						.then(data => {
-							div.devices = data
-						})
-						.catch(error => {
-							console.log(error);
-							this.setState({ loading: 2 });
-						});
-				});
+			.then(data => {
 				this.setState({ 
 					divisions: data,
 					loading: 0
 				});
-				console.log(data);
 			})
 			.catch(error => {
 				console.log(error) ;
@@ -47,12 +36,10 @@ class Dashboard extends React.Component {
 		var content = ""
 		switch(this.state.loading) {
 			case 0:
-				console.log(this.state.divisions);
-				content = this.state.divisions.map((div) => {
-					console.log(div)
-					return (
-					<DeviceGroup key={div.id} division={div} devices={div.devices} />
-				)})
+				content = this.state.divisions.map((div) => (
+						<DeviceGroup key={div.id} division={div} />
+					)
+				)
 				break;
 			case 1:
 				content = "Loading...";
