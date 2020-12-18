@@ -23,6 +23,7 @@ class Generator:
     @classmethod
     async def send_shuffled(cls, sensor_data):
         count = 0
+        await asyncio.sleep(0)
         while sensor_data:
             await asyncio.sleep(cls.time_per_pub/len(sensor_data))
             sensor_id = list(sensor_data.keys())[count % len(sensor_data)]
@@ -79,17 +80,8 @@ class Temperature(Generator):
     MIN, MAX = 0, 37
 
     @classmethod
-    async def start(cls,temp_queue):
+    async def start(cls):
         while True:
-
-            print("ola")
-            if len(temp_queue)>0:
-                data = temp_queue.pop()
-                print(data)
-                id = data['id']
-                value = data['value']
-                cls.sensor_mu[id] = value
-
             sensor_data = {k: [] for k in cls.sensor_mu}
             
             for sensor in list(cls.sensor_mu):
@@ -101,12 +93,12 @@ class Temperature(Generator):
                 elif mu < cls.MIN:
                     mu += .5
 
-                for _ in range(10):
-                    await asyncio.sleep(0)
-                    sensor_data[sensor].append( random.gauss(mu, cls.sigma) )
+                sensor_data[sensor] = [random.gauss(mu, cls.sigma)]
                 cls.sensor_mu[sensor] = mu
 
+            print('antes await')
             await cls.send_shuffled(sensor_data)
+            print('dps await')
 
 
 class Luminosity(Generator):
@@ -129,9 +121,7 @@ class Luminosity(Generator):
                 elif mu < cls.MIN:
                     mu += .5
 
-                for _ in range(10):
-                    await asyncio.sleep(0)
-                    sensor_data[sensor].append( random.gauss(mu * window_opened, cls.sigma) )
+                sensor_data[sensor] = [random.gauss(mu, cls.sigma)]
                 cls.sensor_mu[sensor] = mu
 
             await cls.send_shuffled(sensor_data)
@@ -156,9 +146,7 @@ class Humidity(Generator):
                 elif mu < cls.MIN:
                     mu += .2
 
-                for _ in range(10):
-                    await asyncio.sleep(0)
-                    sensor_data[sensor].append( random.gauss(mu, cls.sigma) )
+                sensor_data[sensor] = [random.gauss(mu, cls.sigma)]
                 cls.sensor_mu[sensor] = mu
 
             await cls.send_shuffled(sensor_data)
@@ -167,7 +155,6 @@ class Humidity(Generator):
 def on_message(client, userdata, message):
     print("Received operation " + str(message.payload))
     
-    global temperatureQ
 
     message = json.loads(message.payload.decode())
 
@@ -182,7 +169,7 @@ def on_message(client, userdata, message):
             #if Sensor.temperature_sensor == None:
             #    Sensor.temperature_sensor = id
             #else:
-            temperatureQ.append({'id':id,'value':random.randint(Temperature.MIN, Temperature.MAX)})
+            Temperature.sensor_mu[id] = random.randint(Temperature.MIN, Temperature.MAX)
             print(id,type)
         elif type == 'Humidity':
 
@@ -255,9 +242,8 @@ temp_queue = asyncio.Queue(loop=loop)
 lum_queue = asyncio.Queue(loop=loop)
 hum_queue = asyncio.Queue(loop=loop)
 
-temperatureQ = []
     
-temp_task = loop.create_task(Temperature.start(temperatureQ))
+temp_task = loop.create_task(Temperature.start())
 lum_task = loop.create_task(Luminosity.start())
 hum_task = loop.create_task(Humidity.start())
 
