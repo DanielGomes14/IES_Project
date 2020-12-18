@@ -33,7 +33,7 @@ public class DeviceController {
     @Autowired
     private DeviceRepository deviceRepository;
 
-    @GetMapping("de/{id}/devices/")
+    @GetMapping("/{id}/devices/")
     public ResponseEntity<?> getAllHomeDivisions(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
         Division division = this.divisionRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Could not find division with id" + id));
         Set <Device> devices = division.getDevices();

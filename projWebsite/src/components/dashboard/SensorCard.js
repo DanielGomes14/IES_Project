@@ -39,16 +39,19 @@ class SensorCard extends React.Component {
         super(props);
         this.sensor = props.sensor;
 		this.state = {
-			value: 0,
+			value: 69,
         };
     }
 
     componentDidMount() {
 		SensorService.getSensorData(this.sensor.id)
             .then(data => {
-                this.setState({ 
-                    sensors: data,
-                });
+                console.log("-->", data)
+                if (data && data.length > 0){
+                    this.setState({ 
+                        value: data[0].data,
+                    });
+                }
             })
             .catch(error => {
                 console.log(error) ;

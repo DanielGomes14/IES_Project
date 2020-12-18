@@ -36,7 +36,7 @@ public class SensorDataController {
         return ResponseEntity.ok().body(data);
     }
     //get sensor data of a specific sensor
-    @GetMapping("/sensor/{id}/sensordata")
+    @GetMapping("/sensors/{id}/sensordata/")
     public ResponseEntity<?> getSensorData(
             @PathVariable(value = "id") long sensorid, @RequestParam(required = false,defaultValue = "false") Boolean latest)
             throws Throwable {

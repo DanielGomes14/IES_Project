@@ -2,7 +2,7 @@ import baseURL from "./../data/base-url";
 import { auth } from "../utils/auth";
 
 const SENSORS_REST_API_URL = "sensors/"
-
+const SENSORDATA_REST_API_URL = "sensordata/"
 class SensorService {
 
     getSensors(div_id) {
@@ -31,7 +31,7 @@ class SensorService {
     }
 
     getSensorData(sen_id) {
-        return fetch(baseURL + (sen_id + '/') + SENSORS_REST_API_URL, {
+        return fetch(baseURL + (SENSORS_REST_API_URL + sen_id + '/') + SENSORDATA_REST_API_URL + "?latest=true", {
             method: 'GET',
             mode: 'cors',
             headers: {
