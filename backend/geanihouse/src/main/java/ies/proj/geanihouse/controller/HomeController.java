@@ -6,6 +6,9 @@ import ies.proj.geanihouse.model.Home;
 import ies.proj.geanihouse.model.User;
 import ies.proj.geanihouse.repository.HomeRepository;
 import org.apache.juli.logging.Log;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -56,6 +59,18 @@ public class HomeController {
     public  Home addnewHome(@Valid @RequestBody Home home) throws  ResourceNotFoundException{
             LOG.debug(home.getClients());
             return homeRepository.save(home);
+    }
+
+    @DeleteMapping("/homes/{id}")
+    public Map<String,Boolean> deleteHouse(@PathVariable(value = "id") Long homeId)
+            throws ResourceNotFoundException {
+            Home home = homeRepository.findById(homeId)
+                    .orElseThrow( () -> new ResourceNotFoundException("House not found for this id :: " + homeId));
+            LOG.debug("deleting house: "+ home);
+            homeRepository.delete(home);
+            Map<String,Boolean> response = new HashMap<>();
+            response.put("deleted",Boolean.TRUE);
+            return response;
     }
 
 }

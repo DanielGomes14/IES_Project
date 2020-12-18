@@ -52,7 +52,6 @@ public class DivisionController {
         Map<String,Boolean> response = new HashMap<>();
         response.put("deleted",Boolean.TRUE);
         return response;
-
     }
 
 

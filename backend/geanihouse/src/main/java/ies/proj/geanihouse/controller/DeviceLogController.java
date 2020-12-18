@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -26,6 +28,19 @@ public class DeviceLogController {
         List<DeviceLog> data = deviceLogRepository.findAllByDevice_Division_Home_Id(id);
         for(DeviceLog d: data) LOG.info(d);
         return ResponseEntity.ok().body(data);
+    }
+
+    @DeleteMapping("/sensorlog/{id}")
+    public Map<String,Boolean> deleteDeviceLog(@PathVariable(value = "id") long deviceLogId)
+            throws  ResourceNotFoundException{
+        DeviceLog deviceLog = deviceLogRepository.findById(deviceLogId)
+                .orElseThrow( () ->  new ResourceNotFoundException("Could not found DeviceLog with id" + deviceLogId));
+        LOG.debug("deleting house: "+ deviceLog);
+        deviceLogRepository.delete(deviceLog);
+        Map<String,Boolean> response = new HashMap<>();
+        response.put("deleted",Boolean.TRUE);
+        return  response;
+
     }
 
 }
