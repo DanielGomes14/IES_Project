@@ -16,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.util.List;
 @RestController
 public class HomeController {
@@ -26,7 +28,7 @@ public class HomeController {
     private UserRepository userRepository;
 
     @GetMapping("/homes")
-    public ResponseEntity<List<Home>> getAllUserHomes() throws ErrorDetails,ResourceNotFoundException{
+    public ResponseEntity<?> getAllUserHomes() throws ErrorDetails,ResourceNotFoundException{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         LOG.info(authentication.getName());
         //ver melhor
@@ -48,6 +50,12 @@ public class HomeController {
         }
         LOG.error("User not authenticated!");
         throw  new ErrorDetails("User not authenticated!");
+    }
+
+    @PostMapping("/newhouse")
+    public  Home addnewHome(@Valid @RequestBody Home home) throws  ResourceNotFoundException{
+            LOG.debug(home.getClients());
+            return homeRepository.save(home);
     }
 
 }
