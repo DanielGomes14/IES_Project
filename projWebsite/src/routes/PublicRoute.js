@@ -5,7 +5,7 @@ import { auth } from '../utils/auth';
 const PublicRoute = ({layout: Layout, component: Component, restricted, ...rest}) => {
     return (
         <Route {...rest} render={props => (
-            auth.isLogin() && restricted ?
+            auth.token() && restricted ?
                 <Redirect to="/" />
             : <Layout {...props}><Component {...props} /></Layout>
         )} />

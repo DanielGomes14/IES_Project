@@ -5,9 +5,9 @@ import { auth } from '../utils/auth';
 const PrivateRoute = ({layout: Layout, component: Component, ...rest}) => {
     return (
         <Route {...rest} render={props => (
-            auth.isLogin() ?
+            auth.token() ?
               <Layout {...props}><Component {...props} /></Layout>
-            : <Redirect to="/register" />
+            : <Redirect to="/login" />
         )} />
     );
 };

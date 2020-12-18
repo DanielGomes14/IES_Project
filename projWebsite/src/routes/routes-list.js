@@ -68,7 +68,6 @@ export const publicRoutes = [
     component: BlogPosts
   },
   {
-<<<<<<< HEAD:projWebsite/src/routes/routes-list.js
     path: "/login",
     restricted: true,
     layout: LoginLayout,
@@ -84,8 +83,6 @@ export const publicRoutes = [
 
 export const privateRoutes = [
   {
-=======
->>>>>>> e2573271f2efd514a3e85ed71e8c4859435fec44:projWebsite/src/routes.js
     path: "/",
     exact: true,
     layout: DefaultLayout,
@@ -127,19 +124,6 @@ export const privateRoutes = [
     component : NewSensor
   },
   {
-<<<<<<< HEAD:projWebsite/src/routes/routes-list.js
-=======
-    path: "/house-settings",
-    layout: DefaultLayout,
-    component: HouseSettings
-  },
-  {
-    path: "/group-settings",
-    layout: DefaultLayout,
-    component: GroupSettings
-  },
-  {
->>>>>>> e2573271f2efd514a3e85ed71e8c4859435fec44:projWebsite/src/routes.js
     path:"/newhouse",
     layout: DefaultLayout,
     component: NewHouse

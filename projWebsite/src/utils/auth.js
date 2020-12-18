@@ -1,12 +1,11 @@
 export const auth = {
-    token: null,
     login(token) {
-      this.token = token
+      localStorage.setItem('token', token);
     },
     logout() {
-      this.token = null
+      localStorage.removeItem('token');
     },
-    isLogin() {
-        return this.token;
+    token() {
+        return localStorage.getItem('token');
     }
 }
