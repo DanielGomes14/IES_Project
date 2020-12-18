@@ -39,5 +39,10 @@ public class DeviceLog {
         this.timestampDate = timestampDate;
         this.data = data;
     }
+    public DeviceLog(Device device, Timestamp timestampDate, double data){
+        this.device = device;
+        this.timestampDate = timestampDate;
+        this.data = data;
+    }
 
 }

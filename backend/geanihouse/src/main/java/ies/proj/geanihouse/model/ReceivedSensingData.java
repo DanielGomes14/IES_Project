@@ -5,16 +5,18 @@ import java.sql.Timestamp;
 import lombok.*;
 
 @Getter @Setter
-public class ReceivedSensorData {
+public class ReceivedSensingData {
 
-    private long sensor_id;
+    private String method;
+    private long id;
     private String type;
     private Timestamp timestamp;
     private double value;
 
 
-    public ReceivedSensorData(long sensor_id,double data,String type,Timestamp timestamp){
-        this.sensor_id = sensor_id;
+    public ReceivedSensingData(String method, long id, double data, String type, Timestamp timestamp){
+        this.method=method;
+        this.id = id;
         this.value = data;
         this.type = type;
         this.timestamp = timestamp;
