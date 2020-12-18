@@ -16,7 +16,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @CrossOrigin(origins="*", allowedHeaders = "*")
@@ -40,4 +42,17 @@ public class DivisionController {
         System.out.println("--->" + division.getSensors());
         return divisionRepository.save(division);
     }
+
+    @DeleteMapping("/divisions/{id}")
+    public Map<String,Boolean> deleteDivision(@PathVariable(value = "id") Long divisionId)
+        throws ResourceNotFoundException{
+        Division division = divisionRepository.findById(divisionId)
+                .orElseThrow( () -> new ResourceNotFoundException("Division not found for this id :: " + divisionId));
+        divisionRepository.delete(division);
+        Map<String,Boolean> response = new HashMap<>();
+        response.put("deleted",Boolean.TRUE);
+        return response;
+    }
+
+
 }

@@ -4,6 +4,8 @@ import ies.proj.geanihouse.model.Division;
 import ies.proj.geanihouse.model.Device;
 import ies.proj.geanihouse.repository.DeviceRepository;
 import ies.proj.geanihouse.repository.DivisionRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,12 +18,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 
 @CrossOrigin(origins={ "*" }, allowedHeaders = "*")
 @RestController
 public class DeviceController {
+    private static final Logger LOG = LogManager.getLogger(HomeController.class);
     @Autowired
     private DivisionRepository divisionRepository;
 
@@ -42,5 +47,15 @@ public class DeviceController {
     public Device addDevice(@Valid @RequestBody Device device) {
         System.out.println("-----"+ device.getDivision());
         return deviceRepository.save(device);
+    }
+    @DeleteMapping("/devices/{id}")
+    public Map<String,Boolean> deleteDevice(@PathVariable(value = "id") Long deviceId) throws ResourceNotFoundException {
+        Device device = deviceRepository.findById(deviceId)
+                .orElseThrow( () -> new ResourceNotFoundException("Division not found for this id :: " + deviceId));
+        LOG.debug("Deleteting device " + device);
+        deviceRepository.delete(device);
+        Map<String,Boolean> response = new HashMap<>();
+        response.put("deleted",Boolean.TRUE);
+        return response;
     }
 }
