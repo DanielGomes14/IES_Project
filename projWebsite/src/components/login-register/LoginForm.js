@@ -10,8 +10,9 @@ import {
 	Button,
 } from "shards-react";
 
-import AuthenticationService from "./../../services/AuthenticationService";
+import AuthenticationService from "../../services/AuthenticationService";
 import { Redirect } from "react-router-dom";
+import { auth } from '../../utils/auth';
 
 
 class LoginForm extends React.Component {
@@ -41,13 +42,13 @@ class LoginForm extends React.Component {
 		+ '\n' + this.state.username
 		+ '\n' + this.state.password
 		);
-		var auth = 'Basic ' + window.btoa(this.state.username + ":" + this.state.password);
-		AuthenticationService.login(auth)
+		var token = 'Basic ' + window.btoa(this.state.username + ":" + this.state.password);
+		AuthenticationService.login(token)
 			.then((response) => {
 				console.log(response);
 				if (response.ok) {
 					console.log("Login successfull:");
-					localStorage.setItem('token', auth);
+					auth.login(token)
 					this.setState({loggedIn: true});
 				} else if (response.status == "400") {
 					console.log("400: ");

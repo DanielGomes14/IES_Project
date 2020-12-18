@@ -1,4 +1,5 @@
 import baseURL from "./../data/base-url";
+import { auth } from "../utils/auth";
 
 const DIVISIONS_REST_API_URL = "divisions"
 
@@ -10,7 +11,7 @@ class DivisionService {
                 mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
-                    authorization: 'Basic ' + window.btoa('chico' + ":" + 'randomquerty')
+                    authorization: auth.token(),
                 }
             })
             .then(res => res.json());
@@ -22,7 +23,7 @@ class DivisionService {
                 mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
-                    authorization: 'Basic ' + window.btoa('chico' + ":" + 'randomquerty')
+                    authorization: auth.token(),
                 },
                 body: JSON.stringify({ name: name, home: {id: home_id} })
             })
@@ -34,7 +35,7 @@ class DivisionService {
     //             mode: 'cors',
     //             headers: {
     //                 'Content-Type': 'application/json',
-    //                 authorization: 'Basic ' + window.btoa('chico' + ":" + 'randomquerty')
+    //                 authorization: auth.token(),
     //             },
     //             body: JSON.stringify({  })
     //         })
