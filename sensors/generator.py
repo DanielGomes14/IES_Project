@@ -2,7 +2,7 @@ import random
 import asyncio
 import paho.mqtt.client as mqtt
 import json
-import Adafruit_DHT
+#import Adafruit_DHT
 from datetime import datetime
 
 # client, user and device details
@@ -164,17 +164,17 @@ def on_message(client, userdata, message):
         
         if type == 'Temperature':
             
-            if Sensor.temperature_sensor == None:
-                Sensor.temperature_sensor = id
-            else:
-                Temperature.sensor_mu[id] = random.randint(Temperature.MIN, Temperature.MAX)
+            #if Sensor.temperature_sensor == None:
+            #    Sensor.temperature_sensor = id
+            #else:
+            Temperature.sensor_mu[id] = random.randint(Temperature.MIN, Temperature.MAX)
 
         elif type == 'Humidity':
 
-            if Sensor.humidity_sensor == None:
-                Sensor.humidity_sensor = id
-            else:
-                Humidity.sensor_mu[id]    = random.randint(Humidity.MIN, Humidity.MAX)
+            #if Sensor.humidity_sensor == None:
+            #    Sensor.humidity_sensor = id
+            #else:
+            Humidity.sensor_mu[id]    = random.randint(Humidity.MIN, Humidity.MAX)
 
         elif type == 'Luminosity':
             Luminosity.sensor_mu[id]  = random.randint(Luminosity.MIN, Luminosity.MAX) 
