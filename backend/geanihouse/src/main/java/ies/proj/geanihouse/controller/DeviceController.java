@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.util.Set;
 
 
-@CrossOrigin(origins={ "http://localhost:3000" }, allowedHeaders = "*")
+@CrossOrigin(origins={ "*" }, allowedHeaders = "*")
 @RestController
 public class DeviceController {
     @Autowired
@@ -40,6 +40,7 @@ public class DeviceController {
 
     @PostMapping("/devices")
     public Device addDevice(@Valid @RequestBody Device device) {
-       return deviceRepository.save(device);
+        System.out.println("-----"+ device.getDivision());
+        return deviceRepository.save(device);
     }
 }

@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 
-@CrossOrigin(origins={ "http://localhost:3000" }, allowedHeaders = "*")
+@CrossOrigin(origins="*", allowedHeaders = "*")
 @RestController
 public class DivisionController {
     @Autowired
@@ -37,6 +37,7 @@ public class DivisionController {
 
     @PostMapping("/divisions")
     public  Division addDivision(@Valid @RequestBody Division division){
+        System.out.println("--->" + division.getSensors());
         return divisionRepository.save(division);
     }
 }

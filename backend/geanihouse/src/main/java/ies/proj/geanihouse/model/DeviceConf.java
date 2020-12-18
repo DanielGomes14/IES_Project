@@ -1,6 +1,9 @@
 package ies.proj.geanihouse.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -8,6 +11,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "Device_Conf")
+@Getter @Setter
 public class DeviceConf {
 
     @Id
@@ -24,8 +28,7 @@ public class DeviceConf {
     private double value;
 
     @ManyToOne()
-    @JoinColumn(name="device_id", referencedColumnName = "id", insertable = false, updatable = false)
-    @JsonIgnore
+    @JoinColumn(name="device_id", nullable = false)
     private Device device;
 
 
@@ -39,50 +42,5 @@ public class DeviceConf {
         this.timeBegin = timeBegin;
         this.timeEnd = timeEnd;
         this.value = value;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Timestamp getTimeBegin() {
-        return timeBegin;
-    }
-
-    public void setTimeBegin(Timestamp timeBegin) {
-        this.timeBegin = timeBegin;
-    }
-
-    public Timestamp getTimeEnd() {
-        return timeEnd;
-    }
-
-    public void setTimeEnd(Timestamp timeEnd) {
-        this.timeEnd = timeEnd;
-    }
-
-    public double getValue() {
-        return value;
-    }
-
-    public void setValue(double value) {
-        this.value = value;
-    }
-
-    public Device getDevice() {
-        return device;
-    }
-
-    public void setDevice(Device device) {
-        this.device = device;
-    }
-
-
-    public String toString(){
-        return this.device.getName() + " : "+ this.timeBegin.toString() ;
     }
 }

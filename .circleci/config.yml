@@ -1,0 +1,11 @@
+version: 2
+jobs:
+ build:
+   machine: true
+   steps:
+     - checkout
+     # start proprietary DB using private Docker image
+     # with credentials stored in the UI
+
+     # build the application image
+     - run: docker-compose up -d

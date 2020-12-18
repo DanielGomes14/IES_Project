@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import lombok.*;
 
 @Entity
 @Table(name = "Division_Conf")
+@Getter @Setter
 public class DivisionConf {
 
     @Id
@@ -20,19 +22,16 @@ public class DivisionConf {
     private double maxValue;
 
     @ManyToOne()
-    @JoinColumn(name="division_id", referencedColumnName = "id", insertable = false, updatable = false)
-    @JsonIgnore
+    @JoinColumn(name="division_id", nullable = false)
     private Division division;
 
     @ManyToOne()
-    @JoinColumn(name="type_id", referencedColumnName = "id", insertable = false, updatable = false)
-    @JsonIgnore
+    @JoinColumn(name="type_id", nullable = false)
     private Type type;
 
     public DivisionConf(){
 
     }
-
     public DivisionConf(long id, Division division, Type type, double minValue, double maxValue){
         this.id = id;
         this.division = division;
@@ -40,50 +39,4 @@ public class DivisionConf {
         this.minValue = minValue;
         this.maxValue = maxValue;
     }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public double getMinValue() {
-        return minValue;
-    }
-
-    public void setMinValue(double min_value) {
-        this.minValue = min_value;
-    }
-
-    public double getMaxValue() {
-        return maxValue;
-    }
-
-    public void setMaxValue(double max_value) {
-        this.maxValue = max_value;
-    }
-
-    public Division getDivision() {
-        return division;
-    }
-
-    public void setDivision(Division division) {
-        this.division = division;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-
-    public String toString(){
-        return this.division.getName() + " : " + this.minValue + " - " + this.maxValue + " > " + this.type.getName();
-    }
-
 }

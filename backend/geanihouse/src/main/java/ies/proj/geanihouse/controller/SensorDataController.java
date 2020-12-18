@@ -27,10 +27,4 @@ public class SensorDataController {
         for(SensorData sd: data) LOG.info(sd);
         return ResponseEntity.ok().body(data);
     }
-
-
-
-
-
-
 }

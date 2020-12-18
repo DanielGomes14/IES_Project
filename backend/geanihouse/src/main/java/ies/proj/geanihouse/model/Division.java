@@ -8,17 +8,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
-
-
-/*
-    Created by Bruno Bastos
-    on 5-12-2020
-*/
-
+import lombok.*;
 
 
 @Entity
 @Table(name="Division")
+@Getter @Setter
 public class Division{
 
     @Id
@@ -26,21 +21,23 @@ public class Division{
     private long id ;
 
     @ManyToOne()
-    @JoinColumn(name="home_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("divisions")
+    @JoinColumn(name="home_id",nullable = false)
     private Home home;
 
     @Column(name = "name", nullable = false,length=50)
     private String name ;
 
-    @OneToMany(mappedBy="division")
-    private Set<Sensor> sensors = new HashSet<>();
+    @OneToMany(mappedBy="division",cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Sensor> sensors ;
 
-    @OneToMany(mappedBy="division")
-    private Set<Device> devices = new HashSet<>();
+    @OneToMany(mappedBy="division",cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Device> devices ;
 
-    @OneToMany(mappedBy="division")
-    private Set<DivisionConf> divisionConf = new HashSet<>();
+    @OneToMany(mappedBy="division",cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<DivisionConf> divisionConf ;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinTable(name = "Division_Permissions",
@@ -61,55 +58,6 @@ public class Division{
         this.id = id;
         this.name = name;
         this.home = home;
-    }
-   
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id){
-        this.id = id;
-    }
-
-
-    public void setHome(Home home){
-        this.home = home;
-    }
-
-    public Home getHome(){
-        return this.home;
-    }
-
-    public void setName(String name){
-        this.name = name;
-    }
-
-    public String getName(){
-        return this.name;
-    }
-
-    public Set<Sensor> getSensors(){
-        return this.sensors;
-    }
-
-    public Set<Device> getDevices(){
-        return this.devices;
-    }
-
-    public Set<DivisionConf> getDivisionConf() {
-        return divisionConf;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setSensors(Set<Sensor> sensors) {
-        this.sensors = sensors;
-    }
-
-    public String toString(){
-        return this.getName();
     }
 
 }

@@ -1,5 +1,5 @@
 
-version: '3.7'
+version: '3.2'
 
 # Define services
 services:
@@ -20,6 +20,20 @@ services:
       SPRING_DATASOURCE_PASSWORD: admin_pass     
     networks: # Networks to join (Services on the same network can communicate with each other using their name)
       - backend
+
+  app-client:
+    build:
+      context: projWebsite # Use an image built from the specified dockerfile in the `polling-app-client` directory.
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_BASE_URL: http://127.0.0.1:8080/
+    ports:
+      - "3000:3000"
+    restart: always
+    depends_on:
+      - app-server
+    networks:
+      - frontend
 
   # Database Service (Mysql)
   db:
@@ -44,3 +58,4 @@ volumes:
 # Networks to be created to facilitate communication between containers
 networks:
   backend:
+  frontend:

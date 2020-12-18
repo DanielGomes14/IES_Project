@@ -1,12 +1,16 @@
 package ies.proj.geanihouse.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+import lombok.*;
 
 @Entity
 @Table(name = "Device_Log")
+@Getter @Setter
 public class DeviceLog {
 
     @Id
@@ -14,8 +18,7 @@ public class DeviceLog {
     private long id;
 
     @ManyToOne()
-    @JoinColumn(name="device_id", referencedColumnName = "id", insertable = false, updatable = false)
-
+    @JoinColumn(name="device_id", nullable = false)
     private Device device;
 
     @CreationTimestamp
@@ -36,45 +39,5 @@ public class DeviceLog {
         this.timestampDate = timestampDate;
         this.data = data;
     }
-
-
-    public long getId() {
-        return id;
-    }
-
-    public Device getDevice() {
-        return device;
-    }
-
-    public void setDevice(Device device) {
-        this.device = device;
-    }
-
-    public Timestamp getTimestampDate() {
-        return timestampDate;
-    }
-
-    public void setTimestampDate(Timestamp timestampDate) {
-        this.timestampDate = timestampDate;
-    }
-
-    public double getData() {
-        return data;
-    }
-
-    public void setData(double data) {
-        this.data = data;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-
-
-    public String toString(){
-        return this.device.getName() + " : " + this.timestampDate.toString()+ " : " + this.data;
-    }
-
 
 }
