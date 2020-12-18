@@ -3,6 +3,8 @@ import asyncio
 import paho.mqtt.client as mqtt
 import json
 #import Adafruit_DHT
+import threading
+from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime
 
 # client, user and device details
@@ -77,10 +79,19 @@ class Temperature(Generator):
     MIN, MAX = 0, 37
 
     @classmethod
-    async def start(cls):
+    async def start(cls,temp_queue):
         while True:
-            sensor_data = {k: [] for k in cls.sensor_mu}
 
+            print("ola")
+            if len(temp_queue)>0:
+                data = temp_queue.pop()
+                print(data)
+                id = data['id']
+                value = data['value']
+                cls.sensor_mu[id] = value
+
+            sensor_data = {k: [] for k in cls.sensor_mu}
+            
             for sensor in list(cls.sensor_mu):
                 mu = cls.sensor_mu[sensor]
 
@@ -156,6 +167,10 @@ class Humidity(Generator):
 def on_message(client, userdata, message):
     print("Received operation " + str(message.payload))
     
+    global temperatureQ
+
+    message = json.loads(message.payload.decode())
+
     topic = message['topic']
     type = message['type'] 
     id   = message['id']
@@ -167,8 +182,8 @@ def on_message(client, userdata, message):
             #if Sensor.temperature_sensor == None:
             #    Sensor.temperature_sensor = id
             #else:
-            Temperature.sensor_mu[id] = random.randint(Temperature.MIN, Temperature.MAX)
-
+            temperatureQ.append({'id':id,'value':random.randint(Temperature.MIN, Temperature.MAX)})
+            print(id,type)
         elif type == 'Humidity':
 
             #if Sensor.humidity_sensor == None:
@@ -235,16 +250,17 @@ print("Device registered successfully!")
 
 client.subscribe("sensors", qos=0)
 
-
 loop = asyncio.get_event_loop()
-
 temp_queue = asyncio.Queue(loop=loop)
 lum_queue = asyncio.Queue(loop=loop)
 hum_queue = asyncio.Queue(loop=loop)
 
-temp_task = loop.create_task(Temperature.start())
+temperatureQ = []
+    
+temp_task = loop.create_task(Temperature.start(temperatureQ))
 lum_task = loop.create_task(Luminosity.start())
 hum_task = loop.create_task(Humidity.start())
 
 loop.run_until_complete(asyncio.gather(temp_task, lum_task, hum_task))
+
 loop.close()
