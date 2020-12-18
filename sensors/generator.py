@@ -2,6 +2,7 @@ import random
 import asyncio
 import paho.mqtt.client as mqtt
 import json
+import Adafruit_DHT
 from datetime import datetime
 
 # client, user and device details
@@ -47,9 +48,31 @@ class Generator:
                 del sensor_data[sensor_id]
             count += 1
 
+class Sensor(Generator):
+
+    temperature_sensor = None
+    humidity_sensor    = None
+    temperature_config = None
+    humidity_config    = None
+    
+
+    @classmethod
+    async def start(cls):
+        while True:
+            humidity, temperature = Adafruit_DHT.read_retry(11, 4)
+
+            sensor_data = {}
+            if temperature_sensor != None:
+                sensor_data[temperature_sensor] = temperature if temperature_config==None else temperature_config+(1/temperature)*random.random()*2-1
+            if humidity_sensor != None:
+                sensor_data[humidity_sensor] = humidity if humidity_config==None else humidity_config+(1/humidity)*random.random()*2-1
+            
+
+            await cls.send_shuffled(sensor_data)
+
 
 class Temperature(Generator):
-    sensor_mu = {1: 25, 2: 10, 3: 30}
+    sensor_mu = {}
     decrease = False
     MIN, MAX = 0, 37
 
@@ -76,7 +99,7 @@ class Temperature(Generator):
 
 
 class Luminosity(Generator):
-    sensor_mu = {4: 50, 5: 40}
+    sensor_mu = {}
     decrease = False
     MIN, MAX = 0, 90
 
@@ -104,7 +127,7 @@ class Luminosity(Generator):
 
 
 class Humidity(Generator):
-    sensor_mu = {6: 50, 7: 60}
+    sensor_mu = {}
     decrease = False
     MIN, MAX = 30, 70
 
@@ -132,16 +155,57 @@ class Humidity(Generator):
 
 def on_message(client, userdata, message):
     print("Received operation " + str(message.payload))
-
-    topic = message.topic
+    
+    topic = message['topic']
+    type = message['type'] 
+    id   = message['id']
     # receive message from rabbit
-
     if topic == 'ADD':
-        ...
+        
+        if type == 'Temperature':
+            
+            if Sensor.temperature_sensor == None:
+                Sensor.temperature_sensor = id
+            else:
+                Temperature.sensor_mu[id] = random.randint(Temperature.MIN, Temperature.MAX)
+
+        elif type == 'Humidity':
+
+            if Sensor.humidity_sensor == None:
+                Sensor.humidity_sensor = id
+            else:
+                Humidity.sensor_mu[id]    = random.randint(Humidity.MIN, Humidity.MAX)
+
+        elif type == 'Luminosity':
+            Luminosity.sensor_mu[id]  = random.randint(Luminosity.MIN, Luminosity.MAX) 
+
     elif topic == 'DEL':
-        ...
+        
+        if Sensor.temperature_sensor == id:
+            Sensor.temperature_sensor = None
+        if Sensor.humidity_sensor == id:
+            Sensor.humidity_sensor = None
+        elif type == 'Temperature':
+            del Temperature.sensor_mu[id]
+        elif type == 'Humidity':
+            del Humidity.sensor_mu[id]
+        elif type == 'Luminosity':
+            del Luminosity.sensor_mu[id]        
+        
     elif topic == 'CONFIG':
-        ...
+        value = message['value']
+        if Sensor.temperature_sensor == id:
+            Sensor.temperature_config = value
+        if Sensor.humidity_sensor == id:
+            Sensor.humidity_config = value
+        elif type == 'Temperature':
+            Temperature.sensor_mu[id] = value
+        elif type == 'Humidity':
+            Humidity.sensor_mu[id]    = value
+        elif type == 'Luminosity':
+            Luminosity.sensor_mu[id]  = value 
+
+
 
 
 def publish(topic, message, waitForAck=False):
@@ -154,6 +218,8 @@ def publish(topic, message, waitForAck=False):
 def on_publish(client, userdata, mid):
     print('on_publish')
     receivedMessages.append(mid)
+
+
 
 
 # connect the client to Cumulocity IoT and register a device
