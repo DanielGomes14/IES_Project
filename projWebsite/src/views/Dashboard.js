@@ -1,29 +1,30 @@
 import React from "react";
 import { Container, Row } from "shards-react";
 
-import PageTitle from "./../components/common/PageTitle";
-import DeviceGroup from "./../components/dashboard/DeviceGroup";
+import PageTitle from "../components/common/PageTitle";
+import DeviceGroup from "../components/dashboard/DeviceGroup";
 
-import DivisionService from "./../services/DivisionService";
+import DivisionService from "../services/DivisionService";
+import DeviceService from "../services/DeviceService";
 
 class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			loading: 0,
-			divisions: []
+			divisions: [],
 		}
   	}
 
 	componentDidMount() {
 		this.setState({ loading: 1 });
+
 		DivisionService.getDivisions(1)
-			.then(data => { 
-				console.log(data);
+			.then(data => {
 				this.setState({ 
-					loading: 0,
-					divisions: data
-				}) 
+					divisions: data,
+					loading: 0
+				});
 			})
 			.catch(error => {
 				console.log(error) ;
@@ -35,9 +36,10 @@ class Dashboard extends React.Component {
 		var content = ""
 		switch(this.state.loading) {
 			case 0:
-				content = this.state.divisions.map(div => (
-					<DeviceGroup key={ div.id } division={ div } />
-				))
+				content = this.state.divisions.map((div) => (
+						<DeviceGroup key={div.id} division={div} />
+					)
+				)
 				break;
 			case 1:
 				content = "Loading...";
