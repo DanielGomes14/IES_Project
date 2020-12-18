@@ -18,14 +18,14 @@ class DeviceService {
     }
 
     addDevice(division_id, type_id, name) {
-        return fetch(baseURL + 'devices', {
+        return fetch(baseURL + 'newdevices', {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
                     authorization: auth.token(),
                 },
-                body: JSON.stringify({ name: name, type: {id: type_id}, division: {id: division_id} })
+                body: JSON.stringify({division: {id: division_id}, type: {id: type_id}, name: name})
             })
     }
 

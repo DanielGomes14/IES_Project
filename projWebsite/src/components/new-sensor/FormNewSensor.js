@@ -33,14 +33,15 @@ const CustomSelectValue = props => (
 	</div>
 )
 const options = [
-	{ id: 1, value: 'Luminosity', icon: <FaLightbulb /> },
+	{ id: 3, value: 'Luminosity', icon: <FaLightbulb /> },
 	{ id: 2, value: 'Humidity', icon: <IoWater /> },
-	{ id: 3, value: 'Temperature', icon: <FaTemperatureHigh /> },
+	{ id: 1, value: 'Temperature', icon: <FaTemperatureHigh /> },
 ]
 
 class FormNewSensor extends React.Component {
 	constructor(props) {
 		super(props);
+		this.division = window.location.href.split('=')[1]
 		this.state = {
 			selectedType: options[0],
 		}
@@ -61,11 +62,11 @@ class FormNewSensor extends React.Component {
 	};
 	
 	handleSubmit(event) {
-		alert('Sensor submitted: ' + this.state.selectedType.id);
 		SensorService.addSensor(
-			1, this.state.selectedType.id
+			this.division, this.state.selectedType.id
 		);
 		event.preventDefault();
+		window.location.pathname = '/'
 	}
 
 	render() {
