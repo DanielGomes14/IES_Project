@@ -21,7 +21,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
 
@@ -38,7 +37,7 @@ function TabPanel(props) {
         >
             {value === index && (
                 <Box p={3}>
-                    <Typography>{children}</Typography>
+                    {children}
                 </Box>
             )}
         </div>
@@ -70,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-function automation({ divisions }) {
+function Automation({ divisions }) {
 
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
@@ -99,8 +98,8 @@ function automation({ divisions }) {
                             aria-label="scrollable auto tabs example">
 
 
-                            {divisions.map((division, idx) => (
-                                <Tab label={division.name} {...a11yProps(idx)} />
+                            {divisions.map((division, index) => (
+                                <Tab key={index} label={division.name} {...a11yProps(index)} />
                             ))}
 
                         </Tabs>
@@ -126,17 +125,17 @@ function automation({ divisions }) {
                         </TabPanel>
                     ))}
                     */}
-                    {divisions.map((division, idx_div) => (
-                        <TabPanel value={value} index={idx_div}>
+                    {divisions.map((division, index) => (
+                        <TabPanel key={index} value={value} index={index}>
                             <Button className="float-right mx-2 mb-3">Set Default</Button>
                             <Button className="float-right mx-2 mb-3">Set Economics</Button>
                             <a href="/config-device"><Button className="float-right mx-2 mb-3">Custom Edit</Button></a>
                             <div className="clearfix"></div>
 
                             <Row>
-                                {division.configurations.map((configuration,idx_conf) => (
+                                {division.configurations.map((configuration,index) => (
 
-                                    <Col lg="4">
+                                    <Col key={index} lg="4">
                                         <h4>{configuration.type}</h4>
                                         <TypeSlider type={configuration.type} min_value={configuration.min_value}
                                         max_value={configuration.max_value} />
@@ -148,8 +147,8 @@ function automation({ divisions }) {
                             
                             <Row>
 
-                                {division.devices.map((device, idx_dev) => (
-                                    <Col lg="6" className="py-3">
+                                {division.devices.map((device, index) => (
+                                    <Col key={index} lg="6" className="py-3">
                                         <Card className="">
                                             <CardBody>
                                                 <h3>
@@ -163,8 +162,8 @@ function automation({ divisions }) {
                                                     <h6 style={{textAlign:"right"}}>{device.type}</h6>
                                                     </Col>
                                                 </Row>                                                    
-                                                {device.configurations.map((configuration,idx_conf)=> (
-                                                    <ConfigDevice value={configuration.value} start={configuration.start} end={configuration.end}    />
+                                                {device.configurations.map((configuration,index)=> (
+                                                    <ConfigDevice key={index} value={configuration.value} start={configuration.start} end={configuration.end}    />
                                                 ))}
 
 
@@ -173,29 +172,23 @@ function automation({ divisions }) {
                                     </Col>
                                 ))}
                             </Row>
-
-
                         </TabPanel>
                     ))}
-
-
                 </div>
-
             </Container>
             <Container>
-
 
             </Container>
         </Container>
     );
 };
 
-automation.propTypes = {
+Automation.propTypes = {
     devices: PropTypes.array,
     divisions: PropTypes.array
 };
 
-automation.defaultProps = {
+Automation.defaultProps = {
     divisions: [{
         id: "1",
         name: "Kitchen",
@@ -333,6 +326,4 @@ automation.defaultProps = {
     }
 ]};
 
-
-
-export default automation;
+export default Automation;
