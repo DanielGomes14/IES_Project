@@ -55,8 +55,11 @@ class LoadDatabase {
 
             Device light_bulb = new Device(1, "Lampada", 0.0, eletronic, division);
             Device coffe_machine = new Device(2, "Máquina de Café", 0.0, eletronic, division);
+            Device air_cond = new Device(3,"Ar Condicionado",0.0,temperature,division);
             devices.save(light_bulb);
             devices.save(coffe_machine);
+            devices.save(air_cond);
+
 
         };
     }

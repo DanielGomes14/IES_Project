@@ -1,12 +1,11 @@
 package ies.proj.geanihouse;
 
 
-import ies.proj.geanihouse.controller.HomeController;
+import ies.proj.geanihouse.exception.ErrorDetails;
 import ies.proj.geanihouse.exception.ResourceNotFoundException;
-import ies.proj.geanihouse.model.ReceivedSensorData;
-import ies.proj.geanihouse.model.Sensor;
-import ies.proj.geanihouse.model.SensorData;
-import org.apache.juli.logging.Log;
+import ies.proj.geanihouse.model.*;
+import ies.proj.geanihouse.repository.DeviceLogRepository;
+import ies.proj.geanihouse.repository.DeviceRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +14,7 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.cloud.stream.messaging.Sink;
 import ies.proj.geanihouse.repository.SensorDataRepository;
 import ies.proj.geanihouse.repository.SensorRepository;
-import org.w3c.dom.stylesheets.LinkStyle;
 
-import java.util.concurrent.ExecutionException;
 
 
 @EnableBinding(Sink.class)
@@ -31,19 +28,35 @@ public class MessageConsumer {
     @Autowired
     private SensorRepository sensorRepository;
 
-    @StreamListener(Sink.INPUT)
-    public void log(ReceivedSensorData msg) throws ResourceNotFoundException {
-        long sensor_id = msg.getSensor_id();
+    @Autowired
+    private DeviceRepository deviceRepository;
+    @Autowired
+    private DeviceLogRepository deviceLogRepository;
 
-        Sensor sensor = sensorRepository.findById(sensor_id).orElseThrow(() -> new ResourceNotFoundException("Sensor with id " + sensor_id + " not found"));
-        if (sensor==null){
-            LOG.info("Id is not valid");
-            return;
+    @StreamListener(Sink.INPUT)
+    public void log(ReceivedSensingData msg) throws ResourceNotFoundException,ErrorDetails {
+
+        if (msg.getMethod().equals("SENSORDATA")){
+            long sensor_id = msg.getId();
+
+            Sensor sensor = sensorRepository.findById(sensor_id)
+                            .orElseThrow(() -> new ResourceNotFoundException("Sensor with id " + sensor_id + " not found"));
+
+            LOG.info("Inserting sensor data for sensor with  id: "+ sensor.getId());
+            SensorData sd = new SensorData(sensor,msg.getTimestamp(), msg.getValue());
+            this.sensorDataRepository.save(sd);
+            LOG.info("Adding sensor data");
         }
-        LOG.info("Inserting id: "+ sensor.getDivision());
-        LOG.info(sensorRepository.findAll());
-        SensorData sd = new SensorData(sensor,msg.getTimestamp(), msg.getValue());
-        this.sensorDataRepository.save(sd);
+        else if (msg.getMethod().equals("DEVICELOG")){
+            long device_id= msg.getId();
+            Device device = deviceRepository.findById(device_id)
+                            .orElseThrow(() -> new ResourceNotFoundException("Sensor with id " + device_id + " not found"));
+            LOG.info("Inserting  Logs for device with id: "+ device.getId());
+            DeviceLog deviceLog= new DeviceLog(device,msg.getTimestamp(), msg.getValue());
+            this.deviceLogRepository.save(deviceLog);
+            LOG.info("Added Device Log");
+        }
+        else throw  new ErrorDetails("Method Error");
     }
 
 
