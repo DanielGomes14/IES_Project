@@ -24,30 +24,6 @@ public class HomeController {
     private HomeRepository homeRepository;
     @Autowired
     private UserRepository userRepository;
-    /*
-    @GetMapping("/homes")
-    public  List<Home> getAllUserHomes(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        LOG.info(authentication.getName());
-        //ver melhor
-        LOG.info("GET Request to /homes ");
-        if(!authentication.getName().equals("anonymousUser")) {
-            LOG.debug("User is authenticated");
-            User user = userRepository.findByUsername(authentication.getName());
-            Client c = user.getClient();
-
-            List<Home> homes = homeRepository.findAll();
-
-            for (Home home : homes) {
-                LOG.info("-->" + home.getClients());
-            }
-            System.out.println(homeRepository.findAllByClients_id(c.getId()));
-            return homeRepository.findAllByClients_id(c.getId());
-        }
-        LOG.error("User not authenticated!");
-       return  null;
-    }
-    */
 
     @GetMapping("/homes")
     public ResponseEntity<List<Home>> getAllUserHomes() throws ErrorDetails,ResourceNotFoundException{

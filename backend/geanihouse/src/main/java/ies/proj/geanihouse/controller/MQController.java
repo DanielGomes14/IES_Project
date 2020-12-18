@@ -3,7 +3,7 @@ package ies.proj.geanihouse.controller;
 
 import java.io.IOException;
 
-import ies.proj.geanihouse.model.ReceivedSensorData;
+import ies.proj.geanihouse.model.ReceivedSensingData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.messaging.Source;
@@ -27,9 +27,9 @@ public class MQController {
     public String sendMessage(@RequestBody String payload) {
         System.out.println(payload);
         ObjectMapper ob = new ObjectMapper();
-        ReceivedSensorData txn = null;
+        ReceivedSensingData txn = null;
         try {
-            txn = ob.readValue(payload, ReceivedSensorData.class);
+            txn = ob.readValue(payload, ReceivedSensingData.class);
         } catch (JsonParseException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
