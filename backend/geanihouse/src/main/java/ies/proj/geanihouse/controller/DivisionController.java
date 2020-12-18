@@ -36,8 +36,25 @@ public class DivisionController {
     }
 
     @PostMapping("/divisions")
-    public  Division addDivision(@Valid @RequestBody Division division){
+    public  Division addDivision(@Valid @RequestBody Division division) {
         System.out.println("--->" + division.getSensors());
         return divisionRepository.save(division);
+    }
+
+    @DeleteMapping("/divisions/{id}")
+    public Map<String, Boolean> deleteEmployee(@Valid @RequestBody Division division)
+            throws ResourceNotFoundException {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = this.
+        
+        (authentication.getName());
+
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + employeeId));
+        employeeRepository.delete(employee);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted", Boolean.TRUE);
+        return response;
     }
 }
