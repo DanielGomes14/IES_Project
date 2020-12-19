@@ -9,6 +9,7 @@ import ies.proj.geanihouse.repository.*;
 import ies.proj.geanihouse.model.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -18,7 +19,7 @@ class LoadDatabase {
     @Bean
     CommandLineRunner initDatabase(UserRepository users,ClientRepository clients, HomeRepository homes,
                        DivisionRepository divisions, TypeRepository types, DeviceRepository devices,
-                       SensorRepository sensors) {
+                       NotificationRepository notifications, SensorRepository sensors) {
 
         return args -> {
 
@@ -59,8 +60,9 @@ class LoadDatabase {
             devices.save(light_bulb);
             devices.save(coffe_machine);
             devices.save(air_cond);
-
-
+            
+            Notification fire_alarm = new Notification(1, "Sensor 1 detected temperature above 40°Celsius.", Timestamp.valueOf("2007-09-23 10:10:10.0"), h1);
+            notifications.save(fire_alarm);
         };
     }
 }
