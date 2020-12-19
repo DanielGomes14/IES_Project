@@ -45,7 +45,7 @@ As a registered user, I want to add divisions to be able to control them using t
 
 As a registered user, I want to add homes to be able to control them using the app.
 
-As Antonio, I want to be able to configure the cylinder in order to leave the water warm for his family.
+As Antonio, I want to be able to configure the cylinder in order to leave the water warm for my family.
 
 As Antonio, I want to give permission to my 12 years old daughter so that she can configure her room devices.
 
