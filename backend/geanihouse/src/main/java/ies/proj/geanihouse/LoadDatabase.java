@@ -19,7 +19,8 @@ class LoadDatabase {
     @Bean
     CommandLineRunner initDatabase(UserRepository users,ClientRepository clients, HomeRepository homes,
                        DivisionRepository divisions, TypeRepository types, DeviceRepository devices,
-                       NotificationRepository notifications, SensorRepository sensors) {
+                       NotificationRepository notifications, SensorRepository sensors,
+                       SensorDataRepository sensordata) {
 
         return args -> {
 
@@ -60,8 +61,11 @@ class LoadDatabase {
             devices.save(light_bulb);
             devices.save(coffe_machine);
             devices.save(air_cond);
-            
-            Notification fire_alarm = new Notification(1, "Sensor 1 detected temperature above 40°Celsius.", Timestamp.valueOf("2007-09-23 10:10:10.0"), h1);
+
+            SensorData init_data = new SensorData(1, sensor, Timestamp.valueOf("2007-09-23 10:10:10.0"), 25.0);
+            sensordata.save(init_data);
+
+            Notification fire_alarm = new Notification(1, "Temperature Alarm", "Sensor 1 detected temperature above 40°Celsius.", Timestamp.valueOf("2007-09-23 10:10:10.0"), h1);
             notifications.save(fire_alarm);
         };
     }

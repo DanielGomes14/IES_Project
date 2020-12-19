@@ -17,6 +17,9 @@ public class Notification{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(name = "title", nullable = false,length=100)
+    private String title;
+
     @Column(name = "text", nullable = false,length=500)
     private String text;
 
@@ -32,8 +35,9 @@ public class Notification{
 
     }
 
-    public Notification(long id, String text, Timestamp timestampDate, Home home) {
+    public Notification(long id, String title, String text, Timestamp timestampDate, Home home) {
         this.id = id;
+        this.title =title;
         this.text = text;
         this.timestampDate = timestampDate;
         this.home = home;
