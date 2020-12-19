@@ -9,6 +9,8 @@ import {
 import PageTitle from "../components/common/PageTitle";
 import Graph from "../components/statistics/Graph";
 import DivisionGraph from "../components/statistics/DivisionGraph";
+import ReactVisCharts from "../components/statistics/ReactVisCharts";
+import DynamicCrosshair from "../components/statistics/DynamicCrosshair";
 
 /*
     Users Overview @param: title,charData
@@ -43,12 +45,22 @@ const statistics = () => (
 
         <Row className="px-3">
             <Col lg="12" md="12" sm="12" className="mb-4">
-            <Graph />
+                <Graph />
             </Col>
         </Row>
         <Row className="px-3">
             <Col lg="6" md="12" sm="12" >
                 <DivisionGraph />    
+            </Col>
+        </Row> 
+        <Row className="px-3">
+            <Col lg="6" md="12" sm="12" >
+                <ReactVisCharts />    
+            </Col>
+        </Row> 
+        <Row className="px-3">
+            <Col lg="6" md="12" sm="12" >
+                <DynamicCrosshair />    
             </Col>
         </Row> 
     </Container>
