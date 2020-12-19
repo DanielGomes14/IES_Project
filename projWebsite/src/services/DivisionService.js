@@ -29,17 +29,16 @@ class DivisionService {
             })
     }
 
-    // deleteDivision(home_id, division_id) {
-    //     return fetch(baseURL + DIVISIONS_REST_API_URL, {
-    //             method: 'DELETE',
-    //             mode: 'cors',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 authorization: auth.token(),
-    //             },
-    //             body: JSON.stringify({  })
-    //         })
-    // }
+    deleteDivision(division_id) {
+        return fetch(baseURL + DIVISIONS_REST_API_URL + '/' + division_id, {
+                method: 'DELETE',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                    authorization: auth.token(),
+                },
+        })
+    }
 }
 
 export default new DivisionService();

@@ -52,6 +52,17 @@ class DeviceService {
             })
             .then(res => res.json());
     }
+
+    deleteDevice(device_id){
+        return fetch(baseURL + devices+ device_id,{
+            method: 'DELETE',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                authorization: auth.token(),
+            }
+        })
+    }
 }
 
 export default new DeviceService();
