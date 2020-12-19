@@ -31,9 +31,18 @@ public class NotificationController {
     private HomeRepository homeRepository;
 
     @GetMapping("/{id}/notifications/")
-    public ResponseEntity<?> getAllHomeNotifications(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
+    public ResponseEntity<?> getAllHomeNotifications(@PathVariable(value = "id") Long id,
+                        @RequestParam(required = false, defaultValue = "false") Boolean all) throws ResourceNotFoundException {
         Home h = this.homeRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Could not find home with id" + id));
-        List<Notification> notifications = notificationRepository.findTop5ByHome_id(id);
+
+        List<Notification> notifications;
+
+        if (all!=null && all) {
+            notifications = notificationRepository.findAllByHome_idOrderByTimestampDateDesc(id);
+        } else {
+            notifications = notificationRepository.findTop5ByHome_idOrderByTimestampDateDesc(id);
+        }
+
         System.out.println(notifications);
         return  ResponseEntity.ok().body(notifications);
     }

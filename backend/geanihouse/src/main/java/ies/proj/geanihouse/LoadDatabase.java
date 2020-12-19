@@ -67,6 +67,18 @@ class LoadDatabase {
 
             Notification fire_alarm = new Notification(1, "Temperature Alarm", "Sensor 1 detected temperature above 40°Celsius.", Timestamp.valueOf("2007-09-23 10:10:10.0"), h1);
             notifications.save(fire_alarm);
+            fire_alarm = new Notification(2, "Temperature Alarm", "Sensor 1 detected temperature above 40°Celsius.", Timestamp.valueOf("2007-09-23 10:10:10.0"), h1);
+            notifications.save(fire_alarm);
+            fire_alarm = new Notification(3, "Temperature Alarm", "Sensor 1 detected temperature above 40°Celsius.", Timestamp.valueOf("2007-09-23 10:10:10.0"), h1);
+            notifications.save(fire_alarm);
+            fire_alarm = new Notification(4, "Temperature Alarm", "Sensor 1 detected temperature above 40°Celsius.", Timestamp.valueOf("2007-09-23 10:10:10.0"), h1);
+            notifications.save(fire_alarm);
+            fire_alarm = new Notification(5, "Temperature Alarm", "Sensor 1 detected temperature above 40°Celsius.", Timestamp.valueOf("2007-09-23 10:10:10.0"), h1);
+            notifications.save(fire_alarm);
+            fire_alarm = new Notification(6, "Temperature Alarm", "Sensor 1 detected temperature above 40°Celsius.", Timestamp.valueOf("2007-09-23 10:10:10.0"), h1);
+            notifications.save(fire_alarm);
+            fire_alarm = new Notification(7, "Temperature Alarm", "Sensor 1 detected temperature above 40°Celsius.", Timestamp.valueOf("2007-09-23 10:10:10.0"), h1);
+            notifications.save(fire_alarm);
         };
     }
 }

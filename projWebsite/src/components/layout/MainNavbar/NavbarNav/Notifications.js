@@ -13,13 +13,26 @@ export default class Notifications extends React.Component {
     };
 
     this.toggleNotifications = this.toggleNotifications.bind(this);
+    this.loadAllNotifications = this.loadAllNotifications.bind(this);
   }
 
   toggleNotifications() {
     this.setState({
       visible: !this.state.visible,
     });
-    NotificationService.getNotifications(1)
+    NotificationService.getTop5Notifications(1)
+      .then(data => {
+        this.setState({ 
+          notifications: data,
+        });
+      })
+      .catch(error => {
+        console.log(error) ;
+      });
+  }
+
+  loadAllNotifications() {
+    NotificationService.getAllNotifications(1)
       .then(data => {
         this.setState({ 
           notifications: data,
@@ -54,9 +67,6 @@ export default class Notifications extends React.Component {
         >
           <div className="nav-link-icon__wrapper">
             <i className="material-icons">&#xE7F4;</i>
-            <Badge pill theme="danger">
-              2
-            </Badge>
           </div>
         </NavLink>
         <Collapse
@@ -66,9 +76,7 @@ export default class Notifications extends React.Component {
 
           {content}
 
-
-         
-          <DropdownItem className="notification__all text-center">
+          <DropdownItem className="notification__all text-center" onClick={this.loadAllNotifications} >
             View all Notifications
           </DropdownItem>
         </Collapse>
