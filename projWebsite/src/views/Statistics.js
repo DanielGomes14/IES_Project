@@ -10,7 +10,8 @@ import PageTitle from "../components/common/PageTitle";
 import Graph from "../components/statistics/Graph";
 import DivisionGraph from "../components/statistics/DivisionGraph";
 import ReactVisCharts from "../components/statistics/ReactVisCharts";
-import DynamicCrosshair from "../components/statistics/DynamicCrosshair";
+import { DynamicCrosshair, ScatterPlotOnNearestXY, LineChartMouseOverSeries, LineChartMouseOverXY, LinkedCharts, Example} from "../components/statistics/DynamicCrosshair";
+import { MarkSeries, LineSeries, VerticalBarSeries } from "react-vis";
 
 /*
     Users Overview @param: title,charData
@@ -62,7 +63,31 @@ const statistics = () => (
             <Col lg="6" md="12" sm="12" >
                 <DynamicCrosshair />    
             </Col>
-        </Row> 
+            <Col lg="6" md="12" sm="12" >
+                <ScatterPlotOnNearestXY />    
+            </Col>
+            <Col lg="6" md="12" sm="12" >
+                <LineChartMouseOverSeries />    
+            </Col>
+            <Col lg="6" md="12" sm="12" >
+                <LineChartMouseOverXY />    
+            </Col>
+            <Col lg="6" md="12" sm="12" >
+                <LinkedCharts />    
+            </Col>
+            <Col lg="6" md="12" sm="12" >
+            </Col>
+            <Col lg="6" md="12" sm="12" >
+                <Example series={VerticalBarSeries} />    
+            </Col>
+            <Col lg="6" md="12" sm="12" >
+                <Example series={LineSeries} />    
+            </Col>
+            <Col lg="6" md="12" sm="12" >
+                <Example series={MarkSeries} />    
+            </Col>
+        </Row>
+        
     </Container>
 );
 
