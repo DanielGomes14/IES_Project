@@ -37,7 +37,7 @@ public class Notification{
 
     public Notification(long id, String title, String text, Timestamp timestampDate, Home home) {
         this.id = id;
-        this.title =title;
+        this.title = title;
         this.text = text;
         this.timestampDate = timestampDate;
         this.home = home;
