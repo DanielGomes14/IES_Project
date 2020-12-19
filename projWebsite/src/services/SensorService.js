@@ -41,6 +41,19 @@ class SensorService {
         })
         .then(res => res.json());
     }
+
+    deleteSensor(sen_id){
+        return fetch(baseURL + SENSORS_REST_API_URL+ sen_id,{
+            method: 'DELETE',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                authorization: auth.token(),
+            }
+        })
+    }
+
+
 }
 
 export default new SensorService();
