@@ -12,8 +12,8 @@ import {
 
 import AuthenticationService from "../../services/AuthenticationService";
 import { Redirect } from "react-router-dom";
-import { auth } from '../../utils/auth';
-
+import { auth, current_home, current_user } from '../../utils/auth';
+import baseURL  from "../../data/base-url";
 
 class LoginForm extends React.Component {
 
@@ -49,6 +49,29 @@ class LoginForm extends React.Component {
 				if (response.ok) {
 					console.log("Login successfull:");
 					auth.login(token)
+
+					fetch(baseURL +'user/'+ this.state.username, {
+						method: 'GET',
+						mode: 'cors',
+						headers: {
+							'Content-Type': 'application/json',
+							authorization: auth.token()
+						}
+					})
+					.then(res => res.json()).then(json => current_user.login(1));
+					
+					fetch(baseURL +'homes', {
+						method: 'GET',
+						mode: 'cors',
+						headers: {
+							'Content-Type': 'application/json',
+							authorization: auth.token()
+						}
+					})
+					.then(res => res.json()).then(json => json[Object.keys(json)[0]]["id"])
+					.then(json => current_home.change_home(json));
+						
+
 					this.setState({loggedIn: true});
 				} else if (response.status == "400") {
 					console.log("400: ");
