@@ -18,7 +18,7 @@ class SensorService {
     }
 
     addSensor(division_id, type_id) {
-        console.log('div ' + division_id + ' typ ' + type_id);
+        alert('div ' + division_id + ' typ ' + type_id);
         return fetch(baseURL + 'newsensor', {
                 method: 'POST',
                 mode: 'cors',

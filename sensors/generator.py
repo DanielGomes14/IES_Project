@@ -30,14 +30,16 @@ class Generator:
 
             value = sensor_data[sensor_id].pop(0)
             print(cls.__name__, {
-                'sensor_id': sensor_id,
+                'method': 'SENSORDATA',
+                'id': sensor_id,
                 'type': str.lower(cls.__name__), 
                 'value': round(value, 2),
                 'timestamp': datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
             })
             # send data to rabbit
             publish(topic=cls.__name__, message=json.dumps( {
-                'sensor_id': sensor_id,
+                'method': 'SENSORDATA',
+                'id': sensor_id,
                 'type': str.lower(cls.__name__), 
                 'value': round(value, 2),
                 'timestamp': datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -81,15 +83,16 @@ class Temperature(Generator):
 
     @classmethod
     async def start(cls):
+        global temp_queue
         while True:
             sensor_data = {k: [] for k in cls.sensor_mu}
             
             for sensor in list(cls.sensor_mu):
                 mu = cls.sensor_mu[sensor]
 
-                mu += random.random() - 0.5
+                mu += random.random() - 0.5 - 2 * cls.decrease
                 if mu > cls.MAX:
-                    mu -= .5 + 2 * cls.decrease
+                    mu -= .5 
                 elif mu < cls.MIN:
                     mu += .5
 
@@ -115,13 +118,15 @@ class Luminosity(Generator):
                 mu = cls.sensor_mu[sensor]
                 window_opened = random.random() < 0.95
 
-                mu += random.random() - 0.5
+                mu += random.random() - 0.5 - 2 * cls.decrease
                 if mu > cls.MAX:
-                    mu -= .5 + 2 * cls.decrease
+                    mu -= .5 
                 elif mu < cls.MIN:
                     mu += .5
 
+                sensor_data[sensor] = [random.gauss(mu * window_opened, cls.sigma)]
                 sensor_data[sensor] = [random.gauss(mu, cls.sigma)]
+
                 cls.sensor_mu[sensor] = mu
 
             await cls.send_shuffled(sensor_data)
@@ -153,10 +158,60 @@ class Humidity(Generator):
 
 
 def on_message(client, userdata, message):
+
     print("Received operation " + str(message.payload))
     
 
     message = json.loads(message.payload.decode())
+
+    method = message['method']
+    type = message['type'] 
+    id   = message['sensor_id']
+    value = message['value']
+    # receive message from rabbit
+    if method == 'ADDSENSOR':
+        if type == 'Temperature':
+            
+            #if Sensor.temperature_sensor == None:
+            #    Sensor.temperature_sensor = id
+            #else:
+            Temperature.sensor_mu[id] = value
+            print(id,type)
+        elif type == 'Humidity':
+
+            #if Sensor.humidity_sensor == None:
+            #    Sensor.humidity_sensor = id
+            #else:
+            Humidity.sensor_mu[id]    = random.randint(Humidity.MIN, Humidity.MAX)
+
+        elif type == 'Luminosity':
+            Luminosity.sensor_mu[id]  = random.randint(Luminosity.MIN, Luminosity.MAX) 
+
+    elif method == 'DEL':
+        
+        if Sensor.temperature_sensor == id:
+            Sensor.temperature_sensor = None
+        if Sensor.humidity_sensor == id:
+            Sensor.humidity_sensor = None
+        elif type == 'Temperature':
+            del Temperature.sensor_mu[id]
+        elif type == 'Humidity':
+            del Humidity.sensor_mu[id]
+        elif type == 'Luminosity':
+            del Luminosity.sensor_mu[id]        
+        
+    elif method == 'CONFIG':
+        value = message['value']
+        if Sensor.temperature_sensor == id:
+            Sensor.temperature_config = value
+        if Sensor.humidity_sensor == id:
+            Sensor.humidity_config = value
+        elif type == 'Temperature':
+            Temperature.sensor_mu[id] = value
+        elif type == 'Humidity':
+            Humidity.sensor_mu[id]    = value
+        elif type == 'Luminosity':
+            Luminosity.sensor_mu[id]  = value 
 
     topic = message['topic']
     type = message['type'] 
@@ -209,7 +264,6 @@ def on_message(client, userdata, message):
 
 
 
-
 def publish(topic, message, waitForAck=False):
     mid = client.publish(topic, message)[1]
     if (waitForAck):
@@ -234,6 +288,8 @@ client.connect(serverUrl)
 client.loop_start()
 
 print("Device registered successfully!")
+
+client.subscribe("Sensors", qos=2)
 
 client.subscribe("sensors", qos=0)
 
