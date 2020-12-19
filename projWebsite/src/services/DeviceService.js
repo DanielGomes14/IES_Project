@@ -54,7 +54,7 @@ class DeviceService {
     }
 
     deleteDevice(device_id){
-        return fetch(baseURL + devices+ device_id,{
+        return fetch(baseURL + DEVICES_REST_API_URL+ device_id,{
             method: 'DELETE',
             mode: 'cors',
             headers: {
