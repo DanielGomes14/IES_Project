@@ -11,7 +11,10 @@ import {
 	CardBody,
 	FormCheckbox,
 	Progress,
-	Button
+	Button,
+	Badge,
+	Col,
+	Row
 } from "shards-react";
 
 
@@ -76,14 +79,34 @@ class DeviceCard extends React.Component {
 			<Card small className="h-100">
 				{/* Card Header */}
 				<CardHeader className="border-bottom">
-					<div className="d-flex float-left">
-					{types[this.device.type.name].icon} 
-					<h6 className="ml-2">{this.device.name}</h6>
-					</div>
-					<FormCheckbox className="float-right" toggle defaultChecked={this.device.state}
-					name="connected" onChange={this.handleChange}>
-						Enable Device
-					</FormCheckbox>
+					<Badge theme="red">
+						<span className="text-danger">
+							<i className="material-icons">clear</i>
+						</span>{" "}
+					</Badge>
+					<Row>
+						<Col sm="4" md="4" lg="7">
+							<div className="d-flex float-left">
+							{types[this.device.type.name].icon} 
+							<h6 className="ml-2">{this.device.name}</h6>
+							</div>
+						</Col>
+						<Col sm="4" md="4" lg="3">
+							<Button className="float-right" theme="white" style={{ width: "100%", height:"100%", minWidth: "160px"}}>
+								<FormCheckbox toggle defaultChecked={this.device.state}	name="connected">
+									Enable Device
+								</FormCheckbox>
+							</Button>
+						</Col>
+						<Col sm="4" md="4" lg="2">
+							<Button className="float-right" theme="white" style={{width: "100%", height:"100%", minWidth: "100px"}}>
+								<span className="text-danger">
+									<i className="material-icons">clear</i>
+								</span>{" "}
+								Remove
+							</Button>
+						</Col>
+					</Row>
 				</CardHeader>
 				{/* { this.state.connected ? (
 					<CardBody className="d-flex flex-column">

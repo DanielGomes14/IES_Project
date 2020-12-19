@@ -12,7 +12,8 @@ import {
 	CardBody,
 	FormCheckbox,
 	Progress,
-	Button
+    Button,
+    Badge
 } from "shards-react";
 
 const types = {
@@ -25,7 +26,7 @@ const types = {
         icon: <FaTemperatureHigh />
     },
     "Humidity": {
-        theme: "info",
+        theme: "primary",
         icon: <IoWater />
     },
     "Eletronic": {
@@ -68,7 +69,9 @@ class SensorCard extends React.Component {
                     <h6 className="ml-2">{this.sensor.type.name}</h6>
                     </div>
                     <div className="float-right">
-                        {this.state.value}
+                        <Badge theme={types[this.sensor.type.name].theme}  style={{width: "100%", height:"100%", minWidth: "80px"}}>
+                            <span>{this.state.value}</span>
+                        </Badge>
                     </div>
                 </CardHeader>
             </Card>
