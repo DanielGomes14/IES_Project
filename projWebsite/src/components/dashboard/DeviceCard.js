@@ -58,10 +58,17 @@ class DeviceCard extends React.Component {
 
 	handleChange(event) {
 		const {name, value, type, checked} = event.target;
-		if (type === "checkbox")
+		console.log(JSON.stringify(this.device));
+		if (type === "checkbox"){
 			this.setState({ [name]: checked });
-		else
+			this.device.state = checked ? 1:0;
+			DeviceService.updateDeviceState(this.device);
+		}
+		else{
 			this.setState({ [name]: value });
+			this.device.state = value;
+			DeviceService.updateDeviceState(this.device);
+		}
 	}
 	
 	render() {
@@ -73,7 +80,7 @@ class DeviceCard extends React.Component {
 					{types[this.device.type.name].icon} 
 					<h6 className="ml-2">{this.device.name}</h6>
 					</div>
-					<FormCheckbox className="float-right" toggle defaultChecked={this.state.connected}
+					<FormCheckbox className="float-right" toggle defaultChecked={this.device.state}
 					name="connected" onChange={this.handleChange}>
 						Enable Device
 					</FormCheckbox>

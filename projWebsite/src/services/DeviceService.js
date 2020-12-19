@@ -29,7 +29,7 @@ class DeviceService {
             })
     }
 
-    updateDeviceState(device_id, state) {
+    updateDeviceState(device) {
         return fetch(baseURL + DEVICES_REST_API_URL, {
                 method: 'PUT',
                 mode: 'cors',
@@ -37,7 +37,7 @@ class DeviceService {
                     'Content-Type': 'application/json',
                     authorization: auth.token(),
                 },
-                body: JSON.stringify({ id: device_id, state: state })
+                body: JSON.stringify(device)
             })
     }
 
