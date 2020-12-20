@@ -9,6 +9,8 @@ import {
   NavItem,
   NavLink
 } from "shards-react";
+import {current_user, auth, current_home} from '../../../../utils/auth';
+
 
 export default class UserActions extends React.Component {
   constructor(props) {
@@ -25,6 +27,12 @@ export default class UserActions extends React.Component {
     this.setState({
       visible: !this.state.visible
     });
+  }
+
+  logout(){
+    current_home.remove_home();
+    current_user.logout();
+    auth.logout();
   }
 
   render() {
@@ -46,7 +54,7 @@ export default class UserActions extends React.Component {
             <i className="material-icons">person_add</i> Invite User
           </DropdownItem>
           <DropdownItem divider />
-          <DropdownItem tag={Link} to="login" className="text-danger">
+          <DropdownItem tag={Link} onClick={this.logout} to="login" className="text-danger">
             <i className="material-icons text-danger">&#xE879;</i> Logout
           </DropdownItem>
         </Collapse>
