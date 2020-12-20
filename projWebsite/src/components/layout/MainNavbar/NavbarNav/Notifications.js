@@ -45,8 +45,8 @@ export default class Notifications extends React.Component {
 
   render() {
     var content = ""
-    content = this.state.notifications.map((notification) => (
-        <DropdownItem>
+    content = this.state.notifications.map((notification, index) => (
+        <DropdownItem key={index}>
           <div className="notification__icon-wrapper">
             <div className="notification__icon">
               <i className="material-icons">&#xE6E1;</i>
