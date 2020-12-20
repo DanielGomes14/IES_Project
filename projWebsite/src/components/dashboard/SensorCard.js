@@ -3,7 +3,9 @@ import PropTypes from "prop-types";
 
 import { FaLightbulb, FaTemperatureHigh } from "react-icons/fa";
 import { IoWater, IoPower } from "react-icons/io5";
-
+import { Redirect } from "react-router-dom";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import SensorService from "../../services/SensorService";
 
 import {
@@ -12,7 +14,10 @@ import {
 	CardBody,
 	FormCheckbox,
 	Progress,
-	Button
+    Button,
+    Badge,
+    Row, 
+    Col
 } from "shards-react";
 
 const types = {
@@ -25,7 +30,7 @@ const types = {
         icon: <FaTemperatureHigh />
     },
     "Humidity": {
-        theme: "info",
+        theme: "primary",
         icon: <IoWater />
     },
     "Eletronic": {
@@ -39,8 +44,10 @@ class SensorCard extends React.Component {
         super(props);
         this.sensor = props.sensor;
 		this.state = {
-			value: 69,
+            value: 69,
+            refresh: false
         };
+        this.submit = this.submit.bind(this);
     }
 
     componentDidMount() {
@@ -56,20 +63,54 @@ class SensorCard extends React.Component {
             .catch(error => {
                 console.log(error) ;
             });
-	}
+    }
     
-    render() {    
+    submit = () => {
+		confirmAlert({
+		  title: 'Confirm to submit',
+		  message: 'Are you sure you want to remove this sensor?',
+		  buttons: [
+			{
+				label: 'Yes',
+				onClick: () => {
+					SensorService.deleteSensor(this.sensor.id)
+					this.setState({refresh: true});
+				}
+			},
+			{
+			  label: 'No',
+			}
+		  ]
+		});
+	  };
+    
+    render() {
+        if (this.state.refresh === true)
+			return <Redirect to='/' />    
         return (
             <Card small className="h-100">
                 {/* Card Header */}
                 <CardHeader className="border-bottom">
-                    <div className="d-flex float-left">
-                    {types[this.sensor.type.name].icon} 
-                    <h6 className="ml-2">{this.sensor.type.name}</h6>
-                    </div>
-                    <div className="float-right">
-                        {this.state.value}
-                    </div>
+                    <span className="text-danger float-right" style={{position: "absolute", right: '-5px',top: 0, marginTop: '-10px'}}>
+                        <Button theme="white" style={{ width: "10px", borderRadius:'50%'}}  onClick={this.submit}>
+                            <span style={{fontWeight: '20px', marginLeft: "-4px", color: "red"}}>X</span>
+                        </Button>
+                    </span>{" "}
+                    <Row>
+                        <Col>
+                            <div className="d-flex float-left">
+                                {types[this.sensor.type.name].icon} 
+                                <h6 className="ml-2">{this.sensor.type.name}</h6>
+                            </div>
+                        </Col>
+                        <Col>
+                            <div className="float-right">
+                                <Badge theme={types[this.sensor.type.name].theme} style={{height:"100%", width: "80px", marginRight: '25px'}}>
+                                    <span>{this.state.value}</span>
+                                </Badge>
+                            </div>
+                        </Col>
+                    </Row>
                 </CardHeader>
             </Card>
         )

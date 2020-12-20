@@ -42,9 +42,9 @@ class DeviceGroup extends React.Component {
 		return (
 			<div>
 				<h4 className="float-left" style={{marginLeft: "20px"}}><a href="#" style={{color: "#17c671"}}>{this.division.name}</a></h4>
-				<a href={"/newsensor?div="+this.division.id}><Button className="float-right mb-2 mr-2" theme="success" style={{ fontSize: "16px"}}>Add Sensor</Button></a>
-				<a href={"/newdevice?div="+this.division.id}><Button className="float-right mb-2 mr-2" theme="success" style={{ fontSize: "16px"}}>Add Device</Button></a>
-				<div className="clearfix"></div>
+				<a href={"/newsensor?div="+this.division.id}><Button className="float-right mb-2 mr-2" theme="success" style={{ fontSize: "16px", height: '100%'}}>Add Sensor</Button></a>
+				<a href={"/newdevice?div="+this.division.id}><Button className="float-right mb-2 mr-2" theme="success" style={{ fontSize: "16px", height: '100%'}}>Add Device</Button></a>
+				<div className="clearfix" style={{paddingBottom: "15px"}}></div>
 				<Row>
           		{	
 					this.state.sensors.map((sen) => (
