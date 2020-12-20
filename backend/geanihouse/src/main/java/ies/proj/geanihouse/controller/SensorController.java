@@ -1,4 +1,5 @@
 package ies.proj.geanihouse.controller;
+import ies.proj.geanihouse.exception.ErrorDetails;
 import ies.proj.geanihouse.exception.ResourceNotFoundException;
 import ies.proj.geanihouse.model.Division;
 import ies.proj.geanihouse.model.MQMessage;
@@ -47,14 +48,20 @@ public class SensorController implements  java.io.Serializable {
     }
 
     @PostMapping("/newsensor")
-    public ResponseEntity<?> addSensorToDivision(@Valid @RequestBody Sensor sensor) throws ResourceNotFoundException {
+    public ResponseEntity<?> addSensorToDivision(@Valid @RequestBody Sensor sensor) throws ResourceNotFoundException,ErrorDetails {
         Division d = divisionRepository.findById(sensor.getDivision().getId())
                      .orElseThrow(() -> new ResourceNotFoundException("Could not find division "));
         Type t = typeRepository.findById(sensor.getType().getId()).
                 orElseThrow(() -> new ResourceNotFoundException("Could not find Type of Sensor "));
         Sensor s = new Sensor();
         s.setDivision(d);s.setType(t);
+        for(Sensor sens : d.getSensors()){
+            if(sens.getType().getName().equals(s.getType().getName()) && !s.getType().getName().equals("Eletronic")){
+                throw new ErrorDetails("Cannot add two sensors of the same type to the same division");
+            }
+        }
         sensorRepository.save(s);
+
         //publish to RabbitMQ the presence of a new Sensor
         LOG.info("ADDSENSOR, " + s.getId() + ", " + s.getType().getName());
         MQMessage msg = new MQMessage("ADDSENSOR",s.getId(),s.getType().getName(),0);

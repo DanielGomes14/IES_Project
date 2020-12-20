@@ -27,6 +27,14 @@ class SensorService {
                     authorization: auth.token(),
                 },
                 body: JSON.stringify({division: {id: division_id}, type: {id: type_id}})
+            }).then(res => {
+                console.log(res.json())
+                if(res.ok){
+                    window.location.pathname = '/'
+                }
+                else{
+                    alert("Cannot add two sensors of same type!")
+                }
             })
     }
 
