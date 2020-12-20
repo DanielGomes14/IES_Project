@@ -162,10 +162,10 @@ def on_message(client, userdata, message):
             #if Sensor.humidity_sensor == None:
             #    Sensor.humidity_sensor = id
             #else:
-            Humidity.sensor_mu[id]    = random.randint(Humidity.MIN, Humidity.MAX)
+            Humidity.sensor_mu[id] = random.randint(Humidity.MIN, Humidity.MAX)
 
         elif type == 'Luminosity':
-            Luminosity.sensor_mu[id]  = random.randint(Luminosity.MIN, Luminosity.MAX) 
+            Luminosity.sensor_mu[id] = random.randint(Luminosity.MIN, Luminosity.MAX) 
 
     elif method == 'DEL':
         
@@ -189,9 +189,9 @@ def on_message(client, userdata, message):
         elif type == 'Temperature':
             Temperature.sensor_mu[id] = value
         elif type == 'Humidity':
-            Humidity.sensor_mu[id]    = value
+            Humidity.sensor_mu[id] = value
         elif type == 'Luminosity':
-            Luminosity.sensor_mu[id]  = value 
+            Luminosity.sensor_mu[id] = value 
 
 
 
