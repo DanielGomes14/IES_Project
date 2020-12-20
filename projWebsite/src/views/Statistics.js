@@ -9,6 +9,7 @@ import {
 import PageTitle from "../components/common/PageTitle";
 import Graph from "../components/statistics/Graph";
 import DivisionGraph from "../components/statistics/DivisionGraph";
+import SensorVis from "../components/statistics/SensorVis";
 import ReactVisCharts from "../components/statistics/ReactVisCharts";
 import { DynamicCrosshair, ScatterPlotOnNearestXY, LineChartMouseOverSeries, LineChartMouseOverXY, LinkedCharts, Example} from "../components/statistics/DynamicCrosshair";
 import { MarkSeries, LineSeries, VerticalBarSeries } from "react-vis";
@@ -56,10 +57,13 @@ const statistics = () => (
         </Row> 
         <Row className="px-3">
             <Col lg="6" md="12" sm="12" >
-                <ReactVisCharts />    
+                <SensorVis /> 
+                {/* <DynamicCrosshair />  
+                <ScatterPlotOnNearestXY /> 
+                <LineChartMouseOverSeries />        */}
             </Col>
         </Row> 
-        <Row className="px-3">
+        {/* <Row className="px-3">
             <Col lg="6" md="12" sm="12" >
                 <DynamicCrosshair />    
             </Col>
@@ -86,7 +90,7 @@ const statistics = () => (
             <Col lg="6" md="12" sm="12" >
                 <Example series={MarkSeries} />    
             </Col>
-        </Row>
+        </Row> */}
         
     </Container>
 );

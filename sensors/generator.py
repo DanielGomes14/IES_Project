@@ -99,9 +99,7 @@ class Temperature(Generator):
                 sensor_data[sensor] = [random.gauss(mu, cls.sigma)]
                 cls.sensor_mu[sensor] = mu
 
-            print('antes await')
             await cls.send_shuffled(sensor_data)
-            print('dps await')
 
 
 class Luminosity(Generator):
@@ -213,55 +211,6 @@ def on_message(client, userdata, message):
         elif type == 'Luminosity':
             Luminosity.sensor_mu[id]  = value 
 
-    topic = message['topic']
-    type = message['type'] 
-    id   = message['id']
-    # receive message from rabbit
-    if topic == 'ADD':
-        
-        if type == 'Temperature':
-            
-            #if Sensor.temperature_sensor == None:
-            #    Sensor.temperature_sensor = id
-            #else:
-            Temperature.sensor_mu[id] = random.randint(Temperature.MIN, Temperature.MAX)
-            print(id,type)
-        elif type == 'Humidity':
-
-            #if Sensor.humidity_sensor == None:
-            #    Sensor.humidity_sensor = id
-            #else:
-            Humidity.sensor_mu[id]    = random.randint(Humidity.MIN, Humidity.MAX)
-
-        elif type == 'Luminosity':
-            Luminosity.sensor_mu[id]  = random.randint(Luminosity.MIN, Luminosity.MAX) 
-
-    elif topic == 'DEL':
-        
-        if Sensor.temperature_sensor == id:
-            Sensor.temperature_sensor = None
-        if Sensor.humidity_sensor == id:
-            Sensor.humidity_sensor = None
-        elif type == 'Temperature':
-            del Temperature.sensor_mu[id]
-        elif type == 'Humidity':
-            del Humidity.sensor_mu[id]
-        elif type == 'Luminosity':
-            del Luminosity.sensor_mu[id]        
-        
-    elif topic == 'CONFIG':
-        value = message['value']
-        if Sensor.temperature_sensor == id:
-            Sensor.temperature_config = value
-        if Sensor.humidity_sensor == id:
-            Sensor.humidity_config = value
-        elif type == 'Temperature':
-            Temperature.sensor_mu[id] = value
-        elif type == 'Humidity':
-            Humidity.sensor_mu[id]    = value
-        elif type == 'Luminosity':
-            Luminosity.sensor_mu[id]  = value 
-
 
 
 def publish(topic, message, waitForAck=False):
@@ -290,8 +239,6 @@ client.loop_start()
 print("Device registered successfully!")
 
 client.subscribe("Sensors", qos=2)
-
-client.subscribe("sensors", qos=0)
 
 loop = asyncio.get_event_loop()
 temp_queue = asyncio.Queue(loop=loop)
