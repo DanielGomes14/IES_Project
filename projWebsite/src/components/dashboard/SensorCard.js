@@ -13,7 +13,9 @@ import {
 	FormCheckbox,
 	Progress,
     Button,
-    Badge
+    Badge,
+    Row, 
+    Col
 } from "shards-react";
 
 const types = {
@@ -64,15 +66,26 @@ class SensorCard extends React.Component {
             <Card small className="h-100">
                 {/* Card Header */}
                 <CardHeader className="border-bottom">
-                    <div className="d-flex float-left">
-                    {types[this.sensor.type.name].icon} 
-                    <h6 className="ml-2">{this.sensor.type.name}</h6>
-                    </div>
-                    <div className="float-right">
-                        <Badge theme={types[this.sensor.type.name].theme}  style={{width: "100%", height:"100%", minWidth: "80px"}}>
-                            <span>{this.state.value}</span>
-                        </Badge>
-                    </div>
+                    <span className="text-danger float-right" style={{position: "absolute", right: '-5px',top: 0, marginTop: '-10px'}}>
+                        <Button theme="white" style={{ width: "10px", borderRadius:'50%'}}>
+                            <span style={{fontWeight: '20px', marginLeft: "-4px", color: "red"}}>X</span>
+                        </Button>
+                    </span>{" "}
+                    <Row>
+                        <Col>
+                            <div className="d-flex float-left">
+                                {types[this.sensor.type.name].icon} 
+                                <h6 className="ml-2">{this.sensor.type.name}</h6>
+                            </div>
+                        </Col>
+                        <Col>
+                            <div className="float-right">
+                                <Badge theme={types[this.sensor.type.name].theme} style={{height:"100%", width: "80px", marginRight: '25px'}}>
+                                    <span>{this.state.value}</span>
+                                </Badge>
+                            </div>
+                        </Col>
+                    </Row>
                 </CardHeader>
             </Card>
         )
