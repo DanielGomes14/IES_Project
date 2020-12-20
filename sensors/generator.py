@@ -45,11 +45,8 @@ class Generator:
                 'timestamp': datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
             } ))
 
-            if sensor_id not in cls.sensor_mu:
-                # deleted my rabbitMQ meanwhile
-                del sensor_data[sensor_id]
-            if not sensor_data[sensor_id]:
-                # already empty
+            if sensor_id not in cls.sensor_mu or not sensor_data[sensor_id]:
+                # deleted my rabbitMQ meanwhile or already empty
                 del sensor_data[sensor_id]
             count += 1
 
@@ -83,7 +80,11 @@ class Temperature(Generator):
     async def start(cls):
         global temp_queue
         while True:
+            print(cls.sensor_mu)
+            await asyncio.sleep(0)
             for sensor in list(cls.sensor_mu):
+                if sensor not in cls.sensor_mu:
+                    break
                 mu = cls.sensor_mu[sensor]
 
                 mu += random.random() - 0.5 - 2 * cls.decrease
@@ -93,6 +94,8 @@ class Temperature(Generator):
                     mu += .5
 
                 await cls.send_shuffled({sensor: [random.gauss(mu, cls.sigma)]})
+                if sensor not in cls.sensor_mu:
+                    break
                 cls.sensor_mu[sensor] = mu
 
 
@@ -104,7 +107,10 @@ class Luminosity(Generator):
     @classmethod
     async def start(cls):
         while True:
+            await asyncio.sleep(0)
             for sensor in list(cls.sensor_mu):
+                if sensor not in cls.sensor_mu:
+                    break
                 mu = cls.sensor_mu[sensor]
                 window_opened = random.random() < 0.95
 
@@ -115,6 +121,8 @@ class Luminosity(Generator):
                     mu += .5
 
                 await cls.send_shuffled({sensor: [random.gauss(mu * window_opened, cls.sigma)]})
+                if sensor not in cls.sensor_mu:
+                    break
                 cls.sensor_mu[sensor] = mu
 
 
@@ -126,7 +134,10 @@ class Humidity(Generator):
     @classmethod
     async def start(cls):
         while True:
+            await asyncio.sleep(0)
             for sensor in list(cls.sensor_mu):
+                if sensor not in cls.sensor_mu:
+                    break
                 mu = cls.sensor_mu[sensor]
 
                 mu += random.random() - 0.5 - 2 * cls.decrease
@@ -136,6 +147,8 @@ class Humidity(Generator):
                     mu += .5
 
                 await cls.send_shuffled({sensor: [random.gauss(mu, cls.sigma)]})
+                if sensor not in cls.sensor_mu:
+                    break
                 cls.sensor_mu[sensor] = mu
 
 
@@ -145,43 +158,45 @@ def on_message(client, userdata, message):
     message = json.loads(message.payload.decode())
 
     method = message['method']
-    type = message['type'] 
-    id   = message['sensor_id']
+    sensor_type = message['type'] 
+    sensor_id = message['id']
     value = message['value']
     # receive message from rabbit
     if method == 'ADDSENSOR':
-        if type == 'Temperature':
-            
+        if sensor_type == 'Temperature':
             #if Sensor.temperature_sensor == None:
             #    Sensor.temperature_sensor = id
             #else:
-            Temperature.sensor_mu[id] = value
-            print(id,type)
-        elif type == 'Humidity':
-
+            Temperature.sensor_mu[sensor_id] = value
+            print(sensor_id,sensor_type)
+        elif sensor_type == 'Humidity':
             #if Sensor.humidity_sensor == None:
             #    Sensor.humidity_sensor = id
             #else:
-            Humidity.sensor_mu[id]    = random.randint(Humidity.MIN, Humidity.MAX)
+            Humidity.sensor_mu[sensor_id] = value
+        elif sensor_type == 'Luminosity':
+            Luminosity.sensor_mu[sensor_id] = value
 
-        elif type == 'Luminosity':
-            Luminosity.sensor_mu[id]  = random.randint(Luminosity.MIN, Luminosity.MAX) 
-
-    elif method == 'DEL':
-        
-        if Sensor.temperature_sensor == id:
+    elif method == 'REMOVESENSOR':
+        if Sensor.temperature_sensor == sensor_id:
             Sensor.temperature_sensor = None
-        if Sensor.humidity_sensor == id:
+        if Sensor.humidity_sensor == sensor_id:
             Sensor.humidity_sensor = None
-        elif type == 'Temperature':
-            del Temperature.sensor_mu[id]
-        elif type == 'Humidity':
-            del Humidity.sensor_mu[id]
-        elif type == 'Luminosity':
-            del Luminosity.sensor_mu[id]        
+        elif sensor_type == 'Temperature':
+            print(type(id))
+            print(sensor_id in Temperature.sensor_mu)
+            print(Temperature.sensor_mu)
+            del Temperature.sensor_mu[sensor_id]
+            print(Temperature.sensor_mu)
+            if sensor_id in Temperature.sensor_mu:
+                Temperature.sensor_mu.pop(sensor_id, None)
+            print(Temperature.sensor_mu)   
+        elif sensor_type == 'Humidity':
+            del Humidity.sensor_mu[sensor_id]
+        elif sensor_type == 'Luminosity':
+            del Luminosity.sensor_mu[sensor_id]        
         
-    elif method == 'CONFIG':
-        value = message['value']
+    elif method == 'CONFIGSENSOR':
         if Sensor.temperature_sensor == id:
             Sensor.temperature_config = value
         if Sensor.humidity_sensor == id:
@@ -189,10 +204,9 @@ def on_message(client, userdata, message):
         elif type == 'Temperature':
             Temperature.sensor_mu[id] = value
         elif type == 'Humidity':
-            Humidity.sensor_mu[id]    = value
+            Humidity.sensor_mu[id] = value
         elif type == 'Luminosity':
-            Luminosity.sensor_mu[id]  = value 
-
+            Luminosity.sensor_mu[id] = value 
 
 
 def publish(topic, message, waitForAck=False):
@@ -205,8 +219,6 @@ def publish(topic, message, waitForAck=False):
 def on_publish(client, userdata, mid):
     print('on_publish')
     receivedMessages.append(mid)
-
-
 
 
 # connect the client to Cumulocity IoT and register a device
@@ -223,10 +235,6 @@ print("Device registered successfully!")
 client.subscribe("Sensors", qos=2)
 
 loop = asyncio.get_event_loop()
-temp_queue = asyncio.Queue(loop=loop)
-lum_queue = asyncio.Queue(loop=loop)
-hum_queue = asyncio.Queue(loop=loop)
-
     
 temp_task = loop.create_task(Temperature.start())
 lum_task = loop.create_task(Luminosity.start())

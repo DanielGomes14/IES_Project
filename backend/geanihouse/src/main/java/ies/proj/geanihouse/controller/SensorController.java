@@ -71,7 +71,7 @@ public class SensorController implements  java.io.Serializable {
 
     @DeleteMapping("sensors/{id}")
     public Map<String,Boolean> deleteSensor(@PathVariable(value = "id") Long sensorId )
-        throws  ResourceNotFoundException{
+        throws ResourceNotFoundException {
         Sensor sensor = sensorRepository.findById(sensorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Sensor not found for this id :: " + sensorId));
         LOG.debug("Deleting sensor "+ sensor);
