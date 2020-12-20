@@ -4,6 +4,9 @@ import PropTypes from "prop-types";
 import { FaLightbulb, FaTemperatureHigh } from "react-icons/fa";
 import { IoWater, IoPower } from "react-icons/io5";
 import DeviceService from "../../services/DeviceService";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import { Redirect } from "react-router-dom";
 
 import {
 	Card,
@@ -43,8 +46,10 @@ class DeviceCard extends React.Component {
         this.device = props.device;
 		this.state = {
 			connected: 0,
+			refresh: false
 		};
 		this.handleChange = this.handleChange.bind(this);
+		this.submit = this.submit.bind(this);
 	}
 
 	componentDidMount() {
@@ -74,13 +79,35 @@ class DeviceCard extends React.Component {
 		}
 	}
 	
+	submit = () => {
+		confirmAlert({
+		  title: 'Confirm to submit',
+		  message: 'Are you sure you want to remove this device?',
+		  buttons: [
+			{
+				label: 'Yes',
+				onClick: () => {
+					DeviceService.deleteDevice(this.device.id)
+					this.setState({refresh: true});
+				}
+			},
+			{
+			  label: 'No',
+			}
+		  ]
+		});
+	  };
+	
+	  
 	render() {
+		if (this.state.refresh === true)
+			return <Redirect to='/' />
 		return (
 			<Card small className="h-100">
 				{/* Card Header */}
 				<CardHeader className="border-bottom">
 					<span className="text-danger float-right" style={{position: "absolute", right: '-5px',top: 0, marginTop: '-10px'}}>
-						<Button theme="white" style={{ width: "10px", borderRadius:'50%'}}>
+						<Button theme="white" style={{ width: "10px", borderRadius:'50%'}} onClick={this.submit}>
 							<span style={{fontWeight: '20px', marginLeft: "-4px", color: "red"}}>X</span>
 						</Button>
 					</span>{" "}

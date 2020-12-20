@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import { FaLightbulb, FaTemperatureHigh } from "react-icons/fa";
 import { IoWater, IoPower } from "react-icons/io5";
+import { Redirect } from "react-router-dom";
 
 import SensorService from "../../services/SensorService";
 
@@ -42,8 +43,10 @@ class SensorCard extends React.Component {
         super(props);
         this.sensor = props.sensor;
 		this.state = {
-			value: 69,
+            value: 69,
+            refresh: false
         };
+        this.submit = this.submit.bind(this);
     }
 
     componentDidMount() {
@@ -59,15 +62,36 @@ class SensorCard extends React.Component {
             .catch(error => {
                 console.log(error) ;
             });
-	}
+    }
     
-    render() {    
+    submit = () => {
+		confirmAlert({
+		  title: 'Confirm to submit',
+		  message: 'Are you sure you want to remove this sensor?',
+		  buttons: [
+			{
+				label: 'Yes',
+				onClick: () => {
+					SensorService.deleteSensor(this.sensor.id)
+					this.setState({refresh: true});
+				}
+			},
+			{
+			  label: 'No',
+			}
+		  ]
+		});
+	  };
+    
+    render() {
+        if (this.state.refresh === true)
+			return <Redirect to='/' />    
         return (
             <Card small className="h-100">
                 {/* Card Header */}
                 <CardHeader className="border-bottom">
                     <span className="text-danger float-right" style={{position: "absolute", right: '-5px',top: 0, marginTop: '-10px'}}>
-                        <Button theme="white" style={{ width: "10px", borderRadius:'50%'}}>
+                        <Button theme="white" style={{ width: "10px", borderRadius:'50%'}}  onClick={this.submit}>
                             <span style={{fontWeight: '20px', marginLeft: "-4px", color: "red"}}>X</span>
                         </Button>
                     </span>{" "}
