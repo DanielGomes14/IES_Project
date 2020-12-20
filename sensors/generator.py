@@ -53,13 +53,12 @@ class Generator:
                 del sensor_data[sensor_id]
             count += 1
 
-class Sensor(Generator):
 
+class Sensor(Generator):
     temperature_sensor = None
     humidity_sensor    = None
     temperature_config = None
     humidity_config    = None
-    
 
     @classmethod
     async def start(cls):
@@ -72,7 +71,6 @@ class Sensor(Generator):
             if humidity_sensor != None:
                 sensor_data[humidity_sensor] = humidity if humidity_config==None else humidity_config+(1/humidity)*random.random()*2-1
             
-
             await cls.send_shuffled(sensor_data)
 
 
@@ -85,21 +83,17 @@ class Temperature(Generator):
     async def start(cls):
         global temp_queue
         while True:
-            sensor_data = {k: [] for k in cls.sensor_mu}
-            
             for sensor in list(cls.sensor_mu):
                 mu = cls.sensor_mu[sensor]
 
                 mu += random.random() - 0.5 - 2 * cls.decrease
-                if mu > cls.MAX:
+                if mu > cls.MAX - cls.sigma:
                     mu -= .5 
-                elif mu < cls.MIN:
+                elif mu < cls.MIN + cls.sigma:
                     mu += .5
 
-                sensor_data[sensor] = [random.gauss(mu, cls.sigma)]
+                await cls.send_shuffled({sensor: [random.gauss(mu, cls.sigma)]})
                 cls.sensor_mu[sensor] = mu
-
-            await cls.send_shuffled(sensor_data)
 
 
 class Luminosity(Generator):
@@ -110,24 +104,18 @@ class Luminosity(Generator):
     @classmethod
     async def start(cls):
         while True:
-            sensor_data = {k: [] for k in cls.sensor_mu}
-
             for sensor in list(cls.sensor_mu):
                 mu = cls.sensor_mu[sensor]
                 window_opened = random.random() < 0.95
 
                 mu += random.random() - 0.5 - 2 * cls.decrease
-                if mu > cls.MAX:
+                if mu > cls.MAX - cls.sigma:
                     mu -= .5 
-                elif mu < cls.MIN:
+                elif mu < cls.MIN + cls.sigma:
                     mu += .5
 
-                sensor_data[sensor] = [random.gauss(mu * window_opened, cls.sigma)]
-                sensor_data[sensor] = [random.gauss(mu, cls.sigma)]
-
+                await cls.send_shuffled({sensor: [random.gauss(mu * window_opened, cls.sigma)]})
                 cls.sensor_mu[sensor] = mu
-
-            await cls.send_shuffled(sensor_data)
 
 
 class Humidity(Generator):
@@ -138,28 +126,22 @@ class Humidity(Generator):
     @classmethod
     async def start(cls):
         while True:
-            sensor_data = {k: [] for k in cls.sensor_mu}
-
             for sensor in list(cls.sensor_mu):
                 mu = cls.sensor_mu[sensor]
 
-                mu += random.random() - 0.5
-                if mu > cls.MAX:
-                    mu -= .2 + 2 * cls.decrease
-                elif mu < cls.MIN:
-                    mu += .2
+                mu += random.random() - 0.5 - 2 * cls.decrease
+                if mu > cls.MAX - cls.sigma:
+                    mu -= .5
+                elif mu < cls.MIN + cls.sigma:
+                    mu += .5
 
-                sensor_data[sensor] = [random.gauss(mu, cls.sigma)]
+                await cls.send_shuffled({sensor: [random.gauss(mu, cls.sigma)]})
                 cls.sensor_mu[sensor] = mu
-
-            await cls.send_shuffled(sensor_data)
 
 
 def on_message(client, userdata, message):
-
     print("Received operation " + str(message.payload))
     
-
     message = json.loads(message.payload.decode())
 
     method = message['method']

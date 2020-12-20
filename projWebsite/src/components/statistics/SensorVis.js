@@ -15,20 +15,30 @@ export default class SensorVis extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            division_id: 1,
+            division_id: 2,
             temperature: [],
             humidity: [],
             luminosity: []
         };
+        this.loadData = this.loadData.bind(this);
     }
 
     componentDidMount() {
-		SensorDataService.getSensorData(this.state.division_id)
-			.then(data => this.processData(data)
-			)
-			.catch(error => {
-				console.log(error) ;
-			});
+        this.loadData()
+        setInterval(this.loadData, 5000);
+    }
+    
+    async loadData() {
+        try {
+            SensorDataService.getSensorData(this.state.division_id)
+            .then(data => this.processData(data)
+            )
+            .catch(error => {
+                console.log(error) ;
+            });
+        } catch (e) {
+            console.log(e);
+        }
     }
     
     processData(data){
@@ -39,7 +49,6 @@ export default class SensorVis extends React.Component {
                 humidity: [],
                 luminosity: []
             };
-            console.log(data);
             data.map(d => {
             if (d.sensor.type.name ==  "Temperature"){
                 dataSeries.temperature.push({x: new Date(d.timestampDate), y: d.data})
@@ -49,15 +58,9 @@ export default class SensorVis extends React.Component {
                 dataSeries.luminosity.push({x: new Date(d.timestampDate), y: d.data})
             }
             });
-        console.log(dataSeries.temperature,dataSeries.humidity)
-        
-        console.log(data)
         this.setState({temperature: dataSeries.temperature});
         this.setState({humidity: dataSeries.humidity});
         this.setState({luminosity: dataSeries.luminosity});
-        console.log(this.state.temperature)
-        console.log(dataSeries.temperature)
-
     }
     else{
         console.log("NOT FOUND")
@@ -95,7 +98,6 @@ export default class SensorVis extends React.Component {
                     stroke="#d9534f"
                     curve={'curveMonotoneX'}
                 />
-                {console.log(this.state.temperature)}
                 <AreaSeries
                     data={this.state.humidity}
                     opacity={0.25}
@@ -110,15 +112,15 @@ export default class SensorVis extends React.Component {
                     stroke="#f0ad4e"
                     curve={'curveMonotoneX'}
                 />
-                <LineSeries data={this.state.temperature} curve={'curveMonotoneX'} color={"#d9534f"} />
-                <LineSeries data={this.state.humidity} curve={'curveMonotoneX'} color={"#5bc0de"}
+                <LineSeries animation="wobbly" data={this.state.temperature} curve={'curveMonotoneX'} color={"#d9534f"} />
+                <LineSeries animation="wobbly" data={this.state.humidity} curve={'curveMonotoneX'} color={"#5bc0de"}
                     onSeriesClick={(event)=>{
                         console.log("Ola Chico!")
                         // does something on click
                         // you can access the value of the event
                     }}
                 />
-                <LineSeries data={this.state.luminosity} curve={'curveMonotoneX'} color={"#f0ad4e"} />
+                <LineSeries animation="wobbly" data={this.state.luminosity} curve={'curveMonotoneX'} color={"#f0ad4e"} />
             </XYPlot>
         );
     }
