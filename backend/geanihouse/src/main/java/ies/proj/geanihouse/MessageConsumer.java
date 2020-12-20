@@ -6,6 +6,10 @@ import ies.proj.geanihouse.exception.ResourceNotFoundException;
 import ies.proj.geanihouse.model.*;
 import ies.proj.geanihouse.repository.DeviceLogRepository;
 import ies.proj.geanihouse.repository.DeviceRepository;
+import ies.proj.geanihouse.repository.NotificationRepository;
+
+
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +34,12 @@ public class MessageConsumer {
 
     @Autowired
     private DeviceRepository deviceRepository;
+
     @Autowired
     private DeviceLogRepository deviceLogRepository;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     @StreamListener(Sink.INPUT)
     public void log(ReceivedSensingData msg) throws ResourceNotFoundException,ErrorDetails {
@@ -41,6 +49,34 @@ public class MessageConsumer {
 
             Sensor sensor = sensorRepository.findById(sensor_id)
                             .orElseThrow(() -> new ResourceNotFoundException("Sensor with id " + sensor_id + " not found"));
+
+            String typeName = sensor.getType().getName();
+            Notification notification = null;
+
+            if ( typeName.equals("Temperature")){
+                if(msg.getValue() > 40){
+                    notification = new Notification(0,"Temperature Alarm","Temperature is higher than 40ºC",msg.getTimestamp(),sensor.getDivision().getHome());
+                }else if (msg.getValue()<0){
+                    notification = new Notification(0,"Temperature Alarm","Temperature is lower than 0ºC",msg.getTimestamp(),sensor.getDivision().getHome());
+                }
+            }else if(typeName.equals("Humidity")){
+                if(msg.getValue() > 80){
+                    notification = new Notification(0,"Humidity Alarm","Humidity is higher than 80%",msg.getTimestamp(),sensor.getDivision().getHome());
+                }else if (msg.getValue()<10){
+                    notification = new Notification(0,"Humidity Alarm","Humidity is lower than 10%",msg.getTimestamp(),sensor.getDivision().getHome());
+                }
+            }else if(typeName.equals("Luminosity")){
+                if(msg.getValue() > 85){
+                    notification = new Notification(0,"Luminosity Alarm","Luminosity is lower than 85%",msg.getTimestamp(),sensor.getDivision().getHome());
+                }else if (msg.getValue()<15){
+                    notification = new Notification(0,"Luminosity Alarm","Luminosity is lower than 15%",msg.getTimestamp(),sensor.getDivision().getHome());
+                }
+            }
+            
+            if (notification != null){
+                System.out.println(notification.getTitle());
+                notificationRepository.save(notification);
+            }
 
             LOG.info("Inserting sensor data for sensor with  id: "+ sensor.getId());
             SensorData sd = new SensorData(sensor,msg.getTimestamp(), msg.getValue());

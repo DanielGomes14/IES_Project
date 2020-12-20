@@ -79,6 +79,19 @@ public class DeviceController {
         return  ResponseEntity.ok().body("Successfully added new Device");
     }
 
+    @PutMapping("/devices")
+    public ResponseEntity<?> updateDevice(@Valid @RequestBody Device device) throws ResourceNotFoundException {
+        System.out.println(device.getState());
+        Device n = deviceRepository.findById(device.getId()).
+        orElseThrow(() -> new ResourceNotFoundException("Could not find Type of Sensor "));;
+        System.out.println(n.getState());
+        n.setState(device.getState());
+        deviceRepository.save(n);
+        System.out.println(n.getState());
+
+        return  ResponseEntity.ok().body("Successfully added new Device");
+    }
+
 
     @DeleteMapping("/devices/{id}")
     public Map<String,Boolean> deleteDevice(@PathVariable(value = "id") Long deviceId) throws ResourceNotFoundException {
