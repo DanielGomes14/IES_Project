@@ -58,7 +58,7 @@ class LoginForm extends React.Component {
 							authorization: auth.token()
 						}
 					})
-					.then(res => res.json()).then(json => current_user.login(1));
+					.then(res => res.json()).then(json => current_user.login(json));
 					
 					fetch(baseURL +'homes', {
 						method: 'GET',
