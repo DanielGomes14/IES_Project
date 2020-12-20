@@ -66,7 +66,6 @@ class FormNewSensor extends React.Component {
 			this.division, this.state.selectedType.id
 		);
 		event.preventDefault();
-		window.location.pathname = '/'
 	}
 
 	render() {
