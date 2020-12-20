@@ -4,6 +4,9 @@ import PropTypes from "prop-types";
 import { FaLightbulb, FaTemperatureHigh } from "react-icons/fa";
 import { IoWater, IoPower } from "react-icons/io5";
 import DeviceService from "../../services/DeviceService";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import { Redirect } from "react-router-dom";
 
 import {
 	Card,
@@ -11,7 +14,10 @@ import {
 	CardBody,
 	FormCheckbox,
 	Progress,
-	Button
+	Button,
+	Badge,
+	Col,
+	Row
 } from "shards-react";
 
 
@@ -40,8 +46,10 @@ class DeviceCard extends React.Component {
         this.device = props.device;
 		this.state = {
 			connected: 0,
+			refresh: false
 		};
 		this.handleChange = this.handleChange.bind(this);
+		this.submit = this.submit.bind(this);
 	}
 
 	componentDidMount() {
@@ -71,19 +79,53 @@ class DeviceCard extends React.Component {
 		}
 	}
 	
+	submit = () => {
+		confirmAlert({
+		  title: 'Confirm to submit',
+		  message: 'Are you sure you want to remove this device?',
+		  buttons: [
+			{
+				label: 'Yes',
+				onClick: () => {
+					DeviceService.deleteDevice(this.device.id)
+					this.setState({refresh: true});
+				}
+			},
+			{
+			  label: 'No',
+			}
+		  ]
+		});
+	  };
+	
+	  
 	render() {
+		if (this.state.refresh === true)
+			return <Redirect to='/' />
 		return (
 			<Card small className="h-100">
 				{/* Card Header */}
 				<CardHeader className="border-bottom">
-					<div className="d-flex float-left">
-					{types[this.device.type.name].icon} 
-					<h6 className="ml-2">{this.device.name}</h6>
-					</div>
-					<FormCheckbox className="float-right" toggle defaultChecked={this.device.state}
-					name="connected" onChange={this.handleChange}>
-						Enable Device
-					</FormCheckbox>
+					<span className="text-danger float-right" style={{position: "absolute", right: '-5px',top: 0, marginTop: '-10px'}}>
+						<Button theme="white" style={{ width: "10px", borderRadius:'50%'}} onClick={this.submit}>
+							<span style={{fontWeight: '20px', marginLeft: "-4px", color: "red"}}>X</span>
+						</Button>
+					</span>{" "}
+					<Row>
+						<Col sm="6" md="8" lg="8">
+							<div className="d-flex float-left">
+							{types[this.device.type.name].icon} 
+							<h6 className="ml-2">{this.device.name}</h6>
+							</div>
+						</Col>
+						<Col sm="6" md="4" lg="4">
+							<Button className="float-right" theme="white" style={{ width: "100%", height:"100%", minWidth: "160px", marginRight: "25px"}}>
+								<FormCheckbox toggle defaultChecked={this.device.state}	name="connected">
+									Enable Device
+								</FormCheckbox>
+							</Button>
+						</Col>
+					</Row>
 				</CardHeader>
 				{/* { this.state.connected ? (
 					<CardBody className="d-flex flex-column">

@@ -39,6 +39,12 @@ public class UserController {
         return clientRepository.findAll();
     }
 
+    @GetMapping("/user/{username}")
+    public ResponseEntity<?> getUserId(@PathVariable(value="username") String username ){
+        long id = userRepository.findByUsername(username).getId();
+        return  ResponseEntity.ok().body(id);
+    }
+
 
     @DeleteMapping("/users/{id}")
     public  Map<String,Boolean> deleteUser(@PathVariable(value = "id") long userId) throws ResourceNotFoundException {

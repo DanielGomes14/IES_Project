@@ -25,7 +25,7 @@ import ies.proj.geanihouse.repository.SensorRepository;
 public class MessageConsumer {
 
     private static final Logger LOG = LogManager.getLogger(MessageConsumer.class);
-
+    private Notification lastnotification;
     @Autowired
     private SensorDataRepository sensorDataRepository;
 
@@ -56,7 +56,7 @@ public class MessageConsumer {
             if ( typeName.equals("Temperature")){
                 if(msg.getValue() > 40){
                     notification = new Notification(0,"Temperature Alarm","Temperature is higher than 40ºC",msg.getTimestamp(),sensor.getDivision().getHome());
-                }else if (msg.getValue()<0){
+                }else if (msg.getValue()<10){
                     notification = new Notification(0,"Temperature Alarm","Temperature is lower than 0ºC",msg.getTimestamp(),sensor.getDivision().getHome());
                 }
             }else if(typeName.equals("Humidity")){
@@ -74,8 +74,13 @@ public class MessageConsumer {
             }
             
             if (notification != null){
-                System.out.println(notification.getTitle());
-                notificationRepository.save(notification);
+                System.out.println("Teste" + notification.getText());
+                if(this.lastnotification== null || checkLastNotification(notification,this.lastnotification) ){
+                    System.out.println(notification.getTitle());
+                    this.lastnotification=notification;
+                    notificationRepository.save(notification);
+                }
+
             }
 
             LOG.info("Inserting sensor data for sensor with  id: "+ sensor.getId());
@@ -95,5 +100,24 @@ public class MessageConsumer {
         else throw  new ErrorDetails("Method Error");
     }
 
+    public  boolean checkLastNotification(Notification notification, Notification lastnotification ){
+        if(!notification.getText().equals(lastnotification.getText())){
+            return true;
+        }
+        LOG.info("possibily new notifcation");
+        //check if it's not the same notifcation and the notification is of the same type as the last one
+        if(notification.getTimestampDate().compareTo(lastnotification.getTimestampDate()) !=0 ){
+            LOG.info("not the same object");
+            //if the last notification was sent more than 5 minutes ago, a new notifcation will be sent
+            System.out.println(notification.getTimestampDate().getTime());
+            LOG.info("Diff" + (notification.getTimestampDate().getTime()-lastnotification.getTimestampDate().getTime()));
+            if(notification.getTimestampDate().getTime()-lastnotification.getTimestampDate().getTime()>=5 * 60 * 1000){
+                LOG.info("New Notification coming");
+                return  true;
+            }
+            return false;
+        }
+        return  false;
 
+    }
 }
