@@ -19,16 +19,24 @@ export default class HomeActions extends React.Component {
     super(props);
 
     this.state = {
-      visible: false
+      visible: false,loading:1
     };
     this.homes = [];
-    this.current_home={"id":0,"name":"Home"};
-    HomeService.getHomesDropdown().then(data=>{this.homes=data});
-    HomeService.getHomeById().then(data=>{this.current_home=data});
+    this.current_home={"id":0,"name":"error"};
     
     this.toggleHomeActions = this.toggleHomeActions.bind(this);
   }
-  
+  componentDidMount(){
+    HomeService.getHomesDropdown().then(data=>{this.homes=data});
+    HomeService.getHomeById()
+    .then(data => {
+      this.setState({ 
+        loading: 0,
+        current_home:data
+      });
+    });
+    
+  }
 
   toggleHomeActions() {
     this.setState({
@@ -41,10 +49,22 @@ export default class HomeActions extends React.Component {
   }
 
   render() {
+    var content = "";
+    switch(this.state.loading) {
+			case 0:
+				content = this.state.current_home.name;
+				break;
+			case 1:
+				content = "Loading...";
+				break;
+			case 2:
+				content = "Ups! Something Went Wrong...";
+				break;
+		}
     return (
         <NavItem className="border-right" tag={Dropdown} caret toggle={this.toggleHomeActions}>
             <DropdownToggle caret tag={NavLink} className="text-nowrap px-3" style={{paddingTop: "20px"}}>
-                {this.current_home.name}
+                {content}
             </DropdownToggle>
             <Collapse tag={DropdownMenu} right small open={this.state.visible}>
                 {this.homes.map((home, index) => (
