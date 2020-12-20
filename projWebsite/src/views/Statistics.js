@@ -9,6 +9,10 @@ import {
 import PageTitle from "../components/common/PageTitle";
 import Graph from "../components/statistics/Graph";
 import DivisionGraph from "../components/statistics/DivisionGraph";
+import SensorVis from "../components/statistics/SensorVis";
+import ReactVisCharts from "../components/statistics/ReactVisCharts";
+import { DynamicCrosshair, ScatterPlotOnNearestXY, LineChartMouseOverSeries, LineChartMouseOverXY, LinkedCharts, Example} from "../components/statistics/DynamicCrosshair";
+import { MarkSeries, LineSeries, VerticalBarSeries } from "react-vis";
 
 /*
     Users Overview @param: title,charData
@@ -43,7 +47,7 @@ const statistics = () => (
 
         <Row className="px-3">
             <Col lg="12" md="12" sm="12" className="mb-4">
-            <Graph />
+                <Graph />
             </Col>
         </Row>
         <Row className="px-3">
@@ -51,6 +55,43 @@ const statistics = () => (
                 <DivisionGraph />    
             </Col>
         </Row> 
+        <Row className="px-3">
+            <Col lg="6" md="12" sm="12" >
+                <SensorVis /> 
+                {/* <DynamicCrosshair />  
+                <ScatterPlotOnNearestXY /> 
+                <LineChartMouseOverSeries />        */}
+            </Col>
+        </Row> 
+        {/* <Row className="px-3">
+            <Col lg="6" md="12" sm="12" >
+                <DynamicCrosshair />    
+            </Col>
+            <Col lg="6" md="12" sm="12" >
+                <ScatterPlotOnNearestXY />    
+            </Col>
+            <Col lg="6" md="12" sm="12" >
+                <LineChartMouseOverSeries />    
+            </Col>
+            <Col lg="6" md="12" sm="12" >
+                <LineChartMouseOverXY />    
+            </Col>
+            <Col lg="6" md="12" sm="12" >
+                <LinkedCharts />    
+            </Col>
+            <Col lg="6" md="12" sm="12" >
+            </Col>
+            <Col lg="6" md="12" sm="12" >
+                <Example series={VerticalBarSeries} />    
+            </Col>
+            <Col lg="6" md="12" sm="12" >
+                <Example series={LineSeries} />    
+            </Col>
+            <Col lg="6" md="12" sm="12" >
+                <Example series={MarkSeries} />    
+            </Col>
+        </Row> */}
+        
     </Container>
 );
 
