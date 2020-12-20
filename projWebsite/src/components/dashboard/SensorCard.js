@@ -4,7 +4,8 @@ import PropTypes from "prop-types";
 import { FaLightbulb, FaTemperatureHigh } from "react-icons/fa";
 import { IoWater, IoPower } from "react-icons/io5";
 import { Redirect } from "react-router-dom";
-
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import SensorService from "../../services/SensorService";
 
 import {
