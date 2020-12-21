@@ -80,7 +80,6 @@ class Temperature(Generator):
     async def start(cls):
         global temp_queue
         while True:
-            print(cls.sensor_mu)
             await asyncio.sleep(0)
             for sensor in list(cls.sensor_mu):
                 if sensor not in cls.sensor_mu:
@@ -183,14 +182,7 @@ def on_message(client, userdata, message):
         if Sensor.humidity_sensor == sensor_id:
             Sensor.humidity_sensor = None
         elif sensor_type == 'Temperature':
-            print(type(id))
-            print(sensor_id in Temperature.sensor_mu)
-            print(Temperature.sensor_mu)
             del Temperature.sensor_mu[sensor_id]
-            print(Temperature.sensor_mu)
-            if sensor_id in Temperature.sensor_mu:
-                Temperature.sensor_mu.pop(sensor_id, None)
-            print(Temperature.sensor_mu)   
         elif sensor_type == 'Humidity':
             del Humidity.sensor_mu[sensor_id]
         elif sensor_type == 'Luminosity':
