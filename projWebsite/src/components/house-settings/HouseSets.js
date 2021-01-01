@@ -12,9 +12,10 @@ import {
 	Button,
 	FormCheckbox,
 } from "shards-react";
+import { current_home } from "../../utils/auth";
 
 import DivisionService from "./../../services/DivisionService";
-import {current_home} from "../../utils/auth";
+import EditDivision from "./EditDivision"
 
 
 class HouseSets extends React.Component {
@@ -50,11 +51,15 @@ class HouseSets extends React.Component {
 	}
 
 	handleSubmit(event) {
-		alert('A name was submitted: ' + this.state.OPTIONS.filter(function(opt) {if (opt.checked) return opt.id;}).map(opt => opt.id + opt.name + opt.checked));
-		DivisionService.addDivision(
-			current_home.current_home(), this.state.name
-		);
-		event.preventDefault();
+		if (!this.state.name.replace(/\s/g, '').length){
+			alert("Division's must have a name");
+		} else {
+			var response = DivisionService.addDivision(
+				current_home.current_home(), this.state.name
+			);
+			EditDivision.ComponentDidMount();
+			event.preventDefault();
+		}
 	}
 
 	render() {

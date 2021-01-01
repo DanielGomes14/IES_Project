@@ -17,13 +17,17 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import ies.proj.geanihouse.repository.UserRepository;
 
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.validation.Valid;
 import java.util.List;
+
+@CrossOrigin(origins="*", allowedHeaders = "*")
 @RestController
 public class HomeController {
     private static final Logger LOG = LogManager.getLogger(HomeController.class);
