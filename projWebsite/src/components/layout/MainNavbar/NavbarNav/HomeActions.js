@@ -13,6 +13,7 @@ import {
 } from "shards-react";
 
 import HomeService from '../../../../services/HomeService';
+import {current_home} from '../../../../utils/auth';
 
 export default class HomeActions extends React.Component {
   constructor(props) {
@@ -22,12 +23,14 @@ export default class HomeActions extends React.Component {
       visible: false,loading:1
     };
     this.homes = [];
-    this.current_home={"id":0,"name":"error"};
+    this.current_home={"id":-1,"name":"error"};
+    this.selected_home = this.current_home;
     
     this.toggleHomeActions = this.toggleHomeActions.bind(this);
   }
   componentDidMount(){
     HomeService.getHomesDropdown().then(data=>{this.homes=data});
+    
     HomeService.getHomeById()
     .then(data => {
       this.setState({ 
@@ -44,9 +47,20 @@ export default class HomeActions extends React.Component {
     });
   }
 
-  changeHome(){
-    console.log("Changing Home");
+  onChangeHome(index){
+    this.selected_home = this.homes[index];
+    this.ChangeHome();
   }
+
+ 
+  ChangeHome(){
+    this.current_home = this.selected_home;
+    this.setState({
+      current_home: this.current_home
+    })
+    current_home.change_home(this.current_home.id)
+  }
+
 
   render() {
     var content = "";
@@ -60,7 +74,8 @@ export default class HomeActions extends React.Component {
 			case 2:
 				content = "Ups! Something Went Wrong...";
 				break;
-		}
+    }
+    
     return (
         <NavItem className="border-right" tag={Dropdown} caret toggle={this.toggleHomeActions}>
             <DropdownToggle caret tag={NavLink} className="text-nowrap px-3" style={{paddingTop: "20px"}}>
@@ -70,7 +85,7 @@ export default class HomeActions extends React.Component {
                 {this.homes.map((home, index) => (
                   <DropdownItem key={index} tag={Link}  to="#">
                     <Badge pill theme="danger" className="mr-2"  style={{lineHeight: "4px"}}> 2 </Badge>
-                    <span onClick={this.changeHome()}>{home.name}</span>
+                    <span onClick={()=> this.onChangeHome(index)}>{home.name}</span>
                   </DropdownItem>
                 ))}
                 
