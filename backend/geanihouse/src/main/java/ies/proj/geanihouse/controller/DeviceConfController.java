@@ -1,5 +1,6 @@
 package ies.proj.geanihouse.controller;
 
+import ies.proj.geanihouse.exception.ErrorDetails;
 import ies.proj.geanihouse.exception.ResourceNotFoundException;
 import ies.proj.geanihouse.model.Device;
 import ies.proj.geanihouse.model.DeviceConf;
@@ -9,15 +10,20 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@RestController
 public class DeviceConfController {
-    private static final Logger LOG = LogManager.getLogger(HomeController.class);
+
+
+    private static final Logger LOG = LogManager.getLogger(DeviceConfController.class);
 
     @Autowired
     private DeviceConfRepository deviceConfRepository;
@@ -25,21 +31,58 @@ public class DeviceConfController {
     @Autowired
     private DeviceRepository deviceRepository;
 
-    @GetMapping("/devices/{id}/configurations")
-    public ResponseEntity<?> getAllDeviceConfigurations(@PathVariable(value = "id") Long id, @RequestParam(required = false,defaultValue = "false") Boolean latest) throws ResourceNotFoundException{
+    @GetMapping("/deviceconfigurations")
+    public List<DeviceConf> getAllDeviceConfigurations() {
+        return deviceConfRepository.findAll();
+    }
+
+    @GetMapping("/devices/{id}/deviceconfigurations")
+    public ResponseEntity<?> getDeviceConfigurations(@PathVariable(value = "id") Long id, @RequestParam(required = false,defaultValue = "false") Boolean latest) throws ResourceNotFoundException{
         Device device = deviceRepository.findById(id)
                 .orElseThrow( () -> new ResourceNotFoundException("Could not Find Device with id :: " + id));
-        if (latest!=null && latest){
-            LOG.debug("Only returning the latest configuration");
-            List<DeviceConf> deviceConfList = deviceConfRepository.findFirstByDevice_idOrderByIdDesc(device.getId());
-            return  ResponseEntity.ok().body(deviceConfList);
-        }
-        else{
-            List<DeviceConf> deviceConfList = deviceConfRepository.findAllByDevice_Id(device.getId());
-            return  ResponseEntity.ok().body(deviceConfList);
-        }
+        LOG.info("Returning all configurations from specificDevice");
+        System.out.println("aaaaa");
+        List<DeviceConf> deviceConfList = deviceConfRepository.findAllByDevice_Id(device.getId());
+        return  ResponseEntity.ok().body(deviceConfList);
+
+    }
+
+    @PostMapping("/deviceconfigurations")
+    public DeviceConf addNewConfiguration(@Valid @RequestBody DeviceConf deviceConf) throws ResourceNotFoundException,ErrorDetails {
+        Device device = deviceRepository.findById(deviceConf.getDevice().getId())
+                .orElseThrow( () -> new ResourceNotFoundException("Could not find Device with id :: " + deviceConf.getDevice().getId() ));
+        Timestamp begindate = deviceConf.getTimeBegin();
+        Timestamp enddate = deviceConf.getTimeEnd();
+        if (!checkDates(device.getId(),begindate,enddate)) throw  new ErrorDetails("Invalid Scheduled Hours!");
+        deviceConfRepository.save(deviceConf);
+        LOG.info("Success inserting new COnfiguration for this Device");
+        return  deviceConfRepository.save(deviceConf);
     }
 
 
+    @DeleteMapping("/deviceconfigurations/{id}")
+    public Map<String,Boolean> removeConfiguration(@PathVariable(value = "id") Long id) throws ResourceNotFoundException{
+        DeviceConf deviceConf = deviceConfRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Could not Found Configuration with id :: " + id));
+        Map<String,Boolean> response = new HashMap<>();
+        LOG.info("Removing new Device Configuration");
+        deviceConfRepository.delete(deviceConf);
+        response.put("deleted",Boolean.TRUE);
+        return response;
+    }
 
+    public  boolean checkDates(long deviceid, Timestamp begindate,Timestamp enddate){
+        List<DeviceConf> deviceConfList = deviceConfRepository.findAllByDevice_Id(deviceid);
+
+        for(DeviceConf deviceConf : deviceConfList){
+            if( ( deviceConf.getTimeBegin().getTime() <= begindate.getTime()) && (begindate.getTime() <= deviceConf.getTimeEnd().getTime())){
+                LOG.warn("Already a conf with this schedule! Invalid Start Date");
+                return  false;
+            }
+            else if(( deviceConf.getTimeBegin().getTime() <= enddate.getTime() ) &&  (enddate.getTime() <= deviceConf.getTimeEnd().getTime())){
+                LOG.warn("Already a conf with this schedule! Invalid End Date");
+                return  false;
+            }
+        }
+        return  true;
+    }
 }

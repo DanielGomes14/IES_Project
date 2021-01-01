@@ -55,9 +55,8 @@ public class HomeController {
         throw  new ErrorDetails("User not authenticated!");
     }
 
-    @PostMapping("/newhouse")
+    @PostMapping("/homes")
     public  Home addnewHome(@Valid @RequestBody Home home) throws  ResourceNotFoundException{
-            LOG.debug(home.getClients());
             return homeRepository.save(home);
     }
 
