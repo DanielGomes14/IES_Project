@@ -3,7 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import {
-    Container, Row, Col, Button
+    Container, Row, Button
 } from "shards-react";
 
 import AutomationDevice from "../components/automation/AutomationDevice";
