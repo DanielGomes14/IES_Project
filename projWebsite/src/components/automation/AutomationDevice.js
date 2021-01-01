@@ -13,7 +13,6 @@ class AutomationDevice extends React.Component {
     constructor(props) {
         super(props);
         this.division = props.division;
-        console.log(this.division);
         this.state = {
             loading1: 0,
             loading2: 0,
@@ -36,7 +35,7 @@ class AutomationDevice extends React.Component {
 		// 		console.log(error) ;
 		// 		this.setState({ loading1: 2 })
 		// 	});
-
+        
 		DeviceService.getDevices(this.division.id)
 			.then(data => {
 				this.setState({ 
@@ -70,13 +69,13 @@ class AutomationDevice extends React.Component {
                                     <h3>{device.name}</h3>
                                     <Row>
                                         <Col lg="7">
-                                            <FormCheckbox toggle checked={device.state}> Off/On </FormCheckbox>
+                                            <FormCheckbox toggle checked={device.state? true : false}> Off/On </FormCheckbox>
                                         </Col>
                                         <Col lg="5">
-                                            <h6 style={{textAlign:"right"}}>{device.type}</h6>
+                                            <h6 style={{textAlign:"right"}}>{device.type.name}</h6>
                                         </Col>
                                     </Row>    
-                                        <AutomationConfig device={device}></AutomationConfig>
+                                    <AutomationConfig device={device}></AutomationConfig>
                                 </CardBody>
                             </Card>
                         </Col>

@@ -18,7 +18,7 @@ class AutomationConfig extends React.Component {
     componentDidMount() {
 		this.setState({ loading: 1 });
 
-		DeviceConfigService.getConfigurations(this.division.id)
+		DeviceConfigService.getConfigurations(this.device.id)
 			.then(data => {
 				this.setState({ 
 					deviceConfigs: data,
