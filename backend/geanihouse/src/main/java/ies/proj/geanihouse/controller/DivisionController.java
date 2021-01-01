@@ -38,9 +38,16 @@ public class DivisionController {
     }
 
     @PostMapping("/divisions")
-    public  Division addDivision(@Valid @RequestBody Division division){
-        System.out.println("--->" + division.getSensors());
-        return divisionRepository.save(division);
+    public Map<String,String> addDivision(@Valid @RequestBody Division division){
+        Map<String, String> response = new HashMap<>();
+
+        if (division.getName().trim().length() == 0){
+            response.put("error", "Can't add divisions without a name");
+            return response;
+        }
+        divisionRepository.save(division);
+        response.put("success", "Successfully added new division.");
+        return response;
     }
 
     @DeleteMapping("/divisions/{id}")

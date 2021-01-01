@@ -15,6 +15,9 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import MaxWidthDialog from "./DialogDivision"
 import { Button } from "@material-ui/core";
+import {current_home} from './../../utils/auth';
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import DivisionService from "./../../services/DivisionService";
 
@@ -65,16 +68,14 @@ class EditDivision extends React.Component{
 
 	componentDidMount() {
 		this.setState({ loading: 1 });
-		DivisionService.getDivisions(1)
+		DivisionService.getDivisions(current_home.current_home())
 			.then(data => { 
-				console.log(data);
 				this.setState({ 
 					loading: 0,
 					divisions: data
 				}) 
 			})
 			.catch(error => {
-				console.log(error) ;
 				this.setState({ loading: 2 })
 			});
 	}
@@ -95,17 +96,31 @@ class EditDivision extends React.Component{
 		})
 	}
 	*/
-
-	handleRemoveDivision(division_id) {
-		// DivisionService.deleteDivision(1, division_id)
-		// 	.then(data => { 
-		// 		console.log(data);
-		// 	})
-		// 	.catch(error => {
-		// 		console.log(error) ;
-		// 	});
-	}
 		
+	handleRemoveDivision = (division_id) => {
+		confirmAlert({
+		  title: 'Confirm Deletion',
+		  message: 'Are you sure you want to remove this division?',
+		  buttons: [
+			{
+				label: 'Yes',
+				onClick: () => {
+					DivisionService.deleteDivision(division_id)
+					.then(data => { 
+						this.componentDidMount()
+					})
+					.catch(error => {
+						alert(error);
+					});
+				}
+			},
+			{
+			  label: 'No',
+			}
+		  ]
+		});
+	  };
+
 	render() {
 		return  (
 			<Card small className="mb-4">
@@ -145,7 +160,7 @@ class EditDivision extends React.Component{
 									<StyledTableCell component="th" scope="col">{/* this.getNumChecked(row) */}</StyledTableCell>
 									<StyledTableCell scope="col">
 										{/* <MaxWidthDialog content={ row } />  */}
-										<Button variant="outlined" color="secondary" onClick={ this.handleRemoveDivision(row.id) }>Remove</Button>
+										<Button variant="outlined" color="secondary" onClick={() => this.handleRemoveDivision(row.id)}>Remove</Button>
 									</StyledTableCell>
 								</StyledTableRow>
 							))}
