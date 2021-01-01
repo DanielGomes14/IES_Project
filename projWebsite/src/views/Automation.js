@@ -3,15 +3,13 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import {
-    Container, Row, Col, Card, CardBody, Button, FormCheckbox
+    Container, Row, Col, Button
 } from "shards-react";
 
-import ConfigProfile from "../components/automation/ConfigProfile";
-import ConfigDevice from "../components/automation/ConfigDevice";
-import TypeSlider from "../components/automation/TypeSlider";
+import AutomationDevice from "../components/automation/AutomationDevice";
 import PageTitle from "../components/common/PageTitle";
 
-
+import DivisionService from "../services/DivisionService";
 
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -54,18 +52,34 @@ function a11yProps(index) {
 }
 
 
-
 class Automation extends React.Component {
 
     constructor(props) {
 		super(props);
 		this.state = {
-            divisions: props.divisions,
+            loading: 0,
+            divisions: [],
             value: 0
         }
         this.classes = this.useStyles;
 		// this.handleChange = this.handleChange.bind(this);
     }
+
+    componentDidMount() {
+		this.setState({ loading: 1 });
+
+		DivisionService.getDivisions(1) // HARDCODED
+			.then(data => {
+				this.setState({ 
+					divisions: data,
+					loading: 0
+				});
+			})
+			.catch(error => {
+				console.log(error) ;
+				this.setState({ loading: 2 })
+			});
+	}
 
     handleChange = (event, newValue) => {
         this.setState({value: newValue});
@@ -86,7 +100,7 @@ class Automation extends React.Component {
                     <PageTitle sm="4" title="Automation" subtitle="Dashboard" className="text-sm-left" />
                 </Row>
 
-                <Container >
+                <Container>
                     <div className={this.classes.root}>
                         <AppBar position="static" color="default">
                             <Tabs
@@ -97,7 +111,6 @@ class Automation extends React.Component {
                                 variant="scrollable"
                                 scrollButtons="auto"
                                 aria-label="scrollable auto tabs example">
-
 
                                 {this.state.divisions.map((division, index) => (
                                     <Tab key={index} label={division.name} {...a11yProps(index)} />
@@ -113,46 +126,7 @@ class Automation extends React.Component {
                                 <a href="/config-device"><Button className="float-right mx-2 mb-3">Custom Edit</Button></a>
                                 <div className="clearfix"></div>
 
-                                <Row>
-                                    {division.configurations.map((configuration,index) => (
-
-                                        <Col key={index} lg="4">
-                                            <h4>{configuration.type}</h4>
-                                            <TypeSlider type={configuration.type} min_value={configuration.min_value}
-                                            max_value={configuration.max_value} />
-                                        </Col>
-
-
-                                    ))}
-                                </Row>
-                                
-                                <Row>
-
-                                    {division.devices.map((device, index) => (
-                                        <Col key={index} lg="6" className="py-3">
-                                            <Card className="">
-                                                <CardBody>
-                                                    <h3>
-                                                        {device.name}
-                                                    </h3>
-                                                    <Row>
-                                                        <Col lg="7">
-                                                        <FormCheckbox toggle checked={device.state} > Off/On </FormCheckbox>
-                                                        </Col>
-                                                        <Col lg="5">
-                                                        <h6 style={{textAlign:"right"}}>{device.type}</h6>
-                                                        </Col>
-                                                    </Row>                                                    
-                                                    {device.configurations.map((configuration,index)=> (
-                                                        <ConfigDevice key={index} value={configuration.value} start={configuration.start} end={configuration.end}    />
-                                                    ))}
-
-
-                                                </CardBody>
-                                            </Card>
-                                        </Col>
-                                    ))}
-                                </Row>
+                                <AutomationDevice key={index} division={division}></AutomationDevice>
                             </TabPanel>
                         ))}
                     </div>
