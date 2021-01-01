@@ -66,7 +66,6 @@ public class HomeController {
 
     @PostMapping("/newhouse")
     public  Home addnewHome(@Valid @RequestBody Home home) throws  ResourceNotFoundException{
-            LOG.debug(home.getClients());
             return homeRepository.save(home);
     }
 
