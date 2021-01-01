@@ -5,6 +5,7 @@ import ies.proj.geanihouse.exception.ErrorDetails;
 import ies.proj.geanihouse.exception.ResourceNotFoundException;
 import ies.proj.geanihouse.model.Division;
 import ies.proj.geanihouse.model.DivisionConf;
+import ies.proj.geanihouse.model.Sensor;
 import ies.proj.geanihouse.model.Type;
 import ies.proj.geanihouse.repository.DivisionConfRepository;
 import ies.proj.geanihouse.repository.DivisionRepository;
@@ -49,13 +50,14 @@ public class DivisionConfController {
     }
 
     @PostMapping("/divisionconfigurations")
-    public  DivisionConf getDivisionConfs(@Valid @RequestBody DivisionConf divisionConf) throws  ResourceNotFoundException, ErrorDetails{
+    public  DivisionConf addDivisionConfs(@Valid @RequestBody DivisionConf divisionConf) throws  ResourceNotFoundException, ErrorDetails{
 
         //check if division exists
         Division division= divisionRepository.findById(divisionConf.getDivision().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Could not Find division with id :: "+ divisionConf.getDivision().getId()));
 
         //check if the type is valid
+
         Type type = typeRepository.findByName(divisionConf.getType().getName());
         if(type == null){
             LOG.error("Invalid Type!");
@@ -63,10 +65,13 @@ public class DivisionConfController {
         }
         divisionConf.setType(type);
 
-        String error_message= checkValuesContraints(divisionConf);
+
         //check the contraints to create a new Configuration
+        String error_message= checkValuesContraints(divisionConf);
+
         if (error_message!=null) throw new ErrorDetails(error_message);
-        if (!checkConfsTypes(divisionConf,division)) throw new ErrorDetails("Cannot have two configurations of same type!" );
+        error_message=checkConfsTypes(divisionConf,division);
+        if(error_message!=null)throw new ErrorDetails(error_message);
 
         LOG.info("Success inserting new Configuration for division " + division.getId());
         return divisionConfRepository.save(divisionConf);
@@ -77,7 +82,7 @@ public class DivisionConfController {
         DivisionConf divisionConf = divisionConfRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Could not find division configuration with id ::" + id));
         divisionConfRepository.delete(divisionConf);
-        Map response = new HashMap<String,Boolean>();
+        Map <String,Boolean> response = new HashMap<>();
         response.put("deleted",Boolean.TRUE);
         return response;
     }
@@ -96,14 +101,29 @@ public class DivisionConfController {
         return error_message;
     }
 
-    public boolean checkConfsTypes(DivisionConf divisionConf,Division division){
-        for(DivisionConf conf : division.getDivisionConf()){
-            if(conf.getType().getName().equals(divisionConf.getType().getName())){
-                LOG.warn("Cannot have two configurations of same type in the division " + division.getId());
-                return false;
+    public String checkConfsTypes(DivisionConf divisionConf,Division division){
+        //verify if there's not a sensor of the type present on the configuration that we want to add
+        String error_message=null;
+        boolean valid=false;
+        for(Sensor s : division.getSensors()){
+            if (s.getType().getName().equals(divisionConf.getType().getName())) {
+                valid = true;
+                break;
             }
         }
-        return true;
+        if(!valid){
+            error_message="Cannot add a configuration of type " + divisionConf.getType().getName() + " without a sensor of this type";
+            LOG.warn(error_message);
+            return error_message;
+        }
+        for(DivisionConf conf : division.getDivisionConf()){
+            if(conf.getType().getName().equals(divisionConf.getType().getName())){
+                error_message= "Cannot have two configurations of same type in the division " + division.getId();
+                LOG.warn(error_message);
+                return error_message;
+            }
+        }
+        return error_message;
     }
 
 }
