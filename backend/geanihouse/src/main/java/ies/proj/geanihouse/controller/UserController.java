@@ -10,16 +10,15 @@ import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/*
-    Created by
-    Daniel Gomes on
-    6-12-2020
- */
+
+@CrossOrigin(origins={ "http://localhost:3000" })
 @RestController
 public class UserController {
     @Autowired

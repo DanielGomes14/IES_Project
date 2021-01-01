@@ -11,12 +11,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins={ "http://localhost:3000" })
 @RestController
 public class SensorDataController {
     private static final Logger LOG = LogManager.getLogger(HomeController.class);
