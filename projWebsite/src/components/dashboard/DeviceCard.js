@@ -81,7 +81,7 @@ class DeviceCard extends React.Component {
 	
 	submit = () => {
 		confirmAlert({
-		  title: 'Confirm to submit',
+		  title: 'Confirm Deletion',
 		  message: 'Are you sure you want to remove this device?',
 		  buttons: [
 			{

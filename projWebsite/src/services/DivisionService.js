@@ -27,6 +27,7 @@ class DivisionService {
                 },
                 body: JSON.stringify({ name: name, home: {id: home_id} })
             })
+
     }
 
     deleteDivision(division_id) {
