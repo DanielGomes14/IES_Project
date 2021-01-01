@@ -55,7 +55,16 @@ public class HomeController {
         throw  new ErrorDetails("User not authenticated!");
     }
 
-    @PostMapping("/homes")
+    @GetMapping("/homes/{id}")
+    public ResponseEntity<?> getHomeById(@PathVariable(value="id") Long id) throws ErrorDetails,ResourceNotFoundException{
+        System.out.println("------------------------------------------"+id);
+        Home home = homeRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("House not found for this id :: " + id));
+        System.out.println(home);
+        return ResponseEntity.ok().body(home);
+    }
+
+
+    @PostMapping("/newhouse")
     public  Home addnewHome(@Valid @RequestBody Home home) throws  ResourceNotFoundException{
             return homeRepository.save(home);
     }
