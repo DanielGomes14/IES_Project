@@ -14,6 +14,7 @@ import {
 } from "shards-react";
 
 import DivisionService from "./../../services/DivisionService";
+import {current_home} from "../../utils/auth";
 
 
 class HouseSets extends React.Component {
@@ -51,7 +52,7 @@ class HouseSets extends React.Component {
 	handleSubmit(event) {
 		alert('A name was submitted: ' + this.state.OPTIONS.filter(function(opt) {if (opt.checked) return opt.id;}).map(opt => opt.id + opt.name + opt.checked));
 		DivisionService.addDivision(
-			1, this.state.name
+			current_home.current_home(), this.state.name
 		);
 		event.preventDefault();
 	}
