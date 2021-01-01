@@ -16,15 +16,15 @@ import {
   FormCheckbox,
 } from "shards-react";
 import Select, { components } from 'react-select'
-
-
+import {current_user} from "../../utils/auth";
+import HomeService from "../../services/HomeService";
 
 class FormNewHouse extends React.Component{
 
     constructor(props) {
 		super(props);
 		
-		this.state = { custom: false, name: "", OPTIONS : this.OPTIONS };
+		this.state = {name: "",city:"",address:"",zipcode:"",state:""};
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
@@ -37,11 +37,11 @@ class FormNewHouse extends React.Component{
 
     handleSubmit(event) {
         alert("House has been added")
-        /*
-		DivisionService.addDivision(
-			1, this.state.name
+        
+		HomeService.addHome(
+			current_user.current_user(), this.state.name, this.state.address,this.state.city,this.state.state,this.state.zipcode
         );
-        */
+        
 		event.preventDefault();
 	}
 
