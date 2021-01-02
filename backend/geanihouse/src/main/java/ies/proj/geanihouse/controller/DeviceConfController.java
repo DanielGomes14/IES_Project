@@ -59,19 +59,37 @@ public class DeviceConfController {
         Timestamp begindate = deviceConf.getTimeBegin();
         Timestamp enddate = deviceConf.getTimeEnd();
         if (!checkDates(device.getId(),begindate,enddate)) throw  new ErrorDetails("Invalid Scheduled Hours!");
-        LOG.info("Success inserting new COnfiguration for this Device");
+        LOG.info("Success inserting new Configuration for this Device");
         deviceConfRepository.save(deviceConf);
         MQMessage message = new MQMessage("START_CONF",
                             deviceConf.getDevice().getId(),
                             device.getType().getName(),
                             deviceConf.getValue());
-        deviceConfigurationService.scheduling(message,begindate);
+        deviceConfigurationService.scheduling(deviceConf.getId(),message,begindate);
         message.setMethod("END_CONF");
-        deviceConfigurationService.scheduling(message,enddate);
-
+        deviceConfigurationService.scheduling(deviceConf.getId(),message,enddate);
         return  ResponseEntity.ok().body("Success inserting new Configuration for this Device");
     }
 
+    @PutMapping("/deviceconfigurations/{id}")
+    public ResponseEntity<?> editConfiguration(@PathVariable(value = "id") Long id,@Valid @RequestBody DeviceConf deviceConf) throws ResourceNotFoundException,ErrorDetails {
+        DeviceConf saveddeviceConf = deviceConfRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Could not Found Configuration with id :: " + id));
+        Timestamp begindate = deviceConf.getTimeBegin();
+        Timestamp enddate = deviceConf.getTimeEnd();
+        saveddeviceConf.setTimeBegin(begindate);
+        saveddeviceConf.setTimeEnd(enddate);
+        final DeviceConf updatedConf = deviceConfRepository.save(saveddeviceConf);
+
+        if (!checkDates(deviceConf.getDevice().getId(),begindate,enddate)) throw  new ErrorDetails("Invalid Scheduled Hours!");
+        MQMessage message = new MQMessage("START_CONF",
+                deviceConf.getDevice().getId(),
+                deviceConf.getDevice().getType().getName(),
+                deviceConf.getValue());
+        deviceConfigurationService.scheduling(deviceConf.getId(),message,begindate);
+        message.setMethod("END_CONF");
+        deviceConfigurationService.scheduling(deviceConf.getId(),message,enddate);
+        return ResponseEntity.ok().body(updatedConf);
+    }
 
     @DeleteMapping("/deviceconfigurations/{id}")
     public Map<String,Boolean> removeConfiguration(@PathVariable(value = "id") Long id) throws ResourceNotFoundException{

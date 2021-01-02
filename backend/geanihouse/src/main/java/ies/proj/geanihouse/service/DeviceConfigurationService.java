@@ -3,6 +3,7 @@ package ies.proj.geanihouse.service;
 
 import ies.proj.geanihouse.controller.DeviceConfController;
 import ies.proj.geanihouse.model.MQMessage;
+import org.apache.juli.logging.Log;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,34 +11,44 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.Trigger;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 @Service
 @EnableBinding(Source.class)
 public class DeviceConfigurationService {
     @Autowired
     Source source;
-
+    private final Map<Long, ScheduledFuture<?>> scheduledTasks = new IdentityHashMap<>();
     private static final Logger LOG = LogManager.getLogger(DeviceConfigurationService.class);
 
     //
     private class SendMessageTask implements Runnable {
 
-
+        private long configId;
         private MQMessage message;
 
-        public SendMessageTask(MQMessage message) {
+        public SendMessageTask(MQMessage message,long configId) {
             this.message = message;
+            this.configId=configId;
         }
 
         public void run() {
-            System.out.println(message);
             source.output().send(MessageBuilder.withPayload(message).build());
+            scheduledTasks.remove(configId);
         }
+        public MQMessage getMessage(){return this.message;}
 
     }
 
@@ -54,10 +65,21 @@ public class DeviceConfigurationService {
         LOG.info(sb.toString());
         return sb.toString();
     }
-    public void scheduling(MQMessage message,Timestamp timestamp) {
-        LOG.info("Sucessfully scheduled a new Task");
+    public void scheduling(long configId,MQMessage message,Timestamp timestamp) {
         String reg = this.getCronExpression(timestamp);
-        executor.schedule(new SendMessageTask(message), new CronTrigger(reg));
-        //executor.schedule(new SendMessageTask(message), new CronTrigger("0 0/1 * * * *"));
+        SendMessageTask task = new SendMessageTask(message,configId);
+
+        ScheduledFuture<?> future = executor.schedule(task, new CronTrigger(reg));
+        scheduledTasks.put(configId,future);
+        LOG.info("Sucessfully scheduled a new Task");
+        }
+
+    public  void editSchedule(long confId,MQMessage message,Timestamp timestamp){
+        String reg = this.getCronExpression(timestamp);
+        ScheduledFuture task = scheduledTasks.get(confId);
+        task.cancel(true);
+        this.scheduling(confId,message,timestamp);
+        LOG.info("Success Editing Schedule!");
+        }
     }
-}
+
