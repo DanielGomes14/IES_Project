@@ -1,7 +1,9 @@
 import React from "react";
 import { FormCheckbox, Button, Row, Col} from "shards-react";
+
+import { timestampToHour } from "../../utils/date";
+
 import { TextField } from '@material-ui/core';
-import TypeSlider from "./TypeSlider"
 
 import DeviceConfigService from "../../services/DeviceConfigService";
 
@@ -13,12 +15,10 @@ class FormConfiguration extends React.Component {
         if (props.config) {
             // Form state for existent configuration
             this.device = props.config.device;
-            var timeBegin = new Date(props.config.timeBegin)
-            var timeEnd = new Date(props.config.timeEnd)
             this.state = {
                 apply: false,
-                timeBegin: timeBegin.getHours() + ':' + timeBegin.getMinutes(),
-                timeEnd: timeEnd.getHours() + ':' + timeEnd.getMinutes(),
+                timeBegin: timestampToHour(props.config.timeBegin),
+                timeEnd: timestampToHour(props.config.timeEnd),
                 value: props.config.value
             }
         } else if (props.device) {
@@ -59,29 +59,32 @@ class FormConfiguration extends React.Component {
 	}
 
     render() {
-        let field;
-        if (this.device.type.name == "Eletronic")
-            field = <FormCheckbox id="value" toggle checked> Off/On </FormCheckbox>;
-        else
-            field = <TextField
-                        type={"number"}
-                        onChange={(event) => {
-                            if (event.target.value < 0)
-                                event.target.value = 0
-                            else if (event.target.value > 100)
-                                event.target.value =  100
-                        }}
-                    />;
-
         return (
             <form noValidate style={{'width':"100%"}} onSubmit={this.handleSubmit}>
                 <Row>
-                    <Col sm="12" className="px-5">
-                        <h5 className="text-black text-semibold">Set Value:</h5>
-                    </Col>
-                    <Col sm="12" className="px-5 mb-5 mt-2">
-                        {field}
-                    </Col>
+                    
+                    {this.device.type.name != "Eletronic" ? (
+                        <div>
+                            <Col sm="12" className="px-5">
+                                <h5 className="text-black text-semibold">Set Value:</h5>
+                            </Col>
+                            <Col sm="12" className="px-5 mb-5 mt-2">
+                                <TextField
+                                    name="value"
+                                    type={"number"}
+                                    onChange={(event) => {
+                                        if (event.target.value < 0)
+                                            event.target.value = 0;
+                                        else if (event.target.value > 100)
+                                            event.target.value =  100;
+                                        this.handleChange(event);
+                                    }}
+                                />
+                            </Col>
+                        </div>
+                    ) : (
+                        ''
+                    )}
                     <Col sm="12" className="px-5">
                         <h5 className="text-black text-semibold">Schedule:</h5>
                     </Col>

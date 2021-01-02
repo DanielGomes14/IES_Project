@@ -27,17 +27,17 @@ class AutomationTab extends React.Component {
     componentDidMount() {
         this.setState({ loading1: 1, loading2: 1 });
         
-        DivisionConfigService.getConfigurations(this.division.id)
-			.then(data => {
-				this.setState({ 
-					divisionConfigs: data,
-					loading1: 0
-				});
-			})
-			.catch(error => {
-				console.log(error) ;
-				this.setState({ loading1: 2 })
-			});
+        // DivisionConfigService.getConfigurations(this.division.id)
+		// 	.then(data => {
+		// 		this.setState({ 
+		// 			divisionConfigs: data,
+		// 			loading1: 0
+		// 		});
+		// 	})
+		// 	.catch(error => {
+		// 		console.log(error) ;
+		// 		this.setState({ loading1: 2 })
+		// 	});
         
 		DeviceService.getDevices(this.division.id)
 			.then(data => {
@@ -66,8 +66,8 @@ class AutomationTab extends React.Component {
                 <Row>
                     {this.state.divisionConfigs.map((config, index) => (
                         <Col key={index} lg="4">
-                            <h4>{config.type}</h4>
-                            <TypeSlider type={config.type} min_value={config.minValue}
+                            <h4>{config.type.name}</h4>
+                            <TypeSlider type={config.type.name} min_value={config.minValue}
                                 max_value={config.maxValue} />
                         </Col>
                     ))}
@@ -80,7 +80,7 @@ class AutomationTab extends React.Component {
                                     <h3>{device.name}</h3>
                                     <Row>
                                         <Col lg="7">
-                                            <FormCheckbox toggle checked={device.state? true : false}> Off/On </FormCheckbox>
+                                            <FormCheckbox toggle checked={device.state ? true : false}> Off/On </FormCheckbox>
                                         </Col>
                                         <Col lg="5">
                                             <h6 style={{textAlign:"right"}}>{device.type.name}</h6>

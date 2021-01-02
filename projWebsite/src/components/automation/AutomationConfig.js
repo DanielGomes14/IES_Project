@@ -1,6 +1,8 @@
 import React from "react";
 import { Row, Col } from "shards-react";
 
+import { timestampToHour } from "../../utils/date";
+
 import DeviceConfigService from "../../services/DeviceConfigService";
 
 
@@ -29,16 +31,19 @@ class AutomationConfig extends React.Component {
 				console.log(error) ;
 				this.setState({ loading: 2 })
 			});
-	}
+    }
 
     render() {
         return (
             <div>
                 {this.state.deviceConfigs.map((config, index)=> (
-                    <div index={index} className="px-3 py-2">
+                    <div key={index} className="px-3 py-2">
                         <Row>
                             <Col>
-                                <h5>{config.timeBegin} to {config.timeEnd} with {config.value}</h5>
+                                <h5>
+                                    {timestampToHour(config.timeBegin)} {" to "}
+                                    {timestampToHour(config.timeEnd)} {" with "} {config.value}
+                                </h5>
                             </Col>
                         </Row>
                     </div>
