@@ -6,7 +6,7 @@ import {
     Container, Row, Button
 } from "shards-react";
 
-import AutomationDevice from "../components/automation/AutomationDevice";
+import AutomationTab from "../components/automation/AutomationTab";
 import PageTitle from "../components/common/PageTitle";
 
 import DivisionService from "../services/DivisionService";
@@ -16,6 +16,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
+
+// import NewConfiguration from "../components/automation/NewConfiguration";
+
 
 
 function TabPanel(props) {
@@ -121,19 +124,14 @@ class Automation extends React.Component {
                        
                         {this.state.divisions.map((division, index) => (
                             <TabPanel key={index} value={this.state.value} index={index}>
-                                <Button className="float-right mx-2 mb-3">Set Default</Button>
-                                <Button className="float-right mx-2 mb-3">Set Economics</Button>
-                                <a href="/config-device"><Button className="float-right mx-2 mb-3">Custom Edit</Button></a>
-                                <div className="clearfix"></div>
-
-                                <AutomationDevice key={index} division={division}></AutomationDevice>
+                                <AutomationTab division={division}></AutomationTab>
                             </TabPanel>
                         ))}
                     </div>
                 </Container>
-                <Container>
+                {/* <Container>
 
-                </Container>
+                </Container> */}
             </Container>
         );
     }
