@@ -16,15 +16,23 @@ import {
   FormCheckbox,
 } from "shards-react";
 import Select, { components } from 'react-select'
-import {current_user} from "../../utils/auth";
+import {current_home, current_user} from "../../utils/auth";
 import HomeService from "../../services/HomeService";
+import { Redirect } from "react-router-dom";
 
 class FormNewHouse extends React.Component{
 
     constructor(props) {
 		super(props);
-		
-		this.state = {name: "",city:"",address:"",zipcode:"",state:""};
+		this.homes = [];
+        this.state = {
+            name: "",
+            city:"",
+            address:"",
+            zipcode:"",
+            state:"",
+            new_house: false
+        };
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
@@ -36,18 +44,34 @@ class FormNewHouse extends React.Component{
 	}
 
     handleSubmit(event) {
-        alert("House has been added")
         
 		HomeService.addHome(
 			current_user.current_user(), this.state.name, this.state.address,this.state.city,this.state.state,this.state.zipcode
         );
         
+        HomeService.getHomes().then(data =>
+            {
+                this.homes = data
+            }
+        );
+        
+        for (let i = 0; i < this.homes.length; i++) {
+            if (this.homes[i].name == this.state.name){
+                current_home.change_home(this.homes[i].id);
+            }
+        }
+        
+        
+        this.setState({new_house: true});
+
 		event.preventDefault();
 	}
 
 
     render(){
-
+		if (this.state.new_house === true)
+			return <Redirect to='/' />
+            
         return (
             <Card small className="h-100 py-3 col-sm-8">
 
