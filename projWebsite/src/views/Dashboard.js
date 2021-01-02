@@ -5,6 +5,7 @@ import PageTitle from "../components/common/PageTitle";
 import DeviceGroup from "../components/dashboard/DeviceGroup";
 
 import DivisionService from "../services/DivisionService";
+import { current_home } from "../utils/auth";
 
 class Dashboard extends React.Component {
 	constructor(props) {
@@ -18,7 +19,7 @@ class Dashboard extends React.Component {
 	componentDidMount() {
 		this.setState({ loading: 1 });
 
-		DivisionService.getDivisions(1)
+		DivisionService.getDivisions(current_home.current_home())
 			.then(data => {
 				this.setState({ 
 					divisions: data,
