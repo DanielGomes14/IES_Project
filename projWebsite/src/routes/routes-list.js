@@ -22,7 +22,6 @@ import Register from "../views/Register";
 import Statistics from "../views/Statistics";
 import UserProfile from "../views/UserProfile";
 import NewHouse from "../views/NewHouse";
-import NewConfiguration from "../views/NewConfiguration"
 import NewSensor from "../views/NewSensor";
 
 export const publicRoutes = [
@@ -127,11 +126,6 @@ export const privateRoutes = [
     path:"/newhouse",
     layout: DefaultLayout,
     component: NewHouse
-  },
-  {
-    path: "/config-device",
-    layout: DefaultLayout,
-    component: NewConfiguration
   },
   {
     path: "/account",

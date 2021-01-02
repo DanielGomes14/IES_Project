@@ -41,7 +41,6 @@ public class DeviceLogController {
         Map<String,Boolean> response = new HashMap<>();
         response.put("deleted",Boolean.TRUE);
         return  response;
-
     }
 
 }
