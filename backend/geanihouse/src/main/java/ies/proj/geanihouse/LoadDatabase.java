@@ -20,7 +20,7 @@ class LoadDatabase {
     CommandLineRunner initDatabase(UserRepository users,ClientRepository clients, HomeRepository homes,
                        DivisionRepository divisions, TypeRepository types, DeviceRepository devices,
                        NotificationRepository notifications, SensorRepository sensors,
-                       SensorDataRepository sensordata) {
+                       SensorDataRepository sensordata, DivisionConfRepository divisionconfs) {
 
         return args -> {
 
@@ -79,6 +79,10 @@ class LoadDatabase {
             notifications.save(fire_alarm);
             fire_alarm = new Notification(7, "Temperature Alarm", "Sensor 1 detected temperature above 40°Celsius.", Timestamp.valueOf("2007-09-23 10:10:10.0"), h1);
             notifications.save(fire_alarm);
+
+
+            DivisionConf dc = new DivisionConf(1,division,temperature,25,35);
+            divisionconfs.save(dc);
         };
     }
 }

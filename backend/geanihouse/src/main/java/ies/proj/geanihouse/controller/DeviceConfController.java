@@ -24,7 +24,6 @@ import java.util.Map;
 @RestController
 public class DeviceConfController {
 
-
     private static final Logger LOG = LogManager.getLogger(DeviceConfController.class);
 
     @Autowired

@@ -29,6 +29,24 @@ class HomeService {
         }).then(res=>res.json());
     }
 
+    addHome(client_id, name, address, city, state, zipcode) {
+        return fetch(baseURL + "newhouse/", {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                    authorization: auth.token(),
+                },
+                body: JSON.stringify({ 
+                    name: name,
+                    address:address,
+                    state:state,
+                    city:city,
+                    zipCode:zipcode,
+                    admin: {id: client_id}
+                })
+            })
+    }
 
 
 }

@@ -5,7 +5,6 @@ import PageTitle from "../components/common/PageTitle";
 import DeviceGroup from "../components/dashboard/DeviceGroup";
 
 import DivisionService from "../services/DivisionService";
-import DeviceService from "../services/DeviceService";
 
 class Dashboard extends React.Component {
 	constructor(props) {
