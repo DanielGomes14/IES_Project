@@ -53,11 +53,16 @@ class DeviceConfigurations extends React.Component {
                         </div>
                     </div>
                 )}
-                {this.state.deviceConfigs.map((config, index)=> (
-                    <Row key={index}>
-                        <FormConfiguration config={config} />
-                    </Row>
-                ))}
+                {/* <div className="m-3"></div> */}
+                <Row>
+                    {this.state.deviceConfigs.map((config, index)=> (
+                        <Col key={index} sm="12" className="my-2">
+                            <div style={{border: "solid 2px #E5E8E8", padding: "10px", borderRadius: "5px"}}>
+                                <FormConfiguration config={config} />
+                            </div>
+                        </Col>
+                    ))}
+                </Row>
             </div>
         );
     }
