@@ -23,13 +23,17 @@ class Dashboard extends React.Component {
 			.then(data => {
 				this.setState({ 
 					divisions: data,
-					loading: 0
 				});
 			})
 			.catch(error => {
 				console.log(error) ;
-				this.setState({ loading: 2 })
+				this.setState({ loading: 3 })
 			});
+		if (this.state.divisions.length == 0){
+			this.setState({ loading: 2 });
+		} else{
+			this.setState({ loading: 0 });
+		}
 	}
   
 	render() {
@@ -45,8 +49,12 @@ class Dashboard extends React.Component {
 				content = "Loading...";
 				break;
 			case 2:
+				content = "No divisions yet";
+				break;
+			case 3:
 				content = "Ups! Something Went Wrong...";
 				break;
+
 		}
 		return (
 			<Container fluid className="main-content-container px-4">
