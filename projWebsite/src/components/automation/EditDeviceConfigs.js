@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Row, Col} from "shards-react";
+import { Card, CardBody, Button, Row, Col} from "shards-react";
 
 import DeviceConfigService from "../../services/DeviceConfigService";
 import FormDeviceConfig from "./FormDeviceConfig";
@@ -40,27 +40,39 @@ class EditDeviceConfigs extends React.Component {
 
     render() {
         return (
-            <div>
-                {!this.state.addConfig ? (
-                    <Button theme="info" onClick={this.toggleAddConfig}>Add Configuration</Button>
-                ) : (
-                    <div>
-                        <Button className="mb-3" theme="info" onClick={this.toggleAddConfig}>Cancel</Button>
-                        <div style={{backgroundColor: "#E5E8E8", padding: "10px", borderRadius: "5px"}}>
-                            <FormDeviceConfig device={this.device} />
-                        </div>
-                    </div>
-                )}
-                <Row>
-                    {this.state.deviceConfigs.map((config, index)=> (
-                        <Col key={index} sm="12" className="my-2">
-                            <div style={{border: "solid 2px #E5E8E8", padding: "10px", borderRadius: "5px"}}>
-                                <FormDeviceConfig config={config} />
-                            </div>
+            <Card className="">
+                <CardBody>
+                    <Row>
+                        <Col sm="6" md="7">
+                            <h3>
+                                {this.device.name}
+                            </h3>
                         </Col>
-                    ))}
-                </Row>
-            </div>
+                        <Col sm="6" md="5">
+                            <h6 style={{textAlign:"right"}}>{this.device.type.name}</h6>
+                        </Col>
+                    </Row>
+                    {!this.state.addConfig ? (
+                        <Button theme="info" onClick={this.toggleAddConfig}>Add Configuration</Button>
+                    ) : (
+                        <div>
+                            <Button className="mb-3" theme="info" onClick={this.toggleAddConfig}>Cancel</Button>
+                            <div style={{backgroundColor: "#E5E8E8", padding: "10px", borderRadius: "5px"}}>
+                                <FormDeviceConfig device={this.device} />
+                            </div>
+                        </div>
+                    )}
+                    <Row>
+                        {this.state.deviceConfigs.map((config, index)=> (
+                            <Col key={index} sm="12" className="my-2">
+                                <div style={{border: "solid 2px #E5E8E8", padding: "10px", borderRadius: "5px"}}>
+                                    <FormDeviceConfig config={config} />
+                                </div>
+                            </Col>
+                        ))}
+                    </Row>
+                </CardBody>
+            </Card>
         );
     }
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col } from "shards-react";
+import { Card, CardBody, FormCheckbox, Row, Col } from "shards-react";
 
 import { timestampToHour } from "../../utils/date";
 
@@ -35,20 +35,31 @@ class DeviceConfigs extends React.Component {
 
     render() {
         return (
-            <div>
-                {this.state.deviceConfigs.map((config, index)=> (
-                    <div key={index} className="px-3 py-2">
-                        <Row>
-                            <Col>
-                                <h5>
-                                    {timestampToHour(config.timeBegin)} {" to "}
-                                    {timestampToHour(config.timeEnd)} {" with "} {config.value}
-                                </h5>
-                            </Col>
-                        </Row>
-                    </div>
-                ))}
-            </div>
+            <Card className="">
+                <CardBody>
+                    <h4>{this.device.name}</h4>
+                    <Row>
+                        <Col lg="7">
+                            <FormCheckbox toggle checked={this.device.state ? true : false}> Off/On </FormCheckbox>
+                        </Col>
+                        <Col lg="5">
+                            <h6 style={{textAlign:"right"}}>{this.device.type.name}</h6>
+                        </Col>
+                    </Row>    
+                    {this.state.deviceConfigs.map((config, index)=> (
+                        <div key={index} className="px-3 py-2">
+                            <Row>
+                                <Col>
+                                    <h5>
+                                        {timestampToHour(config.timeBegin)} {" to "}
+                                        {timestampToHour(config.timeEnd)} {" with "} {config.value}
+                                    </h5>
+                                </Col>
+                            </Row>
+                        </div>
+                    ))}
+                </CardBody>
+            </Card>
         );
     }
 }

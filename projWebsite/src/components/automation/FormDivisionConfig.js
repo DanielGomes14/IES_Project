@@ -1,5 +1,6 @@
 import React from "react";
-import { Slider, Button } from "shards-react";
+import { Card, CardBody, Button, Slider } from "shards-react";
+
 
 import DivisionConfigService from "../../services/DivisionConfigService";
 
@@ -10,6 +11,11 @@ import DivisionConfigService from "../../services/DivisionConfigService";
 
     Used in ConfigDivision
 */
+
+
+
+
+
 class FormDivisionConfig extends React.Component {
 
     constructor(props) {
@@ -30,15 +36,17 @@ class FormDivisionConfig extends React.Component {
 
         if (props.config) {
             // Form state for existent configuration
-            this.division = props.config.division
+            this.division = props.config.division;
+            this.type = props.config.type;
             this.state = {
                 apply: false,
                 tooltip: false,
                 value: [this.props.config.minValue, this.props.config.maxValue]
             }
-        } else if (props.division) {
+        } else if (props.division && props.type) {
             // Form state for new configuration
-            this.division = props.division
+            this.division = props.division;
+            this.type = props.type;
             this.state = {
                 apply: true,
                 tooltip: false,
@@ -69,40 +77,45 @@ class FormDivisionConfig extends React.Component {
             DivisionConfigService.addConfiguration(
                 this.division.id, this.state.type, this.state.value[0], this.state.value[1]
             );
-        event.prevaultDefault();
+        event.preventDefault();
     }
     
     render() {
         return (
-            <form noValidate style={{'width':"100%"}} onSubmit={this.handleSubmit}>
-                <Slider
-                    start={[this.state.value[0], this.state.value[1]]}
-                    pips={{
-                        mode: "positions",
-                        values: [0, 25, 50, 75, 100],
-                        stepped: true,
-                        density: 5
-                    }}
-                    range={{ min: this.range[0], max: this.range[1] }}
-                    step={1}
-                    margin={5}
-                    theme={this.theme}
-                    animate={true}
-                    connect
-                    tooltips={this.state.tooltip}
-                    onSlide={this.handleSlide}
-                    onEnd={e => this.setState({tooltip: false})}
-                />
-                {this.state.apply ? (
-                    <div>
-                        <div className="my-5"></div>
-                        <Button type="submit" className="float-right">Apply Changes</Button>
-                        <div className="clearfix"></div>
-                    </div>
-                ) : (
-                    <div></div>
-                )}
-            </form>
+            <Card className="">
+                <CardBody>
+                    <h3>{this.type.name}</h3>
+                    <form noValidate style={{'width':"100%"}} onSubmit={this.handleSubmit}>
+                        <Slider
+                            start={[this.state.value[0], this.state.value[1]]}
+                            pips={{
+                                mode: "positions",
+                                values: [0, 25, 50, 75, 100],
+                                stepped: true,
+                                density: 5
+                            }}
+                            range={{ min: this.range[0], max: this.range[1] }}
+                            step={1}
+                            margin={5}
+                            theme={this.theme}
+                            animate={true}
+                            connect
+                            tooltips={this.state.tooltip}
+                            onSlide={this.handleSlide}
+                            onEnd={e => this.setState({tooltip: false})}
+                        />
+                        {this.state.apply ? (
+                            <div>
+                                <div className="my-5"></div>
+                                <Button type="submit" className="float-right">Apply Changes</Button>
+                                <div className="clearfix"></div>
+                            </div>
+                        ) : (
+                            <div></div>
+                        )}
+                    </form>
+                </CardBody>
+            </Card>
         )
     }
 }

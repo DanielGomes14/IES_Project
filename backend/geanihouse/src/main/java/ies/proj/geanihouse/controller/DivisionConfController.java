@@ -106,11 +106,6 @@ public class DivisionConfController {
         String error_message = checkValuesContraints(divisionConf);
         if (error_message != null) throw new ErrorDetails(error_message);
         
-        // validates conf types
-        error_message = checkConfsTypes(divisionConf,divisionConf.getDivision());
-        if(error_message != null)throw new ErrorDetails(error_message);
-
-
         divisionConf.setMinValue(dconf.getMinValue());
         divisionConf.setMaxValue(dconf.getMaxValue());
         divisionConfRepository.save(divisionConf);
@@ -129,6 +124,8 @@ public class DivisionConfController {
             error_message = "Invalid Values, the difference between the max and min value must be greater than 1!";
             LOG.warn(error_message);
         }
+        System.out.println(divisionConf.getMinValue());
+        System.out.println(divisionConf.getMaxValue());
 
         double minValue = divisionConf.getMinValue();
         double maxValue = divisionConf.getMaxValue();
@@ -146,7 +143,6 @@ public class DivisionConfController {
 
         if ( minValue > divisionConf.getMinValue() || maxValue < divisionConf.getMaxValue())
             error_message = "Invalid Values, "+type+" values are between "+ minValue+ "-"+maxValue;
-
 
         return error_message;
     }
