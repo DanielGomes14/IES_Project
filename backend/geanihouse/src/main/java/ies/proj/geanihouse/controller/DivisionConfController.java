@@ -15,12 +15,14 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins={ "*" }, allowedHeaders = "*")
 @RestController
 public class DivisionConfController {
     private static final Logger LOG = LogManager.getLogger(DivisionConf.class);

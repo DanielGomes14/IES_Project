@@ -6,7 +6,7 @@ import { Card, CardBody, CardHeader, FormCheckbox, Slider, Row, Col } from "shar
 /*
     Type Slider
 
-    @param: type (temperature,...) , min_value , max_value
+    @param: type (temperature,...) , minValue , maxValue
 
     Used in ConfigDivision
 
@@ -19,8 +19,8 @@ class TypeSlider extends React.Component{
 
 
     render(){
-        let min = this.props.min_value;
-        let max = this.props.max_value;
+        let min = this.props.minValue;
+        let max = this.props.maxValue;
         let type_conf;
         if (this.props.type === "Temperature") {
 
