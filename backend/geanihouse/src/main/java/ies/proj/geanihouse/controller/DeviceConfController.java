@@ -35,29 +35,28 @@ public class DeviceConfController {
     @Autowired
     private DeviceConfigurationService deviceConfigurationService;
 
-    @GetMapping("/deviceconfigurations")
+    @GetMapping("/devices/configurations")
     public List<DeviceConf> getAllDeviceConfigurations() {
         return deviceConfRepository.findAll();
     }
 
-    @GetMapping("/devices/{id}/deviceconfigurations")
+    @GetMapping("/devices/{id}/configurations")
     public ResponseEntity<?> getDeviceConfigurations(@PathVariable(value = "id") Long id, @RequestParam(required = false,defaultValue = "false") Boolean latest) throws ResourceNotFoundException{
         Device device = deviceRepository.findById(id)
                 .orElseThrow( () -> new ResourceNotFoundException("Could not Find Device with id :: " + id));
         LOG.info("Returning all configurations from specificDevice");
-        System.out.println("aaaaa");
         List<DeviceConf> deviceConfList = deviceConfRepository.findAllByDevice_Id(device.getId());
         return  ResponseEntity.ok().body(deviceConfList);
 
     }
 
-    @PostMapping("/deviceconfigurations")
+    @PostMapping("/devices/configurations")
     public ResponseEntity<?> addNewConfiguration(@Valid @RequestBody DeviceConf deviceConf) throws ResourceNotFoundException,ErrorDetails {
         Device device = deviceRepository.findById(deviceConf.getDevice().getId())
                 .orElseThrow( () -> new ResourceNotFoundException("Could not find Device with id :: " + deviceConf.getDevice().getId() ));
         Timestamp begindate = deviceConf.getTimeBegin();
         Timestamp enddate = deviceConf.getTimeEnd();
-        if (!checkDates(device.getId(),begindate,enddate))  throw  new ErrorDetails("Invalid Scheduled Hours!");
+        if (!checkDates(deviceConf,begindate,enddate))  throw  new ErrorDetails("Invalid Scheduled Hours!");
 
         LOG.info("Success inserting new Configuration for this Device");
         deviceConf.setDevice(device);
@@ -79,7 +78,7 @@ public class DeviceConfController {
         return  ResponseEntity.ok().body("Success inserting new Configuration for this Device");
     }
 
-    @PutMapping("/deviceconfigurations/{id}")
+    @PutMapping("/devices/configurations/{id}")
     public ResponseEntity<?> editConfiguration(@PathVariable(value = "id") Long id,@Valid @RequestBody DeviceConf deviceConf) throws ResourceNotFoundException,ErrorDetails {
         DeviceConf saveddeviceConf = deviceConfRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Could not Found Configuration with id :: " + id));
         Timestamp begindate = deviceConf.getTimeBegin();
@@ -87,29 +86,31 @@ public class DeviceConfController {
         saveddeviceConf.setTimeBegin(begindate);
         saveddeviceConf.setTimeEnd(enddate);
         saveddeviceConf.setValue(deviceConf.getValue());
+        
+        if (!checkDates(deviceConf,begindate,enddate))  throw  new ErrorDetails("Invalid Scheduled Hours!");
         final DeviceConf updatedConf = deviceConfRepository.save(saveddeviceConf);
+        
+        System.out.println(deviceConf.getDevice());
+        System.out.println(deviceConf.getDevice().getType());
 
-        if (!checkDates(deviceConf.getDevice().getId(),begindate,enddate))  throw  new ErrorDetails("Invalid Scheduled Hours!");
-
-        if(!deviceConf.getDevice().getType().equals("Eletronic")){
-
-            Device device =deviceConf.getDevice();
+        if(!updatedConf.getDevice().getType().equals("Eletronic")){
+            Device device =updatedConf.getDevice();
             MQMessage message =new MQMessage("START_CONF",
-                    device.getId(),
-                    device.getType().getName(),
-                    deviceConf.getValue());
-            deviceConfigurationService.editSchedule(deviceConf,message,begindate);
+            device.getId(),
+            device.getType().getName(),
+            updatedConf.getValue());
+            deviceConfigurationService.editSchedule(updatedConf,message,begindate);
             message.setMethod("END_CONF");
-            deviceConfigurationService.editSchedule(deviceConf,message,enddate);
+            deviceConfigurationService.editSchedule(updatedConf,message,enddate);
         }
         else {
-            deviceConfigurationService.editSchedule(deviceConf,null,begindate);
-            deviceConfigurationService.editSchedule(deviceConf,null,enddate);
+            deviceConfigurationService.editSchedule(updatedConf,null,begindate);
+            deviceConfigurationService.editSchedule(updatedConf,null,enddate);
         }
         return ResponseEntity.ok().body(updatedConf);
     }
 
-    @DeleteMapping("/deviceconfigurations/{id}")
+    @DeleteMapping("/devices/configurations/{id}")
     public Map<String,Boolean> removeConfiguration(@PathVariable(value = "id") Long id) throws ResourceNotFoundException{
         DeviceConf deviceConf = deviceConfRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Could not Found Configuration with id :: " + id));
         Map<String,Boolean> response = new HashMap<>();
@@ -119,10 +120,13 @@ public class DeviceConfController {
         return response;
     }
 
-    public  boolean checkDates(long deviceid, Timestamp begindate,Timestamp enddate){
+    public  boolean checkDates(DeviceConf updDeviceConf, Timestamp begindate,Timestamp enddate){
+        long deviceid = updDeviceConf.getDevice().getId();
         List<DeviceConf> deviceConfList = deviceConfRepository.findAllByDevice_Id(deviceid);
 
         for(DeviceConf deviceConf : deviceConfList){
+            if (deviceConf.getId() == updDeviceConf.getId())
+                continue;
             if( ( deviceConf.getTimeBegin().getTime() <= begindate.getTime()) && (begindate.getTime() <= deviceConf.getTimeEnd().getTime())){
                 LOG.warn("Already a conf with this schedule! Invalid Start Date");
                 return  false;
