@@ -22,8 +22,8 @@ class DeviceConfigService {
         dateBegin.setHours(timeBegin.split(':')[0]);
         dateBegin.setMinutes(timeBegin.split(':')[1]);
         var dateEnd = new Date();
-        dateEnd.setHours(timeBegin.split(':')[0]);
-        dateEnd.setMinutes(timeBegin.split(':')[1]);
+        dateEnd.setHours(timeEnd.split(':')[0]);
+        dateEnd.setMinutes(timeEnd.split(':')[1]);
         return fetch(baseURL + DEVICE_CONFIG_REST_API_URL, {
             method: 'POST',
             mode: 'cors',
@@ -41,8 +41,8 @@ class DeviceConfigService {
         dateBegin.setHours(timeBegin.split(':')[0]);
         dateBegin.setMinutes(timeBegin.split(':')[1]);
         var dateEnd = new Date();
-        dateEnd.setHours(timeBegin.split(':')[0]);
-        dateEnd.setMinutes(timeBegin.split(':')[1]);
+        dateEnd.setHours(timeEnd.split(':')[0]);
+        dateEnd.setMinutes(timeEnd.split(':')[1]);
         return fetch(baseURL + DEVICE_CONFIG_REST_API_URL + '/' + id, {
             method: 'PUT',
             mode: 'cors',
