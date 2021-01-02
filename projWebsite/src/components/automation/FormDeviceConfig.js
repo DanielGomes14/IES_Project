@@ -8,7 +8,7 @@ import { TextField } from '@material-ui/core';
 import DeviceConfigService from "../../services/DeviceConfigService";
 
 
-class FormConfiguration extends React.Component {
+class FormDeviceConfig extends React.Component {
 
     constructor(props) {
         super(props);
@@ -62,7 +62,6 @@ class FormConfiguration extends React.Component {
         return (
             <form noValidate style={{'width':"100%"}} onSubmit={this.handleSubmit}>
                 <Row>
-                    
                     {this.device.type.name != "Eletronic" ? (
                         <div>
                             <Col sm="12" className="px-5">
@@ -134,4 +133,4 @@ class FormConfiguration extends React.Component {
 }
 
 
-export default FormConfiguration;
+export default FormDeviceConfig;

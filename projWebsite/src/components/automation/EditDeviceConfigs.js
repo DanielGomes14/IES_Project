@@ -1,13 +1,11 @@
 import React from "react";
-import { FormCheckbox, Button, Row, Col} from "shards-react";
-import { TextField } from '@material-ui/core';
-import TypeSlider from "./TypeSlider"
+import { Button, Row, Col} from "shards-react";
 
 import DeviceConfigService from "../../services/DeviceConfigService";
-import FormConfiguration from "./FormConfiguration";
+import FormDeviceConfig from "./FormDeviceConfig";
 
 
-class DeviceConfigurations extends React.Component {
+class EditDeviceConfigs extends React.Component {
 
     constructor(props) {
         super(props)
@@ -49,16 +47,15 @@ class DeviceConfigurations extends React.Component {
                     <div>
                         <Button className="mb-3" theme="info" onClick={this.toggleAddConfig}>Cancel</Button>
                         <div style={{backgroundColor: "#E5E8E8", padding: "10px", borderRadius: "5px"}}>
-                            <FormConfiguration device={this.device} />
+                            <FormDeviceConfig device={this.device} />
                         </div>
                     </div>
                 )}
-                {/* <div className="m-3"></div> */}
                 <Row>
                     {this.state.deviceConfigs.map((config, index)=> (
                         <Col key={index} sm="12" className="my-2">
                             <div style={{border: "solid 2px #E5E8E8", padding: "10px", borderRadius: "5px"}}>
-                                <FormConfiguration config={config} />
+                                <FormDeviceConfig config={config} />
                             </div>
                         </Col>
                     ))}
@@ -68,4 +65,4 @@ class DeviceConfigurations extends React.Component {
     }
 }
 
-export default DeviceConfigurations;
+export default EditDeviceConfigs;

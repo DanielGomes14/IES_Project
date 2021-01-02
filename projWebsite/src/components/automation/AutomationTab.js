@@ -1,12 +1,12 @@
 import React from "react";
 import { Card, CardBody, FormCheckbox, Button, Row, Col } from "shards-react";
 
-import AutomationConfig from "./AutomationConfig";
-import TypeSlider from "./TypeSlider";
+import DeviceConfigs from "./DeviceConfigs";
+import FormDivisionConfig from "./FormDivisionConfig";
 
 import DivisionConfigService from "../../services/DivisionConfigService";
 import DeviceService from "../../services/DeviceService";
-import DeviceConfigurations from "./DeviceConfigurations";
+import EditDeviceConfigs from "./EditDeviceConfigs";
 
 
 class AutomationTab extends React.Component {
@@ -27,17 +27,17 @@ class AutomationTab extends React.Component {
     componentDidMount() {
         this.setState({ loading1: 1, loading2: 1 });
         
-        // DivisionConfigService.getConfigurations(this.division.id)
-		// 	.then(data => {
-		// 		this.setState({ 
-		// 			divisionConfigs: data,
-		// 			loading1: 0
-		// 		});
-		// 	})
-		// 	.catch(error => {
-		// 		console.log(error) ;
-		// 		this.setState({ loading1: 2 })
-		// 	});
+        DivisionConfigService.getConfigurations(this.division.id)
+			.then(data => {
+				this.setState({ 
+					divisionConfigs: data,
+					loading1: 0
+				});
+			})
+			.catch(error => {
+				console.log(error) ;
+				this.setState({ loading1: 2 })
+			});
         
 		DeviceService.getDevices(this.division.id)
 			.then(data => {
@@ -55,7 +55,7 @@ class AutomationTab extends React.Component {
     toggleEdit() {
         this.setState({ edit: !this.state.edit });
     }
-
+    
     render() {
         return !this.state.edit ? (
             <div>
@@ -65,19 +65,23 @@ class AutomationTab extends React.Component {
                 <div className="clearfix"></div>
                 <Row>
                     {this.state.divisionConfigs.map((config, index) => (
-                        <Col key={index} lg="4">
-                            <h4>{config.type.name}</h4>
-                            <TypeSlider type={config.type.name} min_value={config.minValue}
-                                max_value={config.maxValue} />
+                        <Col key={index} lg="6">
+                            <Card className="">
+                                <CardBody>
+                                    <h3>{config.type.name}</h3>
+                                    <FormDivisionConfig type={config.type.name} minValue={config.minValue}
+                                        maxValue={config.maxValue} />
+                                </CardBody>
+                            </Card>
                         </Col>
                     ))}
                 </Row>
                 <Row>
                     {this.state.devices.map((device, index) => (
-                        <Col key={index} lg="6" className="py-3">
+                        <Col key={index} lg="4" className="py-3">
                             <Card className="">
                                 <CardBody>
-                                    <h3>{device.name}</h3>
+                                    <h4>{device.name}</h4>
                                     <Row>
                                         <Col lg="7">
                                             <FormCheckbox toggle checked={device.state ? true : false}> Off/On </FormCheckbox>
@@ -86,7 +90,7 @@ class AutomationTab extends React.Component {
                                             <h6 style={{textAlign:"right"}}>{device.type.name}</h6>
                                         </Col>
                                     </Row>    
-                                    <AutomationConfig device={device}></AutomationConfig>
+                                    <DeviceConfigs device={device} />
                                 </CardBody>
                             </Card>
                         </Col>
@@ -112,7 +116,7 @@ class AutomationTab extends React.Component {
                                             <h6 style={{textAlign:"right"}}>{device.type.name}</h6>
                                         </Col>
                                     </Row>
-                                    <DeviceConfigurations device={device} />
+                                    <EditDeviceConfigs device={device} />
                                 </CardBody>
                             </Card>
                         </Col>

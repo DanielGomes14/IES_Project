@@ -26,7 +26,7 @@ class DeviceConfigService {
                 'Content-Type': 'application/json',
                 authorization: auth.token(),
             },
-            body: JSON.stringify({device: {id: deviceId}, timeBegin: hourToTimestamp(timeBegin), timeEnd:  hourToTimestamp(timeEnd), value: value})
+            body: JSON.stringify({device: {id: deviceId}, timeBegin: hourToTimestamp(timeBegin), timeEnd: hourToTimestamp(timeEnd), value: value})
         })
     }
 
@@ -38,7 +38,7 @@ class DeviceConfigService {
                 'Content-Type': 'application/json',
                 authorization: auth.token(),
             },
-            body: JSON.stringify({id: id, device: {id: deviceId}, timeBegin: hourToTimestamp(timeBegin), timeEnd:  hourToTimestamp(timeEnd), value: value})
+            body: JSON.stringify({id: id, device: {id: deviceId}, timeBegin: hourToTimestamp(timeBegin), timeEnd: hourToTimestamp(timeEnd), value: value})
         })
     }
 }

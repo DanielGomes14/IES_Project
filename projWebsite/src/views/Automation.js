@@ -129,9 +129,6 @@ class Automation extends React.Component {
                         ))}
                     </div>
                 </Container>
-                {/* <Container>
-
-                </Container> */}
             </Container>
         );
     }

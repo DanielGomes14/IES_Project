@@ -6,7 +6,7 @@ import { timestampToHour } from "../../utils/date";
 import DeviceConfigService from "../../services/DeviceConfigService";
 
 
-class AutomationConfig extends React.Component {
+class DeviceConfigs extends React.Component {
 
     constructor(props) {
         super(props);
@@ -53,4 +53,4 @@ class AutomationConfig extends React.Component {
     }
 }
 
-export default AutomationConfig;
+export default DeviceConfigs;
