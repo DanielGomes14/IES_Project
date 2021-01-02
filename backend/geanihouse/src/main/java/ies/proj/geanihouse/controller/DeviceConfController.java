@@ -57,16 +57,25 @@ public class DeviceConfController {
                 .orElseThrow( () -> new ResourceNotFoundException("Could not find Device with id :: " + deviceConf.getDevice().getId() ));
         Timestamp begindate = deviceConf.getTimeBegin();
         Timestamp enddate = deviceConf.getTimeEnd();
-        if (!checkDates(device.getId(),begindate,enddate)) throw  new ErrorDetails("Invalid Scheduled Hours!");
+        if (!checkDates(device.getId(),begindate,enddate))  throw  new ErrorDetails("Invalid Scheduled Hours!");
+
         LOG.info("Success inserting new Configuration for this Device");
+        deviceConf.setDevice(device);
         deviceConfRepository.save(deviceConf);
-        MQMessage message = new MQMessage("START_CONF",
-                            deviceConf.getDevice().getId(),
-                            device.getType().getName(),
-                            deviceConf.getValue());
-        deviceConfigurationService.scheduling(deviceConf.getId(),message,begindate);
-        message.setMethod("END_CONF");
-        deviceConfigurationService.scheduling(deviceConf.getId(),message,enddate);
+        if(!device.getType().getName().equals("Eletronic")){
+            MQMessage message =new MQMessage("START_CONF",
+                                device.getId(),
+                                device.getType().getName(),
+                                deviceConf.getValue());
+            deviceConfigurationService.scheduling(deviceConf,message,begindate);
+            message.setMethod("END_CONF");
+            deviceConfigurationService.scheduling(deviceConf,message,enddate);
+        }
+        else {
+            deviceConfigurationService.scheduling(deviceConf,null,begindate);
+            deviceConfigurationService.scheduling(deviceConf,null,enddate);
+        }
+
         return  ResponseEntity.ok().body("Success inserting new Configuration for this Device");
     }
 
@@ -77,16 +86,26 @@ public class DeviceConfController {
         Timestamp enddate = deviceConf.getTimeEnd();
         saveddeviceConf.setTimeBegin(begindate);
         saveddeviceConf.setTimeEnd(enddate);
+        saveddeviceConf.setValue(deviceConf.getValue());
         final DeviceConf updatedConf = deviceConfRepository.save(saveddeviceConf);
 
-        if (!checkDates(deviceConf.getDevice().getId(),begindate,enddate)) throw  new ErrorDetails("Invalid Scheduled Hours!");
-        MQMessage message = new MQMessage("START_CONF",
-                deviceConf.getDevice().getId(),
-                deviceConf.getDevice().getType().getName(),
-                deviceConf.getValue());
-        deviceConfigurationService.scheduling(deviceConf.getId(),message,begindate);
-        message.setMethod("END_CONF");
-        deviceConfigurationService.scheduling(deviceConf.getId(),message,enddate);
+        if (!checkDates(deviceConf.getDevice().getId(),begindate,enddate))  throw  new ErrorDetails("Invalid Scheduled Hours!");
+
+        if(!deviceConf.getDevice().getType().equals("Eletronic")){
+
+            Device device =deviceConf.getDevice();
+            MQMessage message =new MQMessage("START_CONF",
+                    device.getId(),
+                    device.getType().getName(),
+                    deviceConf.getValue());
+            deviceConfigurationService.editSchedule(deviceConf,message,begindate);
+            message.setMethod("END_CONF");
+            deviceConfigurationService.editSchedule(deviceConf,message,enddate);
+        }
+        else {
+            deviceConfigurationService.editSchedule(deviceConf,null,begindate);
+            deviceConfigurationService.editSchedule(deviceConf,null,enddate);
+        }
         return ResponseEntity.ok().body(updatedConf);
     }
 
