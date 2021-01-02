@@ -17,7 +17,7 @@ class DivisionConfigService {
             .then(res => res.json());
     }
 
-    addConfiguration(deviceId, type, minValue, maxValue) {
+    addConfiguration(divisionId, typeId, minValue, maxValue) {
         return fetch(baseURL + DIVISION_CONFIG_REST_API_URL, {
             method: 'POST',
             mode: 'cors',
@@ -25,11 +25,11 @@ class DivisionConfigService {
                 'Content-Type': 'application/json',
                 authorization: auth.token(),
             },
-            body: JSON.stringify({device: {id: deviceId}, type: type, minValue: minValue, maxValue: maxValue})
+            body: JSON.stringify({device: {id: divisionId}, type: {id: typeId}, minValue: minValue, maxValue: maxValue})
         })
     }
 
-    updateConfiguration(id, deviceId, type, minValue, maxValue) {
+    updateConfiguration(id, divisionId, typeId, minValue, maxValue) {
         return fetch(baseURL + DIVISION_CONFIG_REST_API_URL + '/' + id, {
             method: 'PUT',
             mode: 'cors',
@@ -37,7 +37,7 @@ class DivisionConfigService {
                 'Content-Type': 'application/json',
                 authorization: auth.token(),
             },
-            body: JSON.stringify({id: id, device: {id: deviceId}, type: type, minValue: minValue, maxValue: maxValue})
+            body: JSON.stringify({id: id, device: {id: divisionId}, type: {id: typeId}, minValue: minValue, maxValue: maxValue})
         })
     }
 }

@@ -1,5 +1,7 @@
 import React from "react";
-import { Slider } from "shards-react";
+import { Slider, Button } from "shards-react";
+
+import DivisionConfigService from "../../services/DivisionConfigService";
 
 /*
     Type Slider
@@ -8,26 +10,44 @@ import { Slider } from "shards-react";
 
     Used in ConfigDivision
 */
-class TypeSlider extends React.Component {
+class FormDivisionConfig extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            tooltip: false,
-            value: [props.minValue, props.maxValue]
-        }
-        if (props.type == "Temperature") {
+
+        if (props.config.type.name == "Temperature") {
             this.theme = "danger";
-            this.range = { min: 15, max: 35 };
-        } else if (props.type == "Humidity") {
+            this.range = [15, 35];
+        } else if (props.config.type.name == "Humidity") {
             this.theme = "info"
-            this.range = { min: 40, max: 60 }
-        } else if (props.type == "Humidity") {
+            this.range = [40, 60];
+        } else if (props.config.type.name == "Luminosity") {
             this.theme = "warning"
-            this.range = { min: 20, max: 80 }
+            this.range = [20, 80];
         } else {
-            throw new Error('Invalid props');
+            throw new Error('Unexpected props');
         }
+
+        if (props.config) {
+            // Form state for existent configuration
+            this.division = props.config.division
+            this.state = {
+                apply: false,
+                tooltip: false,
+                value: [this.props.config.minValue, this.props.config.maxValue]
+            }
+        } else if (props.division) {
+            // Form state for new configuration
+            this.division = props.division
+            this.state = {
+                apply: true,
+                tooltip: false,
+                value: this.range
+            }
+        } else {
+            throw new Error('Unexpected props');
+        }
+        
         this.handleSlide = this.handleSlide.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -35,11 +55,20 @@ class TypeSlider extends React.Component {
     handleSlide(event) {
         this.setState({
           value: [parseFloat(event[0]), parseFloat(event[1])],
-          tooltip: true
+          tooltip: true,
+          apply: true
         });
       }
 
     handleSubmit(event) {
+        if (this.props.config)
+            DivisionConfigService.updateConfiguration(
+                this.props.config.id, this.props.config.type.id, this.division.id, this.state.value[0], this.state.value[1]
+            );
+        else
+            DivisionConfigService.addConfiguration(
+                this.division.id, this.state.type, this.state.value[0], this.state.value[1]
+            );
         event.prevaultDefault();
     }
     
@@ -54,7 +83,7 @@ class TypeSlider extends React.Component {
                         stepped: true,
                         density: 5
                     }}
-                    range={this.range}
+                    range={{ min: this.range[0], max: this.range[1] }}
                     step={1}
                     margin={5}
                     theme={this.theme}
@@ -64,9 +93,18 @@ class TypeSlider extends React.Component {
                     onSlide={this.handleSlide}
                     onEnd={e => this.setState({tooltip: false})}
                 />
+                {this.state.apply ? (
+                    <div>
+                        <div className="my-5"></div>
+                        <Button type="submit" className="float-right">Apply Changes</Button>
+                        <div className="clearfix"></div>
+                    </div>
+                ) : (
+                    <div></div>
+                )}
             </form>
         )
     }
 }
 
-export default TypeSlider;
+export default FormDivisionConfig;

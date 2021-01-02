@@ -69,8 +69,7 @@ class AutomationTab extends React.Component {
                             <Card className="">
                                 <CardBody>
                                     <h3>{config.type.name}</h3>
-                                    <FormDivisionConfig type={config.type.name} minValue={config.minValue}
-                                        maxValue={config.maxValue} />
+                                    <FormDivisionConfig config={config} />
                                 </CardBody>
                             </Card>
                         </Col>
