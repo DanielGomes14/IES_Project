@@ -89,10 +89,25 @@ public class DivisionConfController {
     }
 
     @PutMapping("/divisions/configurations/{id}")
-    public ResponseEntity<?> updateDivisionConf(@PathVariable(value = "id") long id, @Valid @RequestBody DivisionConf dconf) throws ResourceNotFoundException{
+    public ResponseEntity<?> updateDivisionConf(@PathVariable(value = "id") long id, @Valid @RequestBody DivisionConf dconf) throws ResourceNotFoundException, ErrorDetails{
         DivisionConf divisionConf = divisionConfRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Could not find division configuration with id ::" + id));
         
+        // verify if the type exists
+        Type type = typeRepository.findByName(divisionConf.getType().getName());
+        if(type == null){
+            LOG.error("Invalid Type!");
+            throw new ResourceNotFoundException("Could not Find Type with name :: " + type.getName());
+        }
+
+        // validates values
+        String error_message = checkValuesContraints(divisionConf);
+        if (error_message != null) throw new ErrorDetails(error_message);
+        
+        // validates conf types
+        error_message = checkConfsTypes(divisionConf,divisionConf.getDivision());
+        if(error_message != null)throw new ErrorDetails(error_message);
+
 
         divisionConf.setMinValue(dconf.getMinValue());
         divisionConf.setMaxValue(dconf.getMaxValue());
