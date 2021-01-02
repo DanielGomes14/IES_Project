@@ -61,12 +61,15 @@ public class DeviceConfController {
         if (!checkDates(device.getId(),begindate,enddate)) throw  new ErrorDetails("Invalid Scheduled Hours!");
         LOG.info("Success inserting new COnfiguration for this Device");
         deviceConfRepository.save(deviceConf);
+        MQMessage message = new MQMessage("START_CONF",
+                            deviceConf.getDevice().getId(),
+                            device.getType().getName(),
+                            deviceConf.getValue());
+        deviceConfigurationService.scheduling(message,begindate);
+        message.setMethod("END_CONF");
+        deviceConfigurationService.scheduling(message,enddate);
 
-
-        MQMessage message = new MQMessage("DEVICECONF",deviceConf.getDevice().getId(),device.getType().getName(),deviceConf.getValue());
-        deviceConfigurationService.scheduling(message);
-
-        return  ResponseEntity.ok().body("Success inserting new COnfiguration for this Device");
+        return  ResponseEntity.ok().body("Success inserting new Configuration for this Device");
     }
 
 
