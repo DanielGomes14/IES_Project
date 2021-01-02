@@ -3,7 +3,7 @@ package ies.proj.geanihouse.model;
 import lombok.*;
 
 @Getter @Setter
-public class MQMessage {
+public class MQMessage{
     private long id;
     private String type;
     private double value;
@@ -20,5 +20,6 @@ public class MQMessage {
         this.id = id;
         this.type = type;
     }
+
 }
 

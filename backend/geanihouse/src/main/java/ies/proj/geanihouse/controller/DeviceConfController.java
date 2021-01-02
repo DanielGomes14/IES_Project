@@ -4,8 +4,10 @@ import ies.proj.geanihouse.exception.ErrorDetails;
 import ies.proj.geanihouse.exception.ResourceNotFoundException;
 import ies.proj.geanihouse.model.Device;
 import ies.proj.geanihouse.model.DeviceConf;
+import ies.proj.geanihouse.model.MQMessage;
 import ies.proj.geanihouse.repository.DeviceConfRepository;
 import ies.proj.geanihouse.repository.DeviceRepository;
+import ies.proj.geanihouse.service.DeviceConfigurationService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.*;
@@ -31,6 +33,9 @@ public class DeviceConfController {
     @Autowired
     private DeviceRepository deviceRepository;
 
+    @Autowired
+    private DeviceConfigurationService deviceConfigurationService;
+
     @GetMapping("/deviceconfigurations")
     public List<DeviceConf> getAllDeviceConfigurations() {
         return deviceConfRepository.findAll();
@@ -48,15 +53,20 @@ public class DeviceConfController {
     }
 
     @PostMapping("/deviceconfigurations")
-    public DeviceConf addNewConfiguration(@Valid @RequestBody DeviceConf deviceConf) throws ResourceNotFoundException,ErrorDetails {
+    public ResponseEntity<?> addNewConfiguration(@Valid @RequestBody DeviceConf deviceConf) throws ResourceNotFoundException,ErrorDetails {
         Device device = deviceRepository.findById(deviceConf.getDevice().getId())
                 .orElseThrow( () -> new ResourceNotFoundException("Could not find Device with id :: " + deviceConf.getDevice().getId() ));
         Timestamp begindate = deviceConf.getTimeBegin();
         Timestamp enddate = deviceConf.getTimeEnd();
         if (!checkDates(device.getId(),begindate,enddate)) throw  new ErrorDetails("Invalid Scheduled Hours!");
-        deviceConfRepository.save(deviceConf);
         LOG.info("Success inserting new COnfiguration for this Device");
-        return  deviceConfRepository.save(deviceConf);
+        deviceConfRepository.save(deviceConf);
+
+
+        MQMessage message = new MQMessage("DEVICECONF",deviceConf.getDevice().getId(),device.getType().getName(),deviceConf.getValue());
+        deviceConfigurationService.scheduling(message);
+
+        return  ResponseEntity.ok().body("Success inserting new COnfiguration for this Device");
     }
 
 
