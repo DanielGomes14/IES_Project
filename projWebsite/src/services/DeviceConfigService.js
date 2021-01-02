@@ -1,5 +1,6 @@
 import baseURL from "../data/base-url";
 import { auth } from "../utils/auth";
+import { hourToTimestamp } from "../utils/date";
 
 const DEVICE_CONFIG_REST_API_URL = "deviceconfigurations";
 
@@ -18,12 +19,6 @@ class DeviceConfigService {
     }
 
     addConfiguration(deviceId, timeBegin, timeEnd, value) {
-        var dateBegin = new Date();
-        dateBegin.setHours(timeBegin.split(':')[0]);
-        dateBegin.setMinutes(timeBegin.split(':')[1]);
-        var dateEnd = new Date();
-        dateEnd.setHours(timeEnd.split(':')[0]);
-        dateEnd.setMinutes(timeEnd.split(':')[1]);
         return fetch(baseURL + DEVICE_CONFIG_REST_API_URL, {
             method: 'POST',
             mode: 'cors',
@@ -31,18 +26,11 @@ class DeviceConfigService {
                 'Content-Type': 'application/json',
                 authorization: auth.token(),
             },
-            body: JSON.stringify({device: {id: deviceId}, timeBegin: dateBegin, timeEnd: dateEnd, value: value})
+            body: JSON.stringify({device: {id: deviceId}, timeBegin: hourToTimestamp(timeBegin), timeEnd:  hourToTimestamp(timeEnd), value: value})
         })
-
     }
 
     updateConfiguration(id, deviceId, timeBegin, timeEnd, value) {
-        var dateBegin = new Date();
-        dateBegin.setHours(timeBegin.split(':')[0]);
-        dateBegin.setMinutes(timeBegin.split(':')[1]);
-        var dateEnd = new Date();
-        dateEnd.setHours(timeEnd.split(':')[0]);
-        dateEnd.setMinutes(timeEnd.split(':')[1]);
         return fetch(baseURL + DEVICE_CONFIG_REST_API_URL + '/' + id, {
             method: 'PUT',
             mode: 'cors',
@@ -50,7 +38,7 @@ class DeviceConfigService {
                 'Content-Type': 'application/json',
                 authorization: auth.token(),
             },
-            body: JSON.stringify({id: id, device: {id: deviceId}, timeBegin: dateBegin, timeEnd: dateEnd, value: value})
+            body: JSON.stringify({id: id, device: {id: deviceId}, timeBegin: hourToTimestamp(timeBegin), timeEnd:  hourToTimestamp(timeEnd), value: value})
         })
     }
 }

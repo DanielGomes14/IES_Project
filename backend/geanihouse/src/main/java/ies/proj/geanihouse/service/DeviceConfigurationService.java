@@ -2,7 +2,11 @@ package ies.proj.geanihouse.service;
 
 
 import ies.proj.geanihouse.controller.DeviceConfController;
+import ies.proj.geanihouse.model.Device;
+import ies.proj.geanihouse.model.DeviceConf;
 import ies.proj.geanihouse.model.MQMessage;
+import ies.proj.geanihouse.repository.DeviceConfRepository;
+import ies.proj.geanihouse.repository.DeviceRepository;
 import org.apache.juli.logging.Log;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,23 +34,40 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 public class DeviceConfigurationService {
     @Autowired
     Source source;
+
+    @Autowired
+    DeviceRepository deviceRepository;
+
     private final Map<Long, ScheduledFuture<?>> scheduledTasks = new IdentityHashMap<>();
     private static final Logger LOG = LogManager.getLogger(DeviceConfigurationService.class);
 
     //
     private class SendMessageTask implements Runnable {
 
-        private long configId;
+        private DeviceConf deviceConf;
         private MQMessage message;
 
-        public SendMessageTask(MQMessage message,long configId) {
+        public SendMessageTask(MQMessage message,DeviceConf deviceConf) {
             this.message = message;
-            this.configId=configId;
+            this.deviceConf=deviceConf;
         }
 
         public void run() {
-            source.output().send(MessageBuilder.withPayload(message).build());
-            scheduledTasks.remove(configId);
+            //For eletronic types we dont send a message to the MQ, therefore the message parameter will be null
+            if(message!=null){
+                LOG.info("Sent to rabbitmq Configuration Message");
+                source.output().send(MessageBuilder.withPayload(message).build());
+                scheduledTasks.remove(deviceConf.getId());
+            }
+            else   LOG.info("Changed State for Device");
+
+            Device d = deviceConf.getDevice();
+            if(d.getState() == 1){
+                d.setState(0);
+            }
+            else d.setState(1);
+            deviceRepository.save(d);
+
         }
         public MQMessage getMessage(){return this.message;}
 
@@ -65,20 +86,24 @@ public class DeviceConfigurationService {
         LOG.info(sb.toString());
         return sb.toString();
     }
-    public void scheduling(long configId,MQMessage message,Timestamp timestamp) {
+
+    public void scheduling(DeviceConf deviceConf, MQMessage message, Timestamp timestamp) {
+
+
+
         String reg = this.getCronExpression(timestamp);
-        SendMessageTask task = new SendMessageTask(message,configId);
+        SendMessageTask task = new SendMessageTask(message,deviceConf);
 
         ScheduledFuture<?> future = executor.schedule(task, new CronTrigger(reg));
-        scheduledTasks.put(configId,future);
+        scheduledTasks.put(deviceConf.getId(),future);
         LOG.info("Sucessfully scheduled a new Task");
         }
 
-    public  void editSchedule(long confId,MQMessage message,Timestamp timestamp){
+    public  void editSchedule(DeviceConf deviceConf,MQMessage message,Timestamp timestamp){
         String reg = this.getCronExpression(timestamp);
-        ScheduledFuture task = scheduledTasks.get(confId);
+        ScheduledFuture task = scheduledTasks.get(deviceConf.getId());
         task.cancel(true);
-        this.scheduling(confId,message,timestamp);
+        this.scheduling(deviceConf,message,timestamp);
         LOG.info("Success Editing Schedule!");
         }
     }
