@@ -15,7 +15,7 @@ export const current_home = {
     localStorage.setItem('current_home', home);
   },
   remove_home() {
-    localStorage.removeItem('token');
+    localStorage.removeItem('current_home');
   },
   current_home() {
       return localStorage.getItem('current_home');

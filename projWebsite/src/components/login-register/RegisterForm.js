@@ -130,20 +130,20 @@ class RegisterForm extends React.Component {
 											<span>Already have an account?</span>
 									</Col>
 								</Row>
+								<Row form>
+									<Col className="text-sm-center py-3">
+										<a href="/login">
+											Log In
+										</a>
+									</Col>
+								</Row>
 								<Row form >
 									<Col className="text-sm-center py-1">
 											<Button className="bg-primary text-white text-center rounded p-3"
 												style={{ boxShadow: "inset 0 0 5px rgba(0,0,0,.2)", fontSize: "16px" }}
 												type="submit">
-													Log In
+													Create Account
 											</Button>
-									</Col>
-								</Row>
-								<Row form>
-									<Col className="text-sm-center py-3">
-										<a href="#">
-											Create New Account
-										</a>
 									</Col>
 								</Row>
 							</Form>

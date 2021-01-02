@@ -14,22 +14,25 @@ import {
 
 import HomeService from '../../../../services/HomeService';
 import {current_home} from '../../../../utils/auth';
+import { Redirect } from "react-router-dom";
 
 export default class HomeActions extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      visible: false,loading:1
+      visible: false,
+      loading:1,
+      changed_house: false
     };
     this.homes = [];
     this.current_home={"id":-1,"name":"error"};
     this.selected_home = this.current_home;
-    
     this.toggleHomeActions = this.toggleHomeActions.bind(this);
   }
+
   componentDidMount(){
-    HomeService.getHomesDropdown().then(data=>{this.homes=data});
+    HomeService.getHomes().then(data=>{this.homes=data});
     
     HomeService.getHomeById()
     .then(data => {
@@ -50,6 +53,8 @@ export default class HomeActions extends React.Component {
   onChangeHome(index){
     this.selected_home = this.homes[index];
     this.ChangeHome();
+
+    this.setState({changed_house: true});
   }
 
  
@@ -63,6 +68,9 @@ export default class HomeActions extends React.Component {
 
 
   render() {
+    if (this.state.changed_house === true)
+			return <Redirect to='/' />
+
     var content = "";
     switch(this.state.loading) {
 			case 0:
@@ -83,9 +91,8 @@ export default class HomeActions extends React.Component {
             </DropdownToggle>
             <Collapse tag={DropdownMenu} right small open={this.state.visible}>
                 {this.homes.map((home, index) => (
-                  <DropdownItem key={index} tag={Link}  to="#">
-                    <Badge pill theme="danger" className="mr-2"  style={{lineHeight: "4px"}}> 2 </Badge>
-                    <span onClick={()=> this.onChangeHome(index)}>{home.name}</span>
+                  <DropdownItem key={index} tag={Link}  to="#" onClick={()=> this.onChangeHome(index)}>
+                    <span>{home.name}</span>
                   </DropdownItem>
                 ))}
                 

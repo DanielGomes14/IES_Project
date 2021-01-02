@@ -5,7 +5,7 @@ const HOME_REST_API_URL = "homes/"
 
 class HomeService {
 
-    getHomesDropdown() {
+    getHomes() {
         return fetch(baseURL + HOME_REST_API_URL, {
                 method: 'GET',
                 mode: 'cors',
@@ -18,7 +18,6 @@ class HomeService {
     }
 
     getHomeById(){
-        console.log(current_home)
         return fetch(baseURL + HOME_REST_API_URL + current_home.current_home(),{
             method: 'GET',
             mode: 'cors',
