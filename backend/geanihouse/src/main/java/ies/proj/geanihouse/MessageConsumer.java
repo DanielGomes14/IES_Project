@@ -74,7 +74,6 @@ public class MessageConsumer {
             }
             
             if (notification != null){
-                System.out.println("Teste" + notification.getText());
                 if(this.lastnotification== null || checkLastNotification(notification,this.lastnotification) ){
                     System.out.println(notification.getTitle());
                     this.lastnotification=notification;
@@ -104,10 +103,8 @@ public class MessageConsumer {
         if(!notification.getText().equals(lastnotification.getText())){
             return true;
         }
-        LOG.info("possibily new notifcation");
         //check if it's not the same notifcation and the notification is of the same type as the last one
         if(notification.getTimestampDate().compareTo(lastnotification.getTimestampDate()) !=0 ){
-            LOG.info("not the same object");
             //if the last notification was sent more than 5 minutes ago, a new notifcation will be sent
             System.out.println(notification.getTimestampDate().getTime());
             LOG.info("Diff" + (notification.getTimestampDate().getTime()-lastnotification.getTimestampDate().getTime()));

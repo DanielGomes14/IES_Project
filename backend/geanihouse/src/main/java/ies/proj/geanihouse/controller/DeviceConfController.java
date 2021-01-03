@@ -90,8 +90,7 @@ public class DeviceConfController {
         if (!checkDates(deviceConf,begindate,enddate))  throw  new ErrorDetails("Invalid Scheduled Hours!");
         final DeviceConf updatedConf = deviceConfRepository.save(saveddeviceConf);
         
-        System.out.println(deviceConf.getDevice());
-        System.out.println(deviceConf.getDevice().getType());
+
 
         if(!updatedConf.getDevice().getType().equals("Eletronic")){
             Device device =updatedConf.getDevice();
@@ -113,8 +112,9 @@ public class DeviceConfController {
     @DeleteMapping("/devices/configurations/{id}")
     public Map<String,Boolean> removeConfiguration(@PathVariable(value = "id") Long id) throws ResourceNotFoundException{
         DeviceConf deviceConf = deviceConfRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Could not Found Configuration with id :: " + id));
-        Map<String,Boolean> response = new HashMap<>();
         LOG.info("Removing new Device Configuration");
+        deviceConfigurationService.cancelSchedule(deviceConf);
+        Map<String,Boolean> response = new HashMap<>();
         deviceConfRepository.delete(deviceConf);
         response.put("deleted",Boolean.TRUE);
         return response;
