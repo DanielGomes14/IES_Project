@@ -10,28 +10,60 @@ import {
     AreaSeries
 } from 'react-vis';
 import SensorDataService from '../../services/SensorDataService';
+import DivisionService from '../../services/DivisionService';
+import { auth,current_user,current_home } from "../../utils/auth";
 
 export default class SensorVis extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            division_id: 2,
+            divisions : [],
+            division_id: null,
             temperature: [],
             humidity: [],
             luminosity: []
         };
+        this.loadDivisions= this.loadDivisions.bind(this);
         this.loadData = this.loadData.bind(this);
     }
 
     componentDidMount() {
+        this.loadDivisions()
         this.loadData()
         setInterval(this.loadData, 5000);
     }
     
     async loadData() {
+        if(this.state.division_id != null){
+            try {
+                SensorDataService.getSensorData(this.state.division_id)
+                .then(data => this.processData(data)
+                )
+                .catch(error => {
+                    console.log(error) ;
+                });
+            } catch (e) {
+                console.log(e);
+            }
+        }
+    }
+    loadDivisions(){
         try {
-            SensorDataService.getSensorData(this.state.division_id)
-            .then(data => this.processData(data)
+            DivisionService.getDivisions(current_home.current_home())
+            .then(data => {
+                const tmp_arr = []
+                data.map((div) => {
+                    tmp_arr.push(div.id)
+                });
+                if(tmp_arr.length != 0){
+                    this.setState({ divisions : tmp_arr});
+                    this.setState({division_id : tmp_arr[0]})
+                    console.log(this.state.division_id)
+                }
+                else{
+                    console.log("No Divisions!")
+                }
+                }
             )
             .catch(error => {
                 console.log(error) ;
@@ -39,11 +71,11 @@ export default class SensorVis extends React.Component {
         } catch (e) {
             console.log(e);
         }
+
     }
-    
     processData(data){
         if (data != null ) {
-
+            console.log("daa")
             var dataSeries = {
                 temperature: [],
                 humidity: [],
@@ -58,6 +90,7 @@ export default class SensorVis extends React.Component {
                 dataSeries.luminosity.push({x: new Date(d.timestampDate), y: d.data})
             }
             });
+        console.log(dataSeries.temperature)
         this.setState({temperature: dataSeries.temperature});
         this.setState({humidity: dataSeries.humidity});
         this.setState({luminosity: dataSeries.luminosity});
