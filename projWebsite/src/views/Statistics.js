@@ -44,8 +44,7 @@ const statistics = () => (
         <Row noGutters className="page-header px-3 py-4 ">
             <PageTitle title="Statistics" subtitle="Dashboard" className="text-sm-left mb-3" />
         </Row>
-
-        <Row className="px-3">
+        {/* <Row className="px-3">
             <Col lg="12" md="12" sm="12" className="mb-4">
                 <Graph />
             </Col>
@@ -54,44 +53,12 @@ const statistics = () => (
             <Col lg="6" md="12" sm="12" >
                 <DivisionGraph />    
             </Col>
-        </Row> 
+        </Row>  */}
         <Row className="px-3">
-            <Col lg="6" md="12" sm="12" >
+            <Col lg="12" md="12" sm="12" >
                 <SensorVis /> 
-                {/* <DynamicCrosshair />  
-                <ScatterPlotOnNearestXY /> 
-                <LineChartMouseOverSeries />        */}
             </Col>
         </Row> 
-        {/* <Row className="px-3">
-            <Col lg="6" md="12" sm="12" >
-                <DynamicCrosshair />    
-            </Col>
-            <Col lg="6" md="12" sm="12" >
-                <ScatterPlotOnNearestXY />    
-            </Col>
-            <Col lg="6" md="12" sm="12" >
-                <LineChartMouseOverSeries />    
-            </Col>
-            <Col lg="6" md="12" sm="12" >
-                <LineChartMouseOverXY />    
-            </Col>
-            <Col lg="6" md="12" sm="12" >
-                <LinkedCharts />    
-            </Col>
-            <Col lg="6" md="12" sm="12" >
-            </Col>
-            <Col lg="6" md="12" sm="12" >
-                <Example series={VerticalBarSeries} />    
-            </Col>
-            <Col lg="6" md="12" sm="12" >
-                <Example series={LineSeries} />    
-            </Col>
-            <Col lg="6" md="12" sm="12" >
-                <Example series={MarkSeries} />    
-            </Col>
-        </Row> */}
-        
     </Container>
 );
 

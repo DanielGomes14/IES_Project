@@ -7,26 +7,43 @@ import {
     VerticalGridLines,
     HorizontalGridLines,
     LineSeries,
-    AreaSeries
+    AreaSeries,
+    FlexibleWidthXYPlot,
+    FlexibleXYPlot,
+    DiscreteColorLegend
 } from 'react-vis';
 import SensorDataService from '../../services/SensorDataService';
 import DivisionService from '../../services/DivisionService';
 import { auth,current_user,current_home } from "../../utils/auth";
+import { Card,CardBody,FormSelect,CardHeader } from 'shards-react';
+
+
 
 export default class SensorVis extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: 1,
             divisions : [],
             division_id: null,
             temperature: [],
             humidity: [],
-            luminosity: []
+            luminosity: [],
+            series : { "Humidity" : "#5bc0de", "Temperature": "#d9534f", "Luminosity": "#f0ad4e"}
         };
-        this.loadDivisions= this.loadDivisions.bind(this);
+        this.loadDivisions = this.loadDivisions.bind(this);
         this.loadData = this.loadData.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
+    handleChange(event) {
+		const {name, value} = event.target;
+		this.setState({
+            [name]: value,
+            loading: 1
+		});
+	}
+    
     componentDidMount() {
         this.loadDivisions()
         this.loadData()
@@ -34,96 +51,96 @@ export default class SensorVis extends React.Component {
     }
     
     async loadData() {
+        console.log(this.state)
         if(this.state.division_id != null){
+            console.log(this.state.division_id)
             try {
                 SensorDataService.getSensorData(this.state.division_id)
-                .then(data => this.processData(data)
-                )
-                .catch(error => {
-                    console.log(error) ;
-                });
+                    .then(data => {
+                        if (data.length != 0) {
+                            this.setState({loading: 0 });
+                            this.processData(data);
+                        } else {
+                            this.setState({loading: 2 });
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error) 
+                        this.setState({loading: 3 });
+                    });
             } catch (e) {
                 console.log(e);
             }
         }
     }
+    
     loadDivisions(){
         try {
             DivisionService.getDivisions(current_home.current_home())
-            .then(data => {
-                const tmp_arr = []
-                data.map((div) => {
-                    tmp_arr.push(div.id)
+                .then(data => {
+                    const tmp_arr = [];
+                    data.map((div) => {
+                        tmp_arr.push(div)
+                    });
+                    if (tmp_arr.length != 0) {
+                        this.setState({ divisions : tmp_arr});
+                        this.setState({division_id : tmp_arr[0].id});
+                    } else {
+                        console.log("No Divisions!");
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
                 });
-                if(tmp_arr.length != 0){
-                    this.setState({ divisions : tmp_arr});
-                    this.setState({division_id : tmp_arr[0]})
-                    console.log(this.state.division_id)
-                }
-                else{
-                    console.log("No Divisions!")
-                }
-                }
-            )
-            .catch(error => {
-                console.log(error) ;
-            });
         } catch (e) {
             console.log(e);
         }
-
     }
+
     processData(data){
         if (data != null ) {
-            console.log("daa")
             var dataSeries = {
                 temperature: [],
                 humidity: [],
                 luminosity: []
             };
             data.map(d => {
-            if (d.sensor.type.name ==  "Temperature"){
-                dataSeries.temperature.push({x: new Date(d.timestampDate), y: d.data})
-            } else if (d.sensor.type.name == "Humidity") {
-                dataSeries.humidity.push({x: new Date(d.timestampDate), y: d.data})
-            } else if (d.sensor.type.name == "Luminosity") {
-                dataSeries.luminosity.push({x: new Date(d.timestampDate), y: d.data})
-            }
+                if (d.sensor.type.name ==  "Temperature"){
+                    dataSeries.temperature.push({x: new Date(d.timestampDate), y: d.data})
+                } else if (d.sensor.type.name == "Humidity") {
+                    dataSeries.humidity.push({x: new Date(d.timestampDate), y: d.data})
+                } else if (d.sensor.type.name == "Luminosity") {
+                    dataSeries.luminosity.push({x: new Date(d.timestampDate), y: d.data})
+                }
             });
-        console.log(dataSeries.temperature)
-        this.setState({temperature: dataSeries.temperature});
-        this.setState({humidity: dataSeries.humidity});
-        this.setState({luminosity: dataSeries.luminosity});
+            this.setState({temperature: dataSeries.temperature});
+            this.setState({humidity: dataSeries.humidity});
+            this.setState({luminosity: dataSeries.luminosity});
+        } else {
+            console.log("NOT FOUND")
+        }
     }
-    else{
-        console.log("NOT FOUND")
-    }
-    }
+
+    
     
     render() {
-        return (
-            
-            <XYPlot
-                xType="time"
-                width={1000}
-                height={500}>
+        const plot = (
+            <div>
+            <FlexibleWidthXYPlot height={600} xType="time">
                 <HorizontalGridLines />
                 <VerticalGridLines />
                 <XAxis tickFormat={function tickFormat(d){
-                    const date = new Date(d)
-                    return date.toISOString().substr(11, 8)
-                }}
-
-                tickLabelAngle={-45}
-                // tickFormat={(d) => Date.parse(d, { rawFormat: 'MMM' })}
-                // tickLabelAngle={-45}
-                // // xDomain={[new Date(data[0].x), new Date(data[data.length - 1].x)]}
-                // // xRange={[0, 9]}
-                // tickValues={[0, 100000]}
+                        const date = new Date(d)
+                        return date.toISOString().substr(11, 8)
+                    }}
+                    tickLabelAngle={-45}
+                    // tickFormat={(d) => Date.parse(d, { rawFormat: 'MMM' })}
+                    // tickLabelAngle={-45}
+                    // // xDomain={[new Date(data[0].x), new Date(data[data.length - 1].x)]}
+                    // // xRange={[0, 9]}
+                    // tickValues={[0, 100000]}
                 />
                 <YAxis title="Y Axis" />
-                <VerticalGridLines />
-                <HorizontalGridLines />
                 <AreaSeries
                     data={this.state.temperature}
                     opacity={0.25}
@@ -154,7 +171,45 @@ export default class SensorVis extends React.Component {
                     }}
                 />
                 <LineSeries animation="wobbly" data={this.state.luminosity} curve={'curveMonotoneX'} color={"#f0ad4e"} />
-            </XYPlot>
+            </FlexibleWidthXYPlot>
+            <DiscreteColorLegend
+                // onItemClick={this.clickHandler}
+                orientation="vertical"
+
+                // width={180}
+                items={Object.keys(this.state.series).map((key,index) => {
+                // console.log(series.props.colour+"");
+                    return {title: key, color: this.state.series[key]}
+                })
+                }
+            />
+          </div>
+            
+        )
+
+        return (
+            <Card>
+                <CardHeader className="border-bottom">
+                    <h6 className="m-0"> Division Statistics - Sensor Data</h6>
+                </CardHeader>
+                <FormSelect name="division_id" value={this.state.division_id} onChange={this.handleChange}>
+                    {this.state.divisions.map((div, index) => 
+                        <option key={index} value={div.id}>{div.name}</option>
+                    )}
+                </FormSelect>
+                <CardBody>
+                    {(() => {
+                        switch(this.state.loading) {
+                            case 0 :
+                                return plot;
+                            case 1 :
+                                return "No Content available. Might take a while..";
+                            case 2 :
+                                return "Something went wrong..";
+                        }
+                    })()}
+                </CardBody>
+            </Card>
         );
     }
 }
