@@ -84,10 +84,11 @@ class Temperature(Generator):
             for sensor in list(cls.sensor_mu):
                 if sensor not in cls.sensor_mu:
                     break
-                lst = cls.sensor_mu[sensor]
-                mu, value = lst[0],lst[1]
+                mu, value = cls.sensor_mu[sensor]
                 
-                mu += random.random() - 0.5 - 2 * cls.decrease
+                mu += random.random()-0.5
+                if value:
+                    mu += (value-mu) * 0.005
                 if mu > cls.MAX - cls.sigma:
                     mu -= .5 
                 elif mu < cls.MIN + cls.sigma:
@@ -111,17 +112,18 @@ class Luminosity(Generator):
             for sensor in list(cls.sensor_mu):
                 if sensor not in cls.sensor_mu:
                     break
-                lst = cls.sensor_mu[sensor]
-                mu, value = lst[0],lst[1]
-                window_opened = random.random() < 0.95
+                mu, value = cls.sensor_mu[sensor]
 
-                mu += random.random() - 0.5 - 2 * cls.decrease
+                if value:
+                    mu = value
+                else:
+                    mu = 50 # TODO: func seno
                 if mu > cls.MAX - cls.sigma:
                     mu -= .5 
                 elif mu < cls.MIN + cls.sigma:
                     mu += .5
 
-                await cls.send_shuffled({sensor: [random.gauss(mu * window_opened, cls.sigma)]})
+                await cls.send_shuffled({sensor: [random.gauss(mu, cls.sigma)]})
                 if sensor not in cls.sensor_mu:
                     break
                 cls.sensor_mu[sensor] = mu
@@ -139,10 +141,11 @@ class Humidity(Generator):
             for sensor in list(cls.sensor_mu):
                 if sensor not in cls.sensor_mu:
                     break
-                lst = cls.sensor_mu[sensor]
-                mu, value = lst[0],lst[1]
+                mu, value = cls.sensor_mu[sensor]
 
-                mu += random.random() - 0.5 - 2 * cls.decrease
+                mu += random.random()-0.5
+                if value:
+                    mu += (value-mu) * 0.005
                 if mu > cls.MAX - cls.sigma:
                     mu -= .5
                 elif mu < cls.MIN + cls.sigma:
