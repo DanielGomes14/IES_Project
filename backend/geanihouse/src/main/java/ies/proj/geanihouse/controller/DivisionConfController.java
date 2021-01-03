@@ -80,15 +80,6 @@ public class DivisionConfController {
         return divisionConfRepository.save(divisionConf);
     }
 
-    @DeleteMapping("/divisions/configurations/{id}")
-    public Map<String,Boolean> deleteDivisionConf(@PathVariable(value ="id") long id) throws ResourceNotFoundException{
-        DivisionConf divisionConf = divisionConfRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Could not find division configuration with id ::" + id));
-        divisionConfRepository.delete(divisionConf);
-        Map <String,Boolean> response = new HashMap<>();
-        response.put("deleted",Boolean.TRUE);
-        return response;
-    }
 
     @PutMapping("/divisions/configurations/{id}")
     public ResponseEntity<?> updateDivisionConf(@PathVariable(value = "id") long id, @Valid @RequestBody DivisionConf dconf) throws ResourceNotFoundException, ErrorDetails{
@@ -112,6 +103,17 @@ public class DivisionConfController {
 
         return  ResponseEntity.ok().body(divisionConf);
     }
+
+    @DeleteMapping("/divisions/configurations/{id}")
+    public Map<String,Boolean> deleteDivisionConf(@PathVariable(value ="id") long id) throws ResourceNotFoundException{
+        DivisionConf divisionConf = divisionConfRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Could not find division configuration with id ::" + id));
+        divisionConfRepository.delete(divisionConf);
+        Map <String,Boolean> response = new HashMap<>();
+        response.put("deleted",Boolean.TRUE);
+        return response;
+    }
+
 
     private String checkValuesContraints(DivisionConf divisionConf){
         String error_message=null;

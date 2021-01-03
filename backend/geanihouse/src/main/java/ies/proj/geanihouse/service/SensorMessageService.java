@@ -18,7 +18,6 @@ public class SensorMessageService{
 
     public void sendMessage(MQMessage msg){
         source.output().send(MessageBuilder.withPayload(msg).build());
-        System.out.println("Message Sent");
     }
 
 

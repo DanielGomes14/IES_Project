@@ -41,7 +41,6 @@ public class DeviceConfigurationService {
     private final Map<Long, ScheduledFuture<?>> scheduledTasks = new IdentityHashMap<>();
     private static final Logger LOG = LogManager.getLogger(DeviceConfigurationService.class);
 
-    //
     private class SendMessageTask implements Runnable {
 
         private DeviceConf deviceConf;
@@ -89,8 +88,6 @@ public class DeviceConfigurationService {
 
     public void scheduling(DeviceConf deviceConf, MQMessage message, Timestamp timestamp) {
 
-
-
         String reg = this.getCronExpression(timestamp);
         SendMessageTask task = new SendMessageTask(message,deviceConf);
 
@@ -103,8 +100,17 @@ public class DeviceConfigurationService {
         String reg = this.getCronExpression(timestamp);
         ScheduledFuture task = scheduledTasks.get(deviceConf.getId());
         task.cancel(true);
+        scheduledTasks.remove(deviceConf.getId());
         this.scheduling(deviceConf,message,timestamp);
         LOG.info("Success Editing Schedule!");
         }
+
+    public  void cancelSchedule(DeviceConf deviceConf){
+        ScheduledFuture task = scheduledTasks.get(deviceConf.getId());
+        task.cancel(true);
+        scheduledTasks.remove(deviceConf.getId());
+        LOG.info("Success Removing Schedule!");
     }
+
+}
 
