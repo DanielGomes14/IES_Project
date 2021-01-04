@@ -1,5 +1,6 @@
 import React from "react";
-import { FormCheckbox, Button, Row, Col} from "shards-react";
+
+import { Button, Row, Col} from "shards-react";
 
 import { timestampToHour } from "../../utils/date";
 
@@ -8,7 +9,7 @@ import { TextField } from '@material-ui/core';
 import DeviceConfigService from "../../services/DeviceConfigService";
 
 
-class FormConfiguration extends React.Component {
+class FormDeviceConfig extends React.Component {
 
     constructor(props) {
         super(props);
@@ -50,19 +51,18 @@ class FormConfiguration extends React.Component {
         if (this.props.config)
             DeviceConfigService.updateConfiguration(
                 this.props.config.id, this.device.id, this.state.timeBegin, this.state.timeEnd, this.state.value
-            );
+            ).then(() => window.location.reload());
         else
             DeviceConfigService.addConfiguration(
                 this.device.id, this.state.timeBegin, this.state.timeEnd, this.state.value
-            );
-		event.preventDefault();
+            ).then(() => window.location.reload());
+        event.preventDefault();
 	}
 
     render() {
         return (
             <form noValidate style={{'width':"100%"}} onSubmit={this.handleSubmit}>
                 <Row>
-                    
                     {this.device.type.name != "Eletronic" ? (
                         <div>
                             <Col sm="12" className="px-5">
@@ -134,4 +134,4 @@ class FormConfiguration extends React.Component {
 }
 
 
-export default FormConfiguration;
+export default FormDeviceConfig;

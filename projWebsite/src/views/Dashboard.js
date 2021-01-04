@@ -21,19 +21,28 @@ class Dashboard extends React.Component {
 
 		DivisionService.getDivisions(current_home.current_home())
 			.then(data => {
+				console.log(data)
 				this.setState({ 
 					divisions: data,
 				});
+			}).then( data => {
+				if (this.state.divisions.length == 0){
+					this.setState({ loading: 2 });
+				} else{
+					this.setState({ loading: 0 });
+				}
 			})
 			.catch(error => {
 				console.log(error) ;
 				this.setState({ loading: 3 })
 			});
+		/*
 		if (this.state.divisions.length == 0){
 			this.setState({ loading: 2 });
 		} else{
 			this.setState({ loading: 0 });
 		}
+		*/
 	}
   
 	render() {

@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins={ "http://localhost:3000" })
+@CrossOrigin(origins="*", allowedHeaders = "*")
 @RestController
 public class SensorDataController {
     private static final Logger LOG = LogManager.getLogger(HomeController.class);
