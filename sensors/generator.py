@@ -84,9 +84,11 @@ class Temperature(Generator):
             for sensor in list(cls.sensor_mu):
                 if sensor not in cls.sensor_mu:
                     break
-                mu = cls.sensor_mu[sensor]
-
-                mu += random.random() - 0.5 - 2 * cls.decrease
+                mu, value = cls.sensor_mu[sensor]
+                
+                mu += random.random()-0.5
+                if value:
+                    mu += (value-mu) * 0.005
                 if mu > cls.MAX - cls.sigma:
                     mu -= .5 
                 elif mu < cls.MIN + cls.sigma:
@@ -110,16 +112,18 @@ class Luminosity(Generator):
             for sensor in list(cls.sensor_mu):
                 if sensor not in cls.sensor_mu:
                     break
-                mu = cls.sensor_mu[sensor]
-                window_opened = random.random() < 0.95
+                mu, value = cls.sensor_mu[sensor]
 
-                mu += random.random() - 0.5 - 2 * cls.decrease
+                if value:
+                    mu = value
+                else:
+                    mu = 50 # TODO: func seno
                 if mu > cls.MAX - cls.sigma:
                     mu -= .5 
                 elif mu < cls.MIN + cls.sigma:
                     mu += .5
 
-                await cls.send_shuffled({sensor: [random.gauss(mu * window_opened, cls.sigma)]})
+                await cls.send_shuffled({sensor: [random.gauss(mu, cls.sigma)]})
                 if sensor not in cls.sensor_mu:
                     break
                 cls.sensor_mu[sensor] = mu
@@ -137,9 +141,11 @@ class Humidity(Generator):
             for sensor in list(cls.sensor_mu):
                 if sensor not in cls.sensor_mu:
                     break
-                mu = cls.sensor_mu[sensor]
+                mu, value = cls.sensor_mu[sensor]
 
-                mu += random.random() - 0.5 - 2 * cls.decrease
+                mu += random.random()-0.5
+                if value:
+                    mu += (value-mu) * 0.005
                 if mu > cls.MAX - cls.sigma:
                     mu -= .5
                 elif mu < cls.MIN + cls.sigma:
@@ -166,15 +172,15 @@ def on_message(client, userdata, message):
             #if Sensor.temperature_sensor == None:
             #    Sensor.temperature_sensor = id
             #else:
-            Temperature.sensor_mu[sensor_id] = value
+            Temperature.sensor_mu[sensor_id] = [value,None]
             print(sensor_id,sensor_type)
         elif sensor_type == 'Humidity':
             #if Sensor.humidity_sensor == None:
             #    Sensor.humidity_sensor = id
             #else:
-            Humidity.sensor_mu[sensor_id] = value
+            Humidity.sensor_mu[sensor_id] = [value,None]
         elif sensor_type == 'Luminosity':
-            Luminosity.sensor_mu[sensor_id] = value
+            Luminosity.sensor_mu[sensor_id] = [value,None]
 
     elif method == 'REMOVESENSOR':
         if Sensor.temperature_sensor == sensor_id:
@@ -194,11 +200,24 @@ def on_message(client, userdata, message):
         if Sensor.humidity_sensor == id:
             Sensor.humidity_config = value
         elif type == 'Temperature':
-            Temperature.sensor_mu[id] = value
+            Temperature.sensor_mu[id][1] = value
         elif type == 'Humidity':
-            Humidity.sensor_mu[id] = value
+            Humidity.sensor_mu[id][1] = value
+        elif type == 'Luminosity':
+            Luminosity.sensor_mu[id][1] = value 
+
+    elif method == 'END_CONF':
+        if Sensor.temperature_sensor == id:
+            Sensor.temperature_config = value
+        if Sensor.humidity_sensor == id:
+            Sensor.humidity_config = value
+        elif type == 'Temperature':
+            Temperature.sensor_mu[id][1] = None
+        elif type == 'Humidity':
+            Humidity.sensor_mu[id][1] = value
         elif type == 'Luminosity':
             Luminosity.sensor_mu[id] = value 
+ 
 
 
 def publish(topic, message, waitForAck=False):
