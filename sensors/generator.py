@@ -17,7 +17,7 @@ password    = "z6HVKbDR7NpinRi80TFEymkvJmdsXG1m"
 receivedMessages = []
 
 class Generator:
-    sigma = 0.5
+    sigma = 0.1
     time_per_pub = 5
 
     @classmethod
@@ -86,10 +86,9 @@ class Temperature(Generator):
                     break
                 lst = cls.sensor_mu[sensor]
                 mu, value = lst[0], lst[1]
-                
                 mu += random.random()-0.5
                 if value:
-                    mu += (value-mu) * 0.005
+                    mu += (value-mu) * 0.05
                 if mu > cls.MAX - cls.sigma:
                     mu -= .5 
                 elif mu < cls.MIN + cls.sigma:
@@ -98,7 +97,7 @@ class Temperature(Generator):
                 await cls.send_shuffled({sensor: [random.gauss(mu, cls.sigma)]})
                 if sensor not in cls.sensor_mu:
                     break
-                cls.sensor_mu[sensor] = [mu, value]
+                cls.sensor_mu[sensor][0] = mu
 
 
 class Luminosity(Generator):
@@ -128,7 +127,7 @@ class Luminosity(Generator):
                 await cls.send_shuffled({sensor: [random.gauss(mu, cls.sigma)]})
                 if sensor not in cls.sensor_mu:
                     break
-                cls.sensor_mu[sensor] = [mu, value]
+                cls.sensor_mu[sensor][0] = mu
 
 
 class Humidity(Generator):
@@ -157,7 +156,7 @@ class Humidity(Generator):
                 await cls.send_shuffled({sensor: [random.gauss(mu, cls.sigma)]})
                 if sensor not in cls.sensor_mu:
                     break
-                cls.sensor_mu[sensor] = [mu, value]
+                cls.sensor_mu[sensor][0] = mu
 
 
 def on_message(client, userdata, message):
@@ -197,30 +196,30 @@ def on_message(client, userdata, message):
         elif sensor_type == 'Luminosity':
             del Luminosity.sensor_mu[sensor_id]        
         
-    elif method == 'CONFIGSENSOR':
-        if Sensor.temperature_sensor == id:
-            Sensor.temperature_config = value
-        if Sensor.humidity_sensor == id:
-            Sensor.humidity_config = value
-        elif type == 'Temperature':
-            Temperature.sensor_mu[id][1] = value
-        elif type == 'Humidity':
-            Humidity.sensor_mu[id][1] = value
-        elif type == 'Luminosity':
-            Luminosity.sensor_mu[id][1] = value 
+    elif method == 'START_CONF':
+        #if Sensor.temperature_sensor == id:
+            #Sensor.temperature_config = value
+        #if Sensor.humidity_sensor == id:
+            #Sensor.humidity_config = value
+        if sensor_type == 'Temperature':
+            Temperature.sensor_mu[sensor_id][1] = value
+        elif sensor_type == 'Humidity':
+            Humidity.sensor_mu[sensor_id][1] = value
+        elif sensor_type == 'Luminosity':
+            Luminosity.sensor_mu[sensor_id][1] = value 
 
     elif method == 'END_CONF':
         if Sensor.temperature_sensor == id:
             Sensor.temperature_config = value
         if Sensor.humidity_sensor == id:
             Sensor.humidity_config = value
-        elif type == 'Temperature':
-            Temperature.sensor_mu[id][1] = None
-        elif type == 'Humidity':
-            Humidity.sensor_mu[id][1] = value
-        elif type == 'Luminosity':
-            Luminosity.sensor_mu[id] = value 
- 
+        elif sensor_type == 'Temperature':
+            Temperature.sensor_mu[sensor_id][1] = None
+        elif sensor_type == 'Humidity':
+            Humidity.sensor_mu[sensor_id][1] = None
+        elif sensor_type == 'Luminosity':
+            Luminosity.sensor_mu[sensor_id][1] = None 
+
 
 
 def publish(topic, message, waitForAck=False):

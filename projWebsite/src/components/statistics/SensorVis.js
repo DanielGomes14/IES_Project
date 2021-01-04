@@ -24,6 +24,7 @@ export default class SensorVis extends React.Component {
         super(props);
         this.state = {
             loading: 1,
+            asyncreq: true,
             divisions : [],
             division_id: null,
             temperature: [],
@@ -45,11 +46,19 @@ export default class SensorVis extends React.Component {
 	}
     
     componentDidMount() {
+        
         this.loadDivisions()
         this.loadData()
-        setInterval(this.loadData, 5000);
+        this.interval=setInterval(this.loadData, 5000);
+        
+        
     }
     
+    componentWillUnmount() {
+        
+        clearInterval(this.interval)
+        
+    }
     async loadData() {
         console.log(this.state)
         if(this.state.division_id != null){

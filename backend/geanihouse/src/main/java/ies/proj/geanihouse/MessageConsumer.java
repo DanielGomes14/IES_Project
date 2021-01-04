@@ -153,11 +153,11 @@ public class MessageConsumer {
         
         if (value > dc.getMaxValue()){
             System.out.println("Value is higher than configuration");
-            MQMessage msg = new MQMessage("CONFIG",sensor.getId(),sensor.getType().getName(),midValue);
+            MQMessage msg = new MQMessage("START_CONF",sensor.getId(),sensor.getType().getName(),midValue);
             smservice.sendMessage(msg);
         }else if(value < dc.getMinValue()){
             System.out.println("Value is lower than configuration");
-            MQMessage msg = new MQMessage("CONFIG",sensor.getId(),sensor.getType().getName(),midValue);
+            MQMessage msg = new MQMessage("START_CONF",sensor.getId(),sensor.getType().getName(),midValue);
             smservice.sendMessage(msg);
         
         }
