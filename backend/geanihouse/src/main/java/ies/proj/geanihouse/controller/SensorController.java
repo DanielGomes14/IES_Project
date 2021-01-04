@@ -24,8 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-
-@CrossOrigin(origins={ "http://localhost:3000" })
+@CrossOrigin(origins={ "*" }, allowedHeaders = "*")
 @EnableBinding(Source.class)
 @RestController
 public class SensorController implements  java.io.Serializable {
