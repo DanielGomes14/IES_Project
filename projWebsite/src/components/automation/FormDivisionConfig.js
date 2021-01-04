@@ -72,11 +72,11 @@ class FormDivisionConfig extends React.Component {
         if (this.props.config)
             DivisionConfigService.updateConfiguration(
                 this.props.config.id, this.props.config.type.id, this.division.id, this.state.value[0], this.state.value[1]
-            );
+            ).then(() => window.location.reload());
         else
             DivisionConfigService.addConfiguration(
                 this.division.id, this.state.type, this.state.value[0], this.state.value[1]
-            );
+            ).then(() => window.location.reload());
         event.preventDefault();
     }
     

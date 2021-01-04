@@ -84,7 +84,8 @@ class Temperature(Generator):
             for sensor in list(cls.sensor_mu):
                 if sensor not in cls.sensor_mu:
                     break
-                mu, value = cls.sensor_mu[sensor]
+                lst = cls.sensor_mu[sensor]
+                mu, value = lst[0], lst[1]
                 
                 mu += random.random()-0.5
                 if value:
@@ -97,7 +98,7 @@ class Temperature(Generator):
                 await cls.send_shuffled({sensor: [random.gauss(mu, cls.sigma)]})
                 if sensor not in cls.sensor_mu:
                     break
-                cls.sensor_mu[sensor] = mu
+                cls.sensor_mu[sensor] = [mu, value]
 
 
 class Luminosity(Generator):
@@ -112,7 +113,8 @@ class Luminosity(Generator):
             for sensor in list(cls.sensor_mu):
                 if sensor not in cls.sensor_mu:
                     break
-                mu, value = cls.sensor_mu[sensor]
+                lst = cls.sensor_mu[sensor]
+                mu, value = lst[0], lst[1]
 
                 if value:
                     mu = value
@@ -126,7 +128,7 @@ class Luminosity(Generator):
                 await cls.send_shuffled({sensor: [random.gauss(mu, cls.sigma)]})
                 if sensor not in cls.sensor_mu:
                     break
-                cls.sensor_mu[sensor] = mu
+                cls.sensor_mu[sensor] = [mu, value]
 
 
 class Humidity(Generator):
@@ -141,7 +143,8 @@ class Humidity(Generator):
             for sensor in list(cls.sensor_mu):
                 if sensor not in cls.sensor_mu:
                     break
-                mu, value = cls.sensor_mu[sensor]
+                lst = cls.sensor_mu[sensor]
+                mu, value = lst[0], lst[1]
 
                 mu += random.random()-0.5
                 if value:
@@ -154,7 +157,7 @@ class Humidity(Generator):
                 await cls.send_shuffled({sensor: [random.gauss(mu, cls.sigma)]})
                 if sensor not in cls.sensor_mu:
                     break
-                cls.sensor_mu[sensor] = mu
+                cls.sensor_mu[sensor] = [mu, value]
 
 
 def on_message(client, userdata, message):

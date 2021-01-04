@@ -1,5 +1,6 @@
 import React from "react";
-import { FormCheckbox, Button, Row, Col} from "shards-react";
+
+import { Button, Row, Col} from "shards-react";
 
 import { timestampToHour } from "../../utils/date";
 
@@ -50,12 +51,12 @@ class FormDeviceConfig extends React.Component {
         if (this.props.config)
             DeviceConfigService.updateConfiguration(
                 this.props.config.id, this.device.id, this.state.timeBegin, this.state.timeEnd, this.state.value
-            );
+            ).then(() => window.location.reload());
         else
             DeviceConfigService.addConfiguration(
                 this.device.id, this.state.timeBegin, this.state.timeEnd, this.state.value
-            );
-		event.preventDefault();
+            ).then(() => window.location.reload());
+        event.preventDefault();
 	}
 
     render() {
