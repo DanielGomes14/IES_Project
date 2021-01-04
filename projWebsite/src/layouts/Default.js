@@ -7,6 +7,7 @@ import MainSidebar from "../components/layout/MainSidebar/MainSidebar";
 import MainFooter from "../components/layout/MainFooter";
 import { current_home } from "../utils/auth";
 import PageTitle from "../components/common/PageTitle";
+import LocalStorageService from "../services/LocalStorageService";
 
 class DefaultLayout extends React.Component {
 
@@ -20,6 +21,14 @@ class DefaultLayout extends React.Component {
 		this.state = {
 			current_home: current_home.current_home(),
 		}
+  }
+
+  componentDidMount() {
+    LocalStorageService.get_first_home()
+    .then(data=> {
+      this.setState({ current_home: data });
+    });
+
   }
   
 	render() {
