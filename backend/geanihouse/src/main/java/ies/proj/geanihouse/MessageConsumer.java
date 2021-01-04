@@ -6,10 +6,10 @@ import ies.proj.geanihouse.exception.ResourceNotFoundException;
 import ies.proj.geanihouse.model.*;
 import ies.proj.geanihouse.repository.DeviceLogRepository;
 import ies.proj.geanihouse.repository.DeviceRepository;
+import ies.proj.geanihouse.repository.DivisionConfRepository;
 import ies.proj.geanihouse.repository.NotificationRepository;
 
-
-
+import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +18,7 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.cloud.stream.messaging.Sink;
 import ies.proj.geanihouse.repository.SensorDataRepository;
 import ies.proj.geanihouse.repository.SensorRepository;
+import ies.proj.geanihouse.service.SensorMessageService;
 
 
 
@@ -26,6 +27,10 @@ public class MessageConsumer {
 
     private static final Logger LOG = LogManager.getLogger(MessageConsumer.class);
     private Notification lastnotification;
+
+    @Autowired
+    SensorMessageService smservice;
+
     @Autowired
     private SensorDataRepository sensorDataRepository;
 
@@ -41,6 +46,9 @@ public class MessageConsumer {
     @Autowired
     private NotificationRepository notificationRepository;
 
+    @Autowired 
+    private DivisionConfRepository divisionconfRepository;
+
     @StreamListener(Sink.INPUT)
     public void log(ReceivedSensingData msg) throws ResourceNotFoundException,ErrorDetails {
 
@@ -49,6 +57,22 @@ public class MessageConsumer {
 
             Sensor sensor = sensorRepository.findById(sensor_id)
                             .orElseThrow(() -> new ResourceNotFoundException("Sensor with id " + sensor_id + " not found"));
+
+            LOG.info("Inserting sensor data for sensor with  id: "+ sensor.getId());
+            SensorData sd = new SensorData(sensor,msg.getTimestamp(), msg.getValue());
+            this.sensorDataRepository.save(sd);
+            LOG.info("Adding sensor data");
+
+
+            List<SensorData> last5 = sensorDataRepository.findTop5BySensor_IdOrderByTimestampDateDesc(sensor_id);
+            if(last5.size()>=5){
+                double value = 0;
+                for(SensorData d: last5)
+                    value+=d.getData();
+
+                value/=last5.size();
+                checkConfig(sensor,value);
+            }
 
             String typeName = sensor.getType().getName();
             Notification notification = null;
@@ -75,17 +99,13 @@ public class MessageConsumer {
             
             if (notification != null){
                 if(this.lastnotification== null || checkLastNotification(notification,this.lastnotification) ){
-                    System.out.println(notification.getTitle());
                     this.lastnotification=notification;
                     notificationRepository.save(notification);
                 }
 
             }
 
-            LOG.info("Inserting sensor data for sensor with  id: "+ sensor.getId());
-            SensorData sd = new SensorData(sensor,msg.getTimestamp(), msg.getValue());
-            this.sensorDataRepository.save(sd);
-            LOG.info("Adding sensor data");
+            
         }
         else if (msg.getMethod().equals("DEVICELOG")){
             long device_id= msg.getId();
@@ -117,4 +137,30 @@ public class MessageConsumer {
         return  false;
 
     }
+
+    public void checkConfig(Sensor sensor, double value){
+
+        DivisionConf dc = divisionconfRepository.findAllByDivisionIdAndTypeId(
+                            sensor.getDivision().getId(), 
+                            sensor.getType().getId()
+                            );
+        
+        if (dc==null){
+            System.out.println("No config");
+            return;
+        }
+        double midValue = (dc.getMaxValue()+dc.getMinValue()) / 2;
+        
+        if (value > dc.getMaxValue()){
+            System.out.println("Value is higher than configuration");
+            MQMessage msg = new MQMessage("CONFIG",sensor.getId(),sensor.getType().getName(),midValue);
+            smservice.sendMessage(msg);
+        }else if(value < dc.getMinValue()){
+            System.out.println("Value is lower than configuration");
+            MQMessage msg = new MQMessage("CONFIG",sensor.getId(),sensor.getType().getName(),midValue);
+            smservice.sendMessage(msg);
+        
+        }
+    }
+
 }
