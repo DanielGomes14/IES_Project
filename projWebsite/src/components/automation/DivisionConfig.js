@@ -26,7 +26,7 @@ class DivisionConfig extends React.Component {
                 <CardBody>
                     <h3>{this.config.type.name}</h3>
                     <h5 className="float-left">Current Value:</h5>
-                    <h5 className={"float-right text-" + this.theme}>?</h5>
+                    <h5 className={"float-right text-" + this.theme}>?{/* apresentar valor do sensor */}</h5>
                     <div className="clearfix"></div>
                     <h5 className="float-left">Comfort Interval:</h5>
                     <h5 className={"float-right text-" + this.theme}>{this.config.minValue} - {this.config.maxValue}</h5>

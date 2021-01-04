@@ -32,7 +32,7 @@ class AutomationTab extends React.Component {
         super(props);
         this.division = props.division;
         this.state = {
-            edit: false,
+            edit: props.edit,
             loading1: 0,
             loading2: 0,
             divisionConfigs: [],
@@ -70,6 +70,8 @@ class AutomationTab extends React.Component {
     }
     
     toggleEdit() {
+        if (this.state.edit)
+            window.location.reload();
         this.setState({ edit: !this.state.edit });
     }
     

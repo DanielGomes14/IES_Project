@@ -65,7 +65,7 @@ class Automation extends React.Component {
             value: 0
         }
         this.classes = this.useStyles;
-		// this.handleChange = this.handleChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount() {
