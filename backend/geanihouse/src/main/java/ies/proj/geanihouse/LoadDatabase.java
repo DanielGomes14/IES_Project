@@ -20,7 +20,7 @@ class LoadDatabase {
     CommandLineRunner initDatabase(UserRepository users,ClientRepository clients, HomeRepository homes,
                        DivisionRepository divisions, TypeRepository types, DeviceRepository devices,
                        NotificationRepository notifications, SensorRepository sensors,
-                       SensorDataRepository sensordata) {
+                       SensorDataRepository sensordata, DivisionConfRepository divisionconfs) {
 
         return args -> {
 
@@ -52,8 +52,8 @@ class LoadDatabase {
             divisions.save(division);
             divisions.save(new Division(2,"WC",h1));
             
-            Sensor sensor = new Sensor(1, division, temperature);
-            sensors.save(sensor);
+            //Sensor sensor = new Sensor(1, division, temperature);
+            //sensors.save(sensor);
 
             Device light_bulb = new Device(1, "Lampada", 0.0, eletronic, division);
             Device coffe_machine = new Device(2, "Máquina de Café", 0.0, eletronic, division);
@@ -62,8 +62,8 @@ class LoadDatabase {
             devices.save(coffe_machine);
             devices.save(air_cond);
 
-            SensorData init_data = new SensorData(1, sensor, Timestamp.valueOf("2007-09-23 10:10:10.0"), 25.0);
-            sensordata.save(init_data);
+            //SensorData init_data = new SensorData(1, sensor, Timestamp.valueOf("2007-09-23 10:10:10.0"), 25.0);
+            //sensordata.save(init_data);
 
             Notification fire_alarm = new Notification(1, "Temperature Alarm", "Sensor 1 detected temperature above 40°Celsius.", Timestamp.valueOf("2007-09-23 10:10:10.0"), h1);
             notifications.save(fire_alarm);
@@ -79,6 +79,10 @@ class LoadDatabase {
             notifications.save(fire_alarm);
             fire_alarm = new Notification(7, "Temperature Alarm", "Sensor 1 detected temperature above 40°Celsius.", Timestamp.valueOf("2007-09-23 10:10:10.0"), h1);
             notifications.save(fire_alarm);
+
+
+            DivisionConf dc = new DivisionConf(1,division,temperature,25,35);
+            divisionconfs.save(dc);
         };
     }
 }

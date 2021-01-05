@@ -44,7 +44,7 @@ class SensorCard extends React.Component {
         super(props);
         this.sensor = props.sensor;
 		this.state = {
-            value: 69,
+            value: '-',
             refresh: false
         };
         this.submit = this.submit.bind(this);

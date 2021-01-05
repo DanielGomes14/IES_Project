@@ -65,23 +65,20 @@ class DeviceCard extends React.Component {
 	}
 
 	handleChange(event) {
-		const {name, value, type, checked} = event.target;
-		console.log(JSON.stringify(this.device));
-		if (type === "checkbox"){
-			this.setState({ [name]: checked });
-			this.device.state = checked ? 1:0;
-			DeviceService.updateDeviceState(this.device);
-		}
-		else{
-			this.setState({ [name]: value });
-			this.device.state = value;
-			DeviceService.updateDeviceState(this.device);
-		}
+		const {id, name, value} = event.target;
+		var checkbox = document.getElementById(id);
+
+		this.setState({ connected: !checkbox.checked });
+
+		this.device.state = !this.device.state ? 1:0;
+
+		DeviceService.updateDeviceState(this.device);
+		checkbox.checked = this.device.state;
 	}
 	
 	submit = () => {
 		confirmAlert({
-		  title: 'Confirm to submit',
+		  title: 'Confirm Deletion',
 		  message: 'Are you sure you want to remove this device?',
 		  buttons: [
 			{
@@ -120,7 +117,7 @@ class DeviceCard extends React.Component {
 						</Col>
 						<Col sm="6" md="4" lg="4">
 							<Button className="float-right" theme="white" style={{ width: "100%", height:"100%", minWidth: "160px", marginRight: "25px"}}>
-								<FormCheckbox toggle defaultChecked={this.device.state}	name="connected">
+								<FormCheckbox toggle defaultChecked={this.device.state} ref={this.device.id}	name="connected" id={this.device.id} onChange={ e => this.handleChange(e) }>
 									Enable Device
 								</FormCheckbox>
 							</Button>

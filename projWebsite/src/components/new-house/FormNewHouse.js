@@ -16,53 +16,105 @@ import {
   FormCheckbox,
 } from "shards-react";
 import Select, { components } from 'react-select'
+import {current_home, current_user} from "../../utils/auth";
+import HomeService from "../../services/HomeService";
+import { Redirect } from "react-router-dom";
 
-const FormNewHouse = ({ title }) => (
-        <Card small className="h-100 py-3 col-sm-8">
+class FormNewHouse extends React.Component{
+
+    constructor(props) {
+		super(props);
+		this.homes = [];
+        this.state = {
+            name: "",
+            city:"",
+            address:"",
+            zipcode:"",
+            state:"",
+            new_house: false
+        };
+		this.handleChange = this.handleChange.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
+	}
+
+
+    handleChange(event) {
+		const {name, value} = event.target;
+        this.setState({ [name]: value });
+	}
+
+    handleSubmit(event) {
+        
+		HomeService.addHome(
+			current_user.current_user(), this.state.name, this.state.address,this.state.city,this.state.state,this.state.zipcode
+        );
+        
+        HomeService.getHomes().then(data =>
+            {
+                this.homes = data
+            }
+        );
+        
+        for (let i = 0; i < this.homes.length; i++) {
+            if (this.homes[i].name == this.state.name){
+                current_home.change_home(this.homes[i].id);
+            }
+        }
+        
+        
+        this.setState({new_house: true});
+
+		event.preventDefault();
+	}
+
+
+    render(){
+		if (this.state.new_house === true)
+			return <Redirect to='/' />
+            
+        return (
+            <Card small className="h-100 py-3 col-sm-8">
 
             <CardHeader className="border-bottom">
-            <h5 className="m-0">{title}</h5>
+            <h5 className="m-0">New House</h5>
             </CardHeader>
 
             <CardBody className="d-flex flex-column">
-            <Form className="quick-post-form">
+            <Form className="quick-post-form" onSubmit={ this.handleSubmit }>
 
                 <FormGroup className="row">
                     <Col sm="12">
                         <label htmlFor="deName">Name</label>    
-                        <FormInput placeholder="" if="deName"/>
+                        <FormInput name="name" value={this.state.name} onChange={this.handleChange} placeholder="" if="deName"/>
                     </Col>
                 </FormGroup>
 
                 <FormGroup className="row">
                     <Col sm="12">
                         <label htmlFor="feInputAddress">Address</label>
-                        <FormInput id="feInputAddress" placeholder="1234 Main St" />
+                        <FormInput name="address" value={this.state.address} onChange={this.handleChange} id="feInputAddress" placeholder="1234 Main St" />
                     </Col>
                 </FormGroup>
 
                 <FormGroup className="row">
                     <Col md="6">
                         <label htmlFor="feInputCity">City</label>
-                        <FormInput id="feInputCity" />
+                        <FormInput name="city" value={this.state.city} onChange={this.handleChange} id="feInputCity" />
                     </Col>
                     <Col md="4">
                         <label htmlFor="feInputState">State</label>
-                        <FormSelect id="feInputState">
-                        <option>Choose...</option>
-                        <option>...</option>
-                        </FormSelect>
+                        <FormInput name="state" value={this.state.state} onChange={this.handleChange} id="feInputState" />
                     </Col>
                     <Col md="2">
                         <label htmlFor="feInputZip">Zip</label>
-                        <FormInput id="feInputZip" />
+                        <FormInput name="zip" value={this.state.zip} onChange={this.handleChange} id="feInputZip" />
                     </Col>
                 </FormGroup>
 
 
 
                 <FormGroup className="mb-0 d-flex justify-content-center mt-3">
-                    <Button theme="accent" type="submit" className="bg-primary text-white text-center rounded"
+                    <Button theme="accent" value="submit" type="submit" className="bg-primary text-white text-center rounded"
                      style={{ boxShadow: "inset 0 0 5px rgba(0,0,0,.2)", fontSize: "16px", width:  "150px", height:  "40px" }}>
                         Add House
                     </Button>
@@ -71,14 +123,11 @@ const FormNewHouse = ({ title }) => (
             </Form>
             </CardBody>
         </Card>
-);
 
-FormNewHouse.propTypes = {
-    title: PropTypes.string
-};
+        )
+    }
 
-FormNewHouse.defaultProps = {
-title: "New House"
-};
+
+}
 
 export default FormNewHouse;
