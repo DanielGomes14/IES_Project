@@ -10,19 +10,21 @@ import DivisionConfigService from "../../services/DivisionConfigService";
 import DeviceService from "../../services/DeviceService";
 
 
-const typeOptions = [
-    {id: 1, name: "Temperature"},
-    {id: 2, name: "Humidity"},
-    {id: 3, name: "Luminosity"},
-]
 
 function remainingTypeOptions(divisionConfigs) {
-    console.log(divisionConfigs)
-
-    var remaining = [];
-    for (var opt in typeOptions)
-        if (!(opt in divisionConfigs))
-            remaining.append(opt);
+    var remaining = [
+        {id: 1, name: "Temperature"},
+        {id: 2, name: "Humidity"},
+        {id: 3, name: "Luminosity"},
+    ]
+    divisionConfigs.forEach((opt) => {
+        for (var i = 0; i < remaining.length; i++) {
+            if (remaining[i].id == opt.type.id) {
+                remaining.splice(i, 1);
+                break;
+            }
+        }
+    })
     return remaining;
 }
 
@@ -32,13 +34,15 @@ class AutomationTab extends React.Component {
         super(props);
         this.division = props.division;
         this.state = {
-            edit: props.edit,
+            edit: false,
+            addConfig: false,
             loading1: 0,
             loading2: 0,
             divisionConfigs: [],
             devices: [],
         }
-        this.toggleEdit = this.toggleEdit.bind(this)
+        this.toggleEdit = this.toggleEdit.bind(this);
+        this.toggleAddConfig = this.toggleAddConfig.bind(this);
     }
 
     componentDidMount() {
@@ -74,6 +78,10 @@ class AutomationTab extends React.Component {
             window.location.reload();
         this.setState({ edit: !this.state.edit });
     }
+
+    toggleAddConfig() {
+        this.setState({addConfig: !this.state.addConfig});
+    }
     
     render() {
         return !this.state.edit ? (
@@ -103,9 +111,23 @@ class AutomationTab extends React.Component {
             </div>
         ) : (
             <div>
-                <Button className="float-left mx-2 mb-3" theme="info">Add Division Configuration</Button>
+                {remainingTypeOptions(this.state.divisionConfigs).length != 0 ? (
+                    <Button className="float-left mx-2 mb-3" theme="info" onClick={this.toggleAddConfig}>
+                        {this.state.addConfig ? "Cancel" : "Add Division Configuration"}
+                    </Button>
+                ) : null}
+                
                 <Button className="float-right mx-2 mb-3" theme="danger" onClick={this.toggleEdit}>Close</Button>
                 <div className="clearfix"></div>
+                {this.state.addConfig ? (
+                    <Row>
+                        <Col lg="6">
+                            
+                            <FormDivisionConfig division={this.division} types={remainingTypeOptions(this.state.divisionConfigs)} />
+
+                        </Col>
+                    </Row>
+                ) : null}
                 <Row>
                     {this.state.divisionConfigs.map((config, index) => (
                         <Col key={index} lg="6">

@@ -64,7 +64,7 @@ public class DivisionConfController {
         Type type = typeRepository.findByName(divisionConf.getType().getName());
         if(type == null){
             LOG.error("Invalid Type!");
-            throw new ResourceNotFoundException("Could not Find Type with name :: " + type.getName());
+            throw new ResourceNotFoundException("Could not Find Type");
         }
         divisionConf.setType(type);
 
@@ -86,11 +86,12 @@ public class DivisionConfController {
         DivisionConf divisionConf = divisionConfRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Could not find division configuration with id ::" + id));
         
+        LOG.info("PUT Request DivisionConf");
         // verify if the type exists
         Type type = typeRepository.findByName(divisionConf.getType().getName());
         if(type == null){
             LOG.error("Invalid Type!");
-            throw new ResourceNotFoundException("Could not Find Type with name :: " + type.getName());
+            throw new ResourceNotFoundException("Could not Find Type");
         }
 
         // validates values
@@ -100,7 +101,7 @@ public class DivisionConfController {
         divisionConf.setMinValue(dconf.getMinValue());
         divisionConf.setMaxValue(dconf.getMaxValue());
         divisionConfRepository.save(divisionConf);
-
+        
         return  ResponseEntity.ok().body(divisionConf);
     }
 
