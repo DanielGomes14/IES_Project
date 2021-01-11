@@ -4,10 +4,12 @@ import ies.proj.geanihouse.model.Division;
 import ies.proj.geanihouse.model.Device;
 import ies.proj.geanihouse.repository.DeviceRepository;
 import ies.proj.geanihouse.repository.DivisionRepository;
+import ies.proj.geanihouse.service.PermissionService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,9 +47,17 @@ public class DeviceController {
     @Autowired
     Source source;
 
+    @Autowired
+    private PermissionService permissionService;
+
+    private UserDetails authenticateduser;
+
     @GetMapping("/{id}/devices/")
-    public ResponseEntity<?> getAllHomeDivisions(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
-        Division division = this.divisionRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Could not find division with id" + id));
+    public ResponseEntity<?> getAllDivisionDevices(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
+        Division division = this.divisionRepository.findById(id).
+                orElseThrow( () -> new ResourceNotFoundException("Could not find division with id" + id));
+        this.authenticateduser= (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //this.permissionService.checkClientDivision(division)
         Set <Device> devices = division.getDevices();
 
         System.out.println(devices);
