@@ -67,7 +67,7 @@ public class HomeController {
     }
 
 
-    @PostMapping("/newhouse")
+    @PostMapping("/homes")
     public  ResponseEntity<?> addnewHome(@Valid @RequestBody Home home) throws  ResourceNotFoundException{
         LOG.info("Add new Home");
         Client client = clientRepository.findById(home.getAdmin().getId())

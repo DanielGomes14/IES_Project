@@ -18,7 +18,7 @@ class DeviceService {
     }
 
     addDevice(division_id, type_id, name) {
-        return fetch(baseURL + 'newdevices', {
+        return fetch(baseURL + 'device', {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
