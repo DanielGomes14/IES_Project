@@ -37,6 +37,7 @@ class LoadDatabase {
             h1.getClients().addAll(Arrays.asList(c,c1));
             homes.save(h1);
             Home h2 = new Home(2,clients.findByEmail("mongo@gmail.com"),"Casa do Lionel","ali","ok","adeus","zip");
+            h2.getClients().addAll(Arrays.asList(c1));
             homes.save(h2);
 
             Type temperature = new Type(1,"Temperature");
