@@ -40,7 +40,7 @@ public class DeviceLogController {
         return ResponseEntity.ok().body(data);
     }
 
-    @DeleteMapping("/sensorlog/{id}")
+    @DeleteMapping("/{id}/sensorlog")
     public Map<String,Boolean> deleteDeviceLog(@PathVariable(value = "id") long deviceLogId)
             throws  ResourceNotFoundException{
         DeviceLog deviceLog = deviceLogRepository.findById(deviceLogId)

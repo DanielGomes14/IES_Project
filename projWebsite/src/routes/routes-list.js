@@ -23,6 +23,7 @@ import Statistics from "../views/Statistics";
 import UserProfile from "../views/UserProfile";
 import NewHouse from "../views/NewHouse";
 import NewSensor from "../views/NewSensor";
+import DeviceLogPage from "../views/DeviceLog";
 
 export const publicRoutes = [
   {
@@ -131,5 +132,10 @@ export const privateRoutes = [
     path: "/account",
     layout: DefaultLayout,
     component: UserProfile
+  },
+  {
+    path: "/device-logs",
+    layout: DefaultLayout,
+    component: DeviceLogPage
   }
 ];
