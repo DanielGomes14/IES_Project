@@ -47,8 +47,9 @@ public class DivisionConfController {
     public List<DivisionConf> getAllDivisionConfs(){
         return  divisionConfRepository.findAll();
     }
-    @GetMapping("/divisions/{id}/configurations")
-    public ResponseEntity<?> getDivisionConfs(@PathVariable(value = "id") long id) throws ResourceNotFoundException {
+
+    @GetMapping("/divisions/{division_id}/configurations")
+    public ResponseEntity<?> getDivisionConfs(@PathVariable(value = "division_id") long id) throws ResourceNotFoundException {
         Division division = divisionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException ("Could not find division with id :: " + id));
         UserDetails authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(!this.permissionService.checkClientDivision(division, authenticateduser)){

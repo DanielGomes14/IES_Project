@@ -55,8 +55,8 @@ public class DeviceController {
 
     private UserDetails authenticateduser;
 
-    @GetMapping("/{id}/devices/")
-    public ResponseEntity<?> getAllDivisionDevices(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
+    @GetMapping("/{divison_id}/devices")
+    public ResponseEntity<?> getAllDivisionDevices(@PathVariable(value = "divison_id") Long id) throws ResourceNotFoundException {
         Division division = this.divisionRepository.findById(id).
                 orElseThrow( () -> new ResourceNotFoundException("Could not find division with id" + id));
         this.authenticateduser= (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -68,7 +68,7 @@ public class DeviceController {
         return ResponseEntity.ok().body(devices);
     }
 
-    @PostMapping("/device")
+    @PostMapping("/devices")
     public ResponseEntity<?> addDeviceToDivision(@Valid @RequestBody Device device) throws ResourceNotFoundException {
         Division d = divisionRepository.findById(device.getDivision().getId())
         .orElseThrow(() -> new ResourceNotFoundException("Could not find division "));

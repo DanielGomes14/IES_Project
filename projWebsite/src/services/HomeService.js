@@ -1,7 +1,7 @@
 import baseURL from "../data/base-url";
 import { auth,current_user,current_home } from "../utils/auth";
 
-const HOME_REST_API_URL = "homes/"
+const HOME_REST_API_URL = "homes"
 
 class HomeService {
 
@@ -30,7 +30,7 @@ class HomeService {
     }
 
     addHome(client_id, name, address, city, state, zipcode) {
-        return fetch(baseURL + "newhouse/", {
+        return fetch(baseURL + "homes", {
                 method: 'POST',
                 mode: 'cors',
                 headers: {

@@ -29,8 +29,8 @@ public class DeviceLogController {
     @Autowired
     private PermissionService permissionService;
 
-    @GetMapping("/{house-id}/sensorlog/")
-    public ResponseEntity<?> getHouseDeviceLog(@PathVariable(value = "house-id") long id) throws ResourceNotFoundException {
+    @GetMapping("/{house_id}/sensorlog/")
+    public ResponseEntity<?> getHouseDeviceLog(@PathVariable(value = "house_id") long id) throws ResourceNotFoundException {
         Home h = homeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Could not found home with id" + id));
         UserDetails authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(!this.permissionService.checkClientHome(h, authenticateduser)){
@@ -40,7 +40,7 @@ public class DeviceLogController {
         return ResponseEntity.ok().body(data);
     }
 
-    @DeleteMapping("/{id}/sensorlog")
+    @DeleteMapping("/sensorlog/{id}")
     public Map<String,Boolean> deleteDeviceLog(@PathVariable(value = "id") long deviceLogId)
             throws  ResourceNotFoundException{
         DeviceLog deviceLog = deviceLogRepository.findById(deviceLogId)
