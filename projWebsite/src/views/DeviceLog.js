@@ -28,7 +28,7 @@ class DeviceLogPage extends React.Component {
 			})
 			.catch(error => {
 				console.log(error);
-				this.setState({ loading: 3 })
+				this.setState({ loading: 2 })
 			});
 	}
 
