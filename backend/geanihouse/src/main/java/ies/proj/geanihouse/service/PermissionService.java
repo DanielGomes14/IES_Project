@@ -29,7 +29,6 @@ public class PermissionService {
         return c;
     }
 
-    
     public boolean checkClientHome(Home home, UserDetails userDetails){
         Client req_client = this.getClient(userDetails);
         for(Client c : home.getClients()){

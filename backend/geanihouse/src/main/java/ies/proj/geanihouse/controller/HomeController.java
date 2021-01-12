@@ -67,7 +67,7 @@ public class HomeController {
     }
 
 
-    @PostMapping("/newhouse")
+    @PostMapping("/homes")
     public  ResponseEntity<?> addnewHome(@Valid @RequestBody Home home) throws  ResourceNotFoundException{
         LOG.info("Add new Home");
         Client client = clientRepository.findById(home.getAdmin().getId())
@@ -88,6 +88,7 @@ public class HomeController {
         if(! permissionService.checkClientHome(home,this.authenticateduser)){
             // Forbidden!
             response.put("deleted",Boolean.FALSE);
+            return response;
         }
         LOG.debug("deleting house: "+ home);
         homeRepository.delete(home);

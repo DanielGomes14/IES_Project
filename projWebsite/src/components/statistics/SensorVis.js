@@ -201,11 +201,13 @@ export default class SensorVis extends React.Component {
                 <CardHeader className="border-bottom">
                     <h6 className="m-0"> Division Statistics - Sensor Data</h6>
                 </CardHeader>
-                <FormSelect name="division_id" value={this.state.division_id} onChange={this.handleChange}>
+                {this.state.division_id ? (
+                    <FormSelect name="division_id" value={this.state.division_id} onChange={this.handleChange}>
                     {this.state.divisions.map((div, index) => 
                         <option key={index} value={div.id}>{div.name}</option>
                     )}
                 </FormSelect>
+                ) : null}
                 <CardBody>
                     {(() => {
                         switch(this.state.loading) {

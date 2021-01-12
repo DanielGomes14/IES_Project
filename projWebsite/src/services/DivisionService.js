@@ -18,7 +18,7 @@ class DivisionService {
     }
 
     addDivision(home_id, name) {
-        return fetch(baseURL + DIVISIONS_REST_API_URL, {
+        return fetch(baseURL + "division", {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
