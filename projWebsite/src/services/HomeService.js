@@ -46,7 +46,6 @@ class HomeService {
                     zipCode:zipcode,
                     admin: {id: client_id}
                 })
-            })
         })
     }    
 }

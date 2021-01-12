@@ -94,17 +94,6 @@ class LoadDatabase {
             DivisionConf dc = new DivisionConf(1,division1,temperature,25,35);
             divisionconfs.save(dc);
 
-<<<<<<< HEAD
-
-            User user3 = new User(3,"dgomes", encoder.encode("randomquerty"),"Admin");
-            users.save(user3);
-            Client dg = new Client(3,"Daniel","Gomes","dgomes@ua.pt","Male",user3);
-            clients.save(dg);
-
-            Invite dg_invitation = new Invite(c, h1, dg);
-            invites.save(dg_invitation);
-
-=======
             DeviceLog log1 = new DeviceLog(1, light_bulb, Timestamp.valueOf("2020-09-23 10:10:10.0"), 0);
             DeviceLog log2 = new DeviceLog(2, light_bulb, Timestamp.valueOf("2020-09-23 11:10:10.0"), 1);
             DeviceLog log3 = new DeviceLog(3, air_cond, Timestamp.valueOf("2020-09-23 10:10:10.0"), 20);
@@ -117,7 +106,15 @@ class LoadDatabase {
             devicelogs.save(log4);
             devicelogs.save(log5);
             devicelogs.save(log6);
->>>>>>> 583f4ab979123f35668b64c424904ea0970f0d89
+
+
+            User user3 = new User(3,"dgomes", encoder.encode("randomquerty"),"Admin");
+            users.save(user3);
+            Client dg = new Client(3,"Daniel","Gomes","dgomes@ua.pt","Male",user3);
+            clients.save(dg);
+
+            Invite dg_invitation = new Invite(c, h1, dg);
+            invites.save(dg_invitation);
         };
     }
 }
