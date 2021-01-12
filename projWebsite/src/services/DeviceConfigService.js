@@ -6,16 +6,16 @@ const DEVICE_CONFIG_REST_API_URL = "devices/configurations";
 
 class DeviceConfigService {
 
-    getConfigurations(deviceId) {
-        return fetch(baseURL + 'devices/' + deviceId + '/configurations', {
-                method: 'GET',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                    authorization: auth.token(),
-                }
-            })
-            .then(res => res.json());
+    async getConfigurations(deviceId) {
+        const res = await fetch(baseURL + 'devices/' + deviceId + '/configurations', {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                authorization: auth.token(),
+            }
+        });
+        return await res.json();
     }
 
     addConfiguration(deviceId, timeBegin, timeEnd, value) {

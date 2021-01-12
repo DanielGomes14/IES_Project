@@ -5,16 +5,16 @@ const DEVICES_REST_API_URL = "devices/"
 
 class DeviceService {
 
-    getDevices(division_id) {
-        return fetch(baseURL + (division_id + '/') + DEVICES_REST_API_URL, {
-                method: 'GET',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                    authorization: auth.token(),
-                }
-            })
-            .then(res => res.json());
+    async getDevices(division_id) {
+        const res = await fetch(baseURL + (division_id + '/') + DEVICES_REST_API_URL, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                authorization: auth.token(),
+            }
+        });
+        return await res.json();
     }
 
     addDevice(division_id, type_id, name) {
@@ -41,16 +41,16 @@ class DeviceService {
             })
     }
 
-    getDeviceState(device_id) {
-        return fetch(baseURL + (device_id + '/') + DEVICES_REST_API_URL, {
-                method: 'GET',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                    authorization: auth.token(),
-                }
-            })
-            .then(res => res.json());
+    async getDeviceState(device_id) {
+        const res = await fetch(baseURL + (device_id + '/') + DEVICES_REST_API_URL, {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                authorization: auth.token(),
+            }
+        });
+        return await res.json();
     }
 
     deleteDevice(device_id){
