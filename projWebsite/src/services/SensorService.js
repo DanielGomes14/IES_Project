@@ -20,7 +20,7 @@ class SensorService {
 
     async addSensor(division_id, type_id) {
         alert('div ' + division_id + ' typ ' + type_id);
-        const res = await fetch(baseURL + 'newsensor', {
+        const res = await fetch(baseURL + 'sensors', {
             method: 'POST',
             mode: 'cors',
             headers: {
