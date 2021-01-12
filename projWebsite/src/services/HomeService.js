@@ -18,7 +18,7 @@ class HomeService {
     }
 
     async getHomeById(){
-        const res = await fetch(baseURL + HOME_REST_API_URL + current_home.current_home(), {
+        const res = await fetch(baseURL + HOME_REST_API_URL + "/" + current_home.current_home(), {
             method: 'GET',
             mode: 'cors',
             headers: {
@@ -29,6 +29,7 @@ class HomeService {
         return await res.json();
     }
 
+    
     addHome(client_id, name, address, city, state, zipcode) {
         return fetch(baseURL + "homes", {
                 method: 'POST',
@@ -45,10 +46,8 @@ class HomeService {
                     zipCode:zipcode,
                     admin: {id: client_id}
                 })
-            })
-    }
-
-
+        })
+    }    
 }
 
 export default new HomeService();

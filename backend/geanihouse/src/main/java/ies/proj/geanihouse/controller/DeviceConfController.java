@@ -47,7 +47,7 @@ public class DeviceConfController {
 
 
     @GetMapping("/devices/{device_id}/configurations")
-    public ResponseEntity<?> getDeviceConfigurations(@PathVariable(value = "device-id") Long id, @RequestParam(required = false,defaultValue = "false") Boolean latest) throws ResourceNotFoundException{
+    public ResponseEntity<?> getDeviceConfigurations(@PathVariable(value = "device_id") Long id, @RequestParam(required = false,defaultValue = "false") Boolean latest) throws ResourceNotFoundException{
         Device device = deviceRepository.findById(id)
                 .orElseThrow( () -> new ResourceNotFoundException("Could not Find Device with id :: " + id));
         this.authenticatedUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
