@@ -62,9 +62,9 @@ export default function() {
         to: "/house-settings",
       },
       {
-        title: "Group Settings",
+        title: "Invitations",
         htmlBefore: '<i class="material-icons">group</i>',
-        to: "/group-settings",
+        to: "/invitations",
       }
     ];
 }

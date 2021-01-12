@@ -20,7 +20,8 @@ class LoadDatabase {
     CommandLineRunner initDatabase(UserRepository users,ClientRepository clients, HomeRepository homes,
                        DivisionRepository divisions, TypeRepository types, DeviceRepository devices,
                        NotificationRepository notifications, SensorRepository sensors,
-                       SensorDataRepository sensordata, DivisionConfRepository divisionconfs) {
+                       SensorDataRepository sensordata, DivisionConfRepository divisionconfs,
+                       InviteRepository invites) {
 
         return args -> {
 
@@ -83,6 +84,16 @@ class LoadDatabase {
 
             DivisionConf dc = new DivisionConf(1,division,temperature,25,35);
             divisionconfs.save(dc);
+
+
+            User user3 = new User(3,"dgomes", encoder.encode("randomquerty"),"Admin");
+            users.save(user3);
+            Client dg = new Client(3,"Daniel","Gomes","dgomes@ua.pt","Male",user3);
+            clients.save(dg);
+
+            Invite dg_invitation = new Invite(c, h1, dg);
+            invites.save(dg_invitation);
+
         };
     }
 }

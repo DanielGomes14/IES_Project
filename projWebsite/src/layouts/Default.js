@@ -28,7 +28,6 @@ class DefaultLayout extends React.Component {
     .then(data=> {
       this.setState({ current_home: data });
     });
-
   }
   
 	render() {

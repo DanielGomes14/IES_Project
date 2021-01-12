@@ -28,26 +28,49 @@ class HomeService {
         }).then(res=>res.json());
     }
 
+    
     addHome(client_id, name, address, city, state, zipcode) {
         return fetch(baseURL + "newhouse/", {
-                method: 'POST',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                    authorization: auth.token(),
-                },
-                body: JSON.stringify({ 
-                    name: name,
-                    address:address,
-                    state:state,
-                    city:city,
-                    zipCode:zipcode,
-                    admin: {id: client_id}
-                })
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                authorization: auth.token(),
+            },
+            body: JSON.stringify({ 
+                name: name,
+                address:address,
+                state:state,
+                city:city,
+                zipCode:zipcode,
+                admin: {id: client_id}
             })
+        })
     }
 
-
+    getHomeInvites(){
+        return fetch(baseURL + HOME_REST_API_URL + current_home.current_home() + '/invites',{
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                authorization: auth.token(),
+            }
+        }).then(res => res.json());
+    }
+    
+    deleteHomeInvite(inv_id){
+        return fetch(baseURL + HOME_REST_API_URL + current_home.current_home() + '/invites/' + inv_id,{
+            method: 'DELETE',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                authorization: auth.token(),
+            }
+        }).then(res => res.json());
+    }
+    
+    
 }
 
 export default new HomeService();
