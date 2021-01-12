@@ -44,7 +44,7 @@ class UserProfile extends React.Component {
             <UserDetails  user={this.state.user} />
           </Col>
           <Col lg="8">
-            <UserAccountDetails />
+            <UserAccountDetails user={this.state.user} />
           </Col>
         </Row>
       </Container>

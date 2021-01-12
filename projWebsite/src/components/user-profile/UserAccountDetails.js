@@ -24,17 +24,41 @@ class UserAccountDetails extends React.Component {
 
   constructor(props){
     super(props);
-    this.user = props.user;
+    this.state = {user: props.user};
+    this.state.user.password = "";
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+
   }
 
   handleChange(event) {
-		const {name, value} = event.target;
-    this.setState({ [name]: value });
+    const {name, value} = event.target;
+    
+    if (name !== "password")
+      this.setState({ user:{
+                    ...this.state.user,
+                    client:{
+                      [name]: value
+                    },
+                  } });
+    else
+      this.setState({ user:{
+        ...this.state.user,
+        [name]: value
+      } });           
+
+    
 	}
 
 
-  render() {
+  handleSubmit(event) {
+    alert('A name was submitted: ' + this.state.value);
+    event.preventDefault();
+  }
 
+
+  render() {
+    console.log(this.state.user);
     return (
       <Card small className="mb-4">
         <CardHeader className="border-bottom">
@@ -46,49 +70,49 @@ class UserAccountDetails extends React.Component {
               <Col>
                 <Form>
                   <Row form>
-                    {/* First Name */}
                     <Col md="6" className="form-group">
                       <label htmlFor="feFirstName">First Name</label>
                       <FormInput
                         id="feFirstName"
                         placeholder="First Name"
-                        value={userDetails.fname}
-                        onChange={() => { }}
+                        name = "firstName"
+                        value={this.state.user.client.firstName}
+                        onChange={ this.handleChange }
                       />
                     </Col>
-                    {/* Last Name */}
                     <Col md="6" className="form-group">
                       <label htmlFor="feLastName">Last Name</label>
                       <FormInput
                         id="feLastName"
                         placeholder="Last Name"
-                        value={userDetails.lname}
-                        onChange={() => { }}
+                        name = "lastName"
+                        value={this.state.user.client.lastName}
+                        onChange={ this.handleChange }
                       />
                     </Col>
                   </Row>
                   <Row form>
-                    {/* Email */}
                     <Col md="6" className="form-group">
                       <label htmlFor="feEmail">Email</label>
                       <FormInput
                         type="email"
                         id="feEmail"
                         placeholder="Email Address"
-                        value={userDetails.email}
-                        onChange={() => { }}
+                        name = "email"
+                        value={this.state.user.client.email}
+                        onChange={ this.handleChange }
                         autoComplete="email"
                       />
                     </Col>
-                    {/* Password */}
                     <Col md="6" className="form-group">
                       <label htmlFor="fePassword">Password</label>
                       <FormInput
                         type="password"
                         id="fePassword"
                         placeholder="Password"
-                        value={userDetails.password}
-                        onChange={() => { }}
+                        name= "password"
+                        value={ this.state.user.password }
+                        onChange={ this.handleChange }
                         autoComplete="current-password"
                       />
                     </Col>
@@ -97,7 +121,10 @@ class UserAccountDetails extends React.Component {
                     <Col md="12">
                       <label htmlFor="fePhoto">Profile Picture</label>
                       <InputGroup>
-                        <FormInput value={userDetails.avatar_name} placeholder="Enter here your profile pic" />
+                        <FormInput name="profile_pic"
+                         onChange={this.handleChange}
+                         value={this.state.user.client.profile_pic} p
+                         laceholder="Enter here your profile pic" />
 
                         <InputGroupAddon type="append">
                           <Button theme="primary">Upload Photo</Button>
@@ -106,26 +133,24 @@ class UserAccountDetails extends React.Component {
                     </Col>
                   </Row>
                   <Row style={{ paddingTop: "15px" }} form>
-                    {/* City */}
                     <Col md="3" className="form-group">
                       <label htmlFor="feBirth">Birth</label>
                       <FormInput
                         id="feBirth"
+                        name= "birth"
                         placeholder="Birth Date: dd/mm/yyyy"
-                        value={userDetails.birth}
-                        onChange={() => { }}
+                        value={this.state.user.client.birth}
+                        onChange={ this.handleChange }
                       />
                     </Col>
-                    {/* State */}
                     <Col md="2" className="form-group">
                       <label htmlFor="feInputState">Sex</label>
-                      <FormSelect id="feInputState">
+                      <FormSelect id="feInputState" name="sex"  value={this.state.user.client.sex} onChange={ this.handleChange}>
                         <option>Male</option>
                         <option>Female</option>
                         <option>Other</option>
                       </FormSelect>
                     </Col>
-                    {/* Zip Code */}
                   </Row>
                   <Button theme="accent">Update Account</Button>
                 </Form>
