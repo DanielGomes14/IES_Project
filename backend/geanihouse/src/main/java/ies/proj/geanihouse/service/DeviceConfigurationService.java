@@ -5,8 +5,10 @@ import ies.proj.geanihouse.controller.DeviceConfController;
 import ies.proj.geanihouse.model.Device;
 import ies.proj.geanihouse.model.DeviceConf;
 import ies.proj.geanihouse.model.MQMessage;
+import ies.proj.geanihouse.model.Notification;
 import ies.proj.geanihouse.repository.DeviceConfRepository;
 import ies.proj.geanihouse.repository.DeviceRepository;
+import ies.proj.geanihouse.repository.NotificationRepository;
 import org.apache.juli.logging.Log;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,6 +40,9 @@ public class DeviceConfigurationService {
     @Autowired
     DeviceRepository deviceRepository;
 
+    @Autowired
+    NotificationRepository notificationRepository;
+
     private final Map<Long, ScheduledFuture<?>> scheduledTasks = new IdentityHashMap<>();
     private static final Logger LOG = LogManager.getLogger(DeviceConfigurationService.class);
 
@@ -66,7 +71,18 @@ public class DeviceConfigurationService {
             }
             else d.setState(1);
             deviceRepository.save(d);
+            savenewNotification(d);
 
+        }
+        public void savenewNotification(Device d){
+            String state = d.getState()==0? " Off" : " On";
+            //create notification
+            Notification notf = new Notification(0,"Device State Update",
+                    "Device " + d.getName() + " is now " + state,
+                    new Timestamp(System.currentTimeMillis()),
+                    d.getDivision().getHome()
+            );
+            notificationRepository.save(notf);
         }
         public MQMessage getMessage(){return this.message;}
 
