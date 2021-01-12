@@ -25,9 +25,7 @@ class LocalStorageService {
         })
         .then(res => res.json()).then(json => {
             if (Object.keys(json).length > 0) {
-                return json[Object.keys(json)[0]]["id"];
-            } else {
-                return 0;
+                current_home.change_home(json[Object.keys(json)[0]]["id"]);
             }
         })
     }

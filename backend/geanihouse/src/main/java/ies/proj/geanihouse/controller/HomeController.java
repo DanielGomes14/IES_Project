@@ -129,6 +129,10 @@ public class HomeController {
         this.authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Client inviter = permissionService.getClient(this.authenticateduser);
 
+        if (inviter.getEmail() == invite_client.getEmail()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Can't invite yourself.");
+        }
+
         if (! permissionService.checkClientHome(home, this.authenticateduser)){
             List<Invite> invites = inviteRepository.findAllByHome_id(homeID);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -177,4 +181,47 @@ public class HomeController {
         
         return ResponseEntity.ok().body(invites);
     }
+
+    @PostMapping("/invites")
+    public ResponseEntity<?> invite(@Valid @RequestBody Invite invite) throws  ResourceNotFoundException{
+        Home home = homeRepository.findById(invite.getHome().getId()).orElseThrow( () -> new ResourceNotFoundException("House not found for this id :: " + invite.getHome().getId()));
+        Client invite_client = clientRepository.findById(invite.getInvclient().getId()).orElseThrow( () -> new ResourceNotFoundException("House not found for this id :: " + invite.getHome().getId()));
+
+        this.authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Client accepter = permissionService.getClient(this.authenticateduser);
+
+        if (accepter.getId() != invite_client.getId()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        home.getClients().add(accepter);
+        homeRepository.save(home);
+        
+        inviteRepository.delete(invite);
+        
+        List<Invite> invites = inviteRepository.findAllByInvclient_id(accepter.getId());
+
+        return ResponseEntity.ok().body(invites);
+    }
+
+    // @DeleteMapping("/invites/{inv_id}")
+    // public ResponseEntity<?> deleteHomeInvites(@PathVariable(value = "id") Long homeID, @PathVariable(value = "inv_id") Long inviteID )
+    //     throws ResourceNotFoundException {
+    //     Home home = homeRepository.findById(homeID).orElseThrow( () -> new ResourceNotFoundException("House not found for this id :: " + homeID));
+        
+    //     this.authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    //     if (! permissionService.checkClientHome(home, this.authenticateduser)){
+    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    //     }
+
+    //     Optional<Invite> invite = inviteRepository.findById(inviteID);
+
+    //     if (invite.isPresent()) {
+    //         inviteRepository.delete(invite.get());
+    //     }
+
+    //     List<Invite> invites = inviteRepository.findAllByHome_id(homeID);
+
+    //     return ResponseEntity.ok().body(invites);
+    // }
 }

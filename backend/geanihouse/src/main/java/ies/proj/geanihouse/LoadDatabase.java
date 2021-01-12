@@ -21,11 +21,7 @@ class LoadDatabase {
                        DivisionRepository divisions, TypeRepository types, DeviceRepository devices,
                        NotificationRepository notifications, SensorRepository sensors,
                        SensorDataRepository sensordata, DivisionConfRepository divisionconfs,
-<<<<<<< HEAD
-                       InviteRepository invites) {
-=======
-                       DeviceLogRepository devicelogs) {
->>>>>>> 583f4ab979123f35668b64c424904ea0970f0d89
+                       InviteRepository invites, DeviceLogRepository devicelogs) {
 
         return args -> {
 
@@ -44,6 +40,7 @@ class LoadDatabase {
             Home h2 = new Home(2,clients.findByEmail("mongo@gmail.com"),"Casa do Lionel","ali","ok","adeus","zip");
             h2.getClients().addAll(Arrays.asList(c1));
             homes.save(h2);
+            
 
             Type temperature = new Type(1,"Temperature");
             Type humidity = new Type(2,"Humidity");
@@ -112,6 +109,10 @@ class LoadDatabase {
             users.save(user3);
             Client dg = new Client(3,"Daniel","Gomes","dgomes@ua.pt","Male",user3);
             clients.save(dg);
+
+            Home h3 = new Home(3,clients.findByEmail("dgomes@ua.pt"),"Casa do Dgomes","UA","tudo","DETI","Autocarro");
+            h3.getClients().addAll(Arrays.asList(dg));
+            homes.save(h3);
 
             Invite dg_invitation = new Invite(c, h1, dg);
             invites.save(dg_invitation);

@@ -50,6 +50,18 @@ class InviteService {
         }).then(res => res.json());
     }
 
+    acceptInvite(invite_id, client_id, invclient_id, home_id) {
+        return fetch(baseURL + INVITE_REST_API_URL, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                authorization: auth.token(),
+            },
+            body: JSON.stringify({id: invite_id, client: {id: client_id}, home: {id: home_id}, invclient: {id: invclient_id}}),
+        }).then(res => res.json());
+    }
+
 }
 
 export default new InviteService();

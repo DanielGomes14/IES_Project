@@ -51,7 +51,7 @@ class Invites extends React.Component{
           {
             this.state.invites.map((invite) => (
                 <Col key={invite.id} lg="3" style={{textAlign: "center"}}>
-                  <UserDetails user={invite.inv_user} />
+                  <UserDetails client={invite.invclient} />
                   <Button outline={true} theme="danger" className="mx-2" value={invite.id} onClick={this.removeInvite}>
                     Remove Invite
                   </Button>

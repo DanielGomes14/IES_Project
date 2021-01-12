@@ -23,12 +23,19 @@ class MyInvites extends React.Component{
     });
   }
 
-  removeInvite = ev => {
-    InviteService.deleteHomeInvite(ev.currentTarget.value).then(data => { 
-      this.setState({ invites: data });
-    }).catch(error => {
-      console.log(error) ;
-    });
+  acceptInvite = ev => {
+    let id = ev.currentTarget.value;
+    for (let i=0; i<this.state.invites.length;i++) {
+      if (this.state.invites[i].id == id) {
+        let invite = this.state.invites[i]
+        InviteService.acceptInvite(id, invite.client.id, invite.invclient.id, invite.home.id).then(data => { 
+          this.setState({ invites: data });
+        }).catch(error => {
+          console.log(error) ;
+        });
+        break;
+      }
+    }
   }
 
   removeInvite = ev => {
@@ -44,22 +51,14 @@ class MyInvites extends React.Component{
     return (
       
       <Container fluid className="main-content-container px-4">
-        <Row noGutters className="page-header py-4">
-          <PageTitle title="Group Settings" subtitle="Overview" md="12" className="ml-sm-auto mr-sm-auto" />
-        </Row>
-
-        <InviteModel />
-
-        <hr></hr>
-
         <h2>Received Invitations</h2>
         <Row>
           {
-            this.state.invites.map((invite) => (
+            this.state.invites && this.state.invites.map((invite) => (
                 <Col key={invite.id} lg="3" style={{textAlign: "center"}}>
                   <h4>House: {invite.home.name}</h4>
-                  <UserDetails user={invite.inv_user} />
-                  <Button outline={true} theme="danger" className="mx-2" value={invite.id} onClick={this.acceptInvite}>
+                  <UserDetails client={invite.invclient} />
+                  <Button outline={true} theme="primary" className="mx-2" value={invite.id} onClick={this.acceptInvite}>
                     Accept Invite
                   </Button>
                   <Button outline={true} theme="danger" className="mx-2" value={invite.id} onClick={this.removeInvite}>

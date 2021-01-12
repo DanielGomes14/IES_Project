@@ -26,16 +26,14 @@ class UserDetails extends React.Component {
 
   constructor(props) {
     super(props);
-    this.user = props.user;
-    console.log(this.user);
-    
+    this.client = props.client;
   }
 
   
 
   render() {
 
-    if(!this.user)
+    if(!this.client)
       return null;
 
     return (
@@ -49,10 +47,10 @@ class UserDetails extends React.Component {
               width="110"
             />
           </div>
-          <h4 className="mb-0">{this.user.client.firstName} {this.user.client.lastName} </h4>
-          <span className="text-muted d-block mb-2">Age: {calculate_age(this.user.client.birth)}</span>
+          <h4 className="mb-0">{this.client.firstName} {this.client.lastName} </h4>
+          <span className="text-muted d-block mb-2">Age: {calculate_age(this.client.birth)}</span>
           <h5><Badge theme="info">
-            {this.user.client.email}
+            {this.client.email}
           </Badge></h5>
         </CardHeader>
       </Card>
