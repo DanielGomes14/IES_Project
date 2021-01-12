@@ -65,6 +65,11 @@ export default function() {
         title: "Group Settings",
         htmlBefore: '<i class="material-icons">group</i>',
         to: "/group-settings",
+      },
+      {
+        title: "Device Logs",
+        htmlBefore: '<i class="material-icons">inventory_2</i>',
+        to: "/device-logs",
       }
     ];
 }

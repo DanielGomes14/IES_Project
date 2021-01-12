@@ -5,27 +5,28 @@ const HOME_REST_API_URL = "homes/"
 
 class HomeService {
 
-    getHomes() {
-        return fetch(baseURL + HOME_REST_API_URL, {
-                method: 'GET',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                    authorization: auth.token(),
-                }
-            })
-            .then(res => res.json());
-    }
-
-    getHomeById(){
-        return fetch(baseURL + HOME_REST_API_URL + current_home.current_home(),{
+    async getHomes() {
+        const res = await fetch(baseURL + HOME_REST_API_URL, {
             method: 'GET',
             mode: 'cors',
             headers: {
                 'Content-Type': 'application/json',
                 authorization: auth.token(),
             }
-        }).then(res=>res.json());
+        });
+        return await res.json();
+    }
+
+    async getHomeById(){
+        const res = await fetch(baseURL + HOME_REST_API_URL + current_home.current_home(), {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                authorization: auth.token(),
+            }
+        });
+        return await res.json();
     }
 
     addHome(client_id, name, address, city, state, zipcode) {
