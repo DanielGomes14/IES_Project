@@ -11,4 +11,5 @@ import java.util.List;
 public interface DeviceRepository extends JpaRepository<Device, Long>{
     
     List<Device> findAllByDivision_id(long id);
+    List<Device> findAllByDivisionIdAndTypeId(long division, long type);
 }
