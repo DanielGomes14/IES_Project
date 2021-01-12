@@ -7,7 +7,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import HomeService from '../../services/HomeService';
+import InviteService from '../../services/InviteService';
 
 import {
   FormTextarea,
@@ -39,7 +39,7 @@ class InviteModel extends React.Component{
   };
 
   inviteClient = () => {
-    HomeService.inviteUser(document.getElementById('emailToInvite').value).then(data => { 
+    InviteService.inviteUser(document.getElementById('emailToInvite').value).then(data => { 
       this.setState({invited: true});
     }).catch(error => {
       console.log(error) ;

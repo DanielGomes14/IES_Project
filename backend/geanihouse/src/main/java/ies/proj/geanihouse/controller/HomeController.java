@@ -165,4 +165,14 @@ public class HomeController {
 
         return ResponseEntity.ok().body(invites);
     }
+
+    @GetMapping("/invites")
+    public ResponseEntity<?> getMyInvites() throws ErrorDetails,ResourceNotFoundException{
+        this.authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Client invited = permissionService.getClient(this.authenticateduser);
+
+        List<Invite> invites = inviteRepository.findAllByInvclient_id(invited.getId());
+        
+        return ResponseEntity.ok().body(invites);
+    }
 }

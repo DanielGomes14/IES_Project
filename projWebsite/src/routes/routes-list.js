@@ -14,6 +14,7 @@ import Tables from "../views/Tables";
 import BlogPosts from "../views/BlogPosts";
 import HouseSettings from "../views/HouseSettings"
 import Invites from "../views/Invites";
+import MyInvites from "../views/MyInvites";
 import Dashboard from "../views/Dashboard";
 import Automation from "../views/Automation";
 import NewDevice from "../views/NewDevice";
@@ -111,6 +112,11 @@ export const privateRoutes = [
     path: "/invitations",
     layout: DefaultLayout,
     component: Invites
+  },
+  {
+    path: "/my-invites",
+    layout: DefaultLayout,
+    component: MyInvites
   },
   {    
     path: "/newdevice",

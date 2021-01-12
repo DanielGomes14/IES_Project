@@ -50,7 +50,7 @@ export default class UserActions extends React.Component {
           <DropdownItem tag={Link} to="account">
             <i className="material-icons">&#xE7FD;</i> Profile
           </DropdownItem>
-          <DropdownItem tag={Link} to="invites">
+          <DropdownItem tag={Link} to="my-invites">
             <i className="material-icons">person_add</i> Invites
           </DropdownItem>
           <DropdownItem divider />
