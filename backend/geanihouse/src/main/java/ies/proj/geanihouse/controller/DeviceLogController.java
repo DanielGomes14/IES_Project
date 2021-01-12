@@ -23,7 +23,7 @@ public class DeviceLogController {
     private DeviceLogRepository deviceLogRepository;
     @Autowired
     private HomeRepository homeRepository;
-    @GetMapping("/{id}/sensorlog/")
+    @GetMapping("/sensorlog/{id}")
     public ResponseEntity<?> getHouseDeviceLog(@PathVariable(value = "id") long id) throws ResourceNotFoundException {
         Home h = homeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Could not found home with id" + id));
         List<DeviceLog> data = deviceLogRepository.findAllByDevice_Division_Home_Id(id);
