@@ -76,6 +76,7 @@ public class DivisionController {
         if(! permissionService.checkClientDivision(division,this.authenticateduser)){
             // Forbidden!
             response.put("deleted",Boolean.FALSE);
+            return response;
         }
         divisionRepository.delete(division);
         response.put("deleted",Boolean.TRUE);

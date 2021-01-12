@@ -88,6 +88,7 @@ public class HomeController {
         if(! permissionService.checkClientHome(home,this.authenticateduser)){
             // Forbidden!
             response.put("deleted",Boolean.FALSE);
+            return response;
         }
         LOG.debug("deleting house: "+ home);
         homeRepository.delete(home);

@@ -5,6 +5,7 @@ import ies.proj.geanihouse.model.Client;
 import ies.proj.geanihouse.model.User;
 import ies.proj.geanihouse.repository.ClientRepository;
 import ies.proj.geanihouse.repository.UserRepository;
+import ies.proj.geanihouse.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,8 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private ClientRepository clientRepository;
-
+    @Autowired
+    private PermissionService permissionService;
 
     @GetMapping("/users")
     public  List<User>  getAllUsers(){

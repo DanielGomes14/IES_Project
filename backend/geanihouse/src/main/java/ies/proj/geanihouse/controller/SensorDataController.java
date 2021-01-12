@@ -7,9 +7,12 @@ import ies.proj.geanihouse.model.SensorData;
 import ies.proj.geanihouse.repository.DivisionRepository;
 import ies.proj.geanihouse.repository.SensorDataRepository;
 import ies.proj.geanihouse.repository.SensorRepository;
+import ies.proj.geanihouse.service.PermissionService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +31,19 @@ public class SensorDataController {
     private DivisionRepository divisionRepository;
     @Autowired
     private SensorRepository sensorRepository;
+    @Autowired
+    private PermissionService permissionService;
+
+
     //Division id! All sensordata in a division
     @GetMapping("divisions/{id}/sensordata/")
     public ResponseEntity<?>  getDivisionSensorData(@PathVariable(value = "id") long id) throws ResourceNotFoundException {
         Division d =this.divisionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Could not find home with id :: "+ id));
+        UserDetails authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!this.permissionService.checkClientDivision(d,authenticateduser)){
+            return ResponseEntity.status(403).body("Cannot get Data from Sensors you don't have access");
+        }
         List<SensorData> data = sensorDataRepository.findAllBySensor_Division_Id(id);
         for(SensorData sd: data) LOG.info(sd);
         return ResponseEntity.ok().body(data);
@@ -44,6 +55,11 @@ public class SensorDataController {
             throws Throwable {
         Sensor s = sensorRepository.findById(sensorid)
                 .orElseThrow( () -> new ResourceNotFoundException("Could not find Sensor with id :: " + sensorid));
+
+        UserDetails authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!this.permissionService.checkClientDivision(s.getDivision(),authenticateduser)){
+            return ResponseEntity.status(403).body("Cannot get Data from Sensors you don't have access");
+        }
         if(latest!=null && latest){
                 List<SensorData> sensorData = sensorDataRepository.findFirstBySensor_IdOrderByTimestampDateDesc(sensorid);
                 sensorData.forEach(sa -> LOG.debug(sa.getTimestampDate()));
@@ -59,9 +75,15 @@ public class SensorDataController {
     public Map<String,Boolean> removeSensorData(@PathVariable(value = "id") long id ) throws  ResourceNotFoundException{
         SensorData sensorData = this.sensorDataRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Could not found sensor' data  with id :: "+ id));
+        UserDetails authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Map<String,Boolean> response = new HashMap<>();
+        if(! permissionService.checkClientDivision(sensorData.getSensor().getDivision(),authenticateduser)){
+            // Forbidden!
+            response.put("deleted",Boolean.FALSE);
+            return response;
+        }
         LOG.debug("Deleting sensorData "+ sensorData);
         sensorDataRepository.delete(sensorData);
-        Map<String,Boolean> response = new HashMap<String,Boolean>();
         response.put("deleted",Boolean.TRUE);
         return  response;
     }

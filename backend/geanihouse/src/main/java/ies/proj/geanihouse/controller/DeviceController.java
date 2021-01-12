@@ -57,10 +57,10 @@ public class DeviceController {
         Division division = this.divisionRepository.findById(id).
                 orElseThrow( () -> new ResourceNotFoundException("Could not find division with id" + id));
         this.authenticateduser= (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        //this.permissionService.checkClientDivision(division)
+        if(!this.permissionService.checkClientDivision(division,this.authenticateduser)){
+           return  ResponseEntity.status(403).body("Cannot get Devices from a House you Dont Belong!");
+        }
         Set <Device> devices = division.getDevices();
-
-        System.out.println(devices);
 
         return ResponseEntity.ok().body(devices);
     }
@@ -69,6 +69,11 @@ public class DeviceController {
     public ResponseEntity<?> addDeviceToDivision(@Valid @RequestBody Device device) throws ResourceNotFoundException {
         Division d = divisionRepository.findById(device.getDivision().getId())
         .orElseThrow(() -> new ResourceNotFoundException("Could not find division "));
+
+        this.authenticateduser= (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!this.permissionService.checkClientDivision(d,this.authenticateduser)){
+            return  ResponseEntity.status(403).body("Cannot add Devices to a House you Dont Belong!");
+        }
 
         Type t = typeRepository.findById(device.getType().getId()).
         orElseThrow(() -> new ResourceNotFoundException("Could not find Type of Sensor "));
@@ -92,7 +97,11 @@ public class DeviceController {
     @PutMapping("/devices")
     public ResponseEntity<?> updateDevice(@Valid @RequestBody Device device) throws ResourceNotFoundException {
         Device n = deviceRepository.findById(device.getId()).
-        orElseThrow(() -> new ResourceNotFoundException("Could not find Type of Sensor "));;
+        orElseThrow(() -> new ResourceNotFoundException("Could not find Type of Sensor "));
+        this.authenticateduser= (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!this.permissionService.checkClientDivision(n.getDivision(),this.authenticateduser)){
+            ResponseEntity.status(403).body("Cannot update a Device from a House you Dont Belong!");
+        }
         n.setState(device.getState());
         deviceRepository.save(n);
         return  ResponseEntity.ok().body("Successfully added new Device");
@@ -103,9 +112,15 @@ public class DeviceController {
     public Map<String,Boolean> deleteDevice(@PathVariable(value = "id") Long deviceId) throws ResourceNotFoundException {
         Device device = deviceRepository.findById(deviceId)
                 .orElseThrow( () -> new ResourceNotFoundException("Division not found for this id :: " + deviceId));
-        LOG.debug("Deleteting device " + device);
-        deviceRepository.delete(device);
         Map<String,Boolean> response = new HashMap<>();
+        if(! permissionService.checkClientDivision(device.getDivision(),this.authenticateduser)){
+            // Forbidden!
+            response.put("deleted",Boolean.FALSE);
+            return response;
+        }
+        LOG.info("Deleting device " + device);
+        deviceRepository.delete(device);
+
         response.put("deleted",Boolean.TRUE);
         return response;
     }
