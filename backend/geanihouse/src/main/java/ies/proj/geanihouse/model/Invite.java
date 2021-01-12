@@ -22,8 +22,8 @@ public class Invite{
     private Client client;
 
     @OneToOne()
-    @JoinColumn(name="invited_client_id", nullable = false)
-    private Client inv_client;
+    @JoinColumn(name="invclient_id", nullable = false)
+    private Client invclient;
 
     @OneToOne()
     @JoinColumn(name="home_id", nullable = false)
@@ -32,9 +32,9 @@ public class Invite{
     public Invite() {
     }        
 
-    public Invite(Client client, Home home, Client inv_client) {
+    public Invite(Client client, Home home, Client invclient) {
         this.client = client;
-        this.inv_client = inv_client;
+        this.invclient = invclient;
         this.home = home;
     }
 

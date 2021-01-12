@@ -58,6 +58,17 @@ class HomeService {
             }
         }).then(res => res.json());
     }
+
+    inviteUser(email) {
+        return fetch(baseURL + HOME_REST_API_URL + current_home.current_home() + '/invites', {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                authorization: auth.token(),
+            },
+            body: email,
+        }).then(res => res.json());
+    }
     
     deleteHomeInvite(inv_id){
         return fetch(baseURL + HOME_REST_API_URL + current_home.current_home() + '/invites/' + inv_id,{

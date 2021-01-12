@@ -8,6 +8,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import HomeService from '../../services/HomeService';
+
 import {
   FormTextarea,
   Button
@@ -18,10 +19,12 @@ class InviteModel extends React.Component{
   constructor() {
     super();
 		this.state = { 
+      invited: false,
       open_modal: false,
       fullWidth: true,
       maxWidth: 'md',
     };
+    this.inviteClient = this.inviteClient.bind(this);
   }
   
   componentDidMount() {
@@ -34,8 +37,18 @@ class InviteModel extends React.Component{
   handleClose = () => {
     this.setState({open_modal: false});
   };
+
+  inviteClient = () => {
+    HomeService.inviteUser(document.getElementById('emailToInvite').value).then(data => { 
+      this.setState({invited: true});
+    }).catch(error => {
+      console.log(error) ;
+    });
+  }
   
   render() {
+    if (this.state.invited === true)
+      return window.location.reload();
 
     return (
       <React.Fragment>
@@ -57,13 +70,13 @@ class InviteModel extends React.Component{
             </DialogContentText>
 
             <FormGroup>
-              <FormTextarea placeholder="email@example.com" />
+              <FormTextarea placeholder="email@example.com" id="emailToInvite"/>
             </FormGroup>
             <hr></hr>
 
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleClose} theme="primary" className="mx-2" >
+            <Button onClick={this.inviteClient} theme="primary" className="mx-2" >
               Invite
             </Button>
             <Button onClick={this.handleClose} outline={true} theme="danger" className="mx-2" >

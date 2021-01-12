@@ -7,11 +7,8 @@ import ies.proj.geanihouse.model.Home;
 import ies.proj.geanihouse.model.User;
 import ies.proj.geanihouse.repository.ClientRepository;
 import ies.proj.geanihouse.repository.HomeRepository;
-<<<<<<< HEAD
 import ies.proj.geanihouse.repository.InviteRepository;
-=======
 import ies.proj.geanihouse.service.PermissionService;
->>>>>>> d6050d8ab29d8e15d7c3b2a4e184e5dbb169b603
 import org.apache.juli.logging.Log;
 
 import java.util.HashMap;
@@ -25,6 +22,7 @@ import ies.proj.geanihouse.repository.UserRepository;
 
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -73,8 +71,6 @@ public class HomeController {
 
         return ResponseEntity.ok().body(home);
     }
-
-    
     
     @PostMapping("/newhouse")
     public  ResponseEntity<?> addnewHome(@Valid @RequestBody Home home) throws  ResourceNotFoundException{
@@ -106,34 +102,58 @@ public class HomeController {
         return response;
     }
     
-    // TODO: check user permission
     @GetMapping("/homes/{id}/invites")
     public ResponseEntity<?> getHomeInvites(@PathVariable(value="id") Long id) throws ErrorDetails,ResourceNotFoundException{
         Home home = homeRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("House not found for this id :: " + id));
         List<Invite> invites = inviteRepository.findAllByHome_id(id);
+
+        this.authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (! permissionService.checkClientHome(home, this.authenticateduser)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
         
         return ResponseEntity.ok().body(invites);
     }
 
-    // TODO: check user permission
     @PostMapping("/homes/{id}/invites")
-    public ResponseEntity<?> addnewHome(@PathVariable(value = "id") Long homeID, @Valid @RequestBody String email) throws  ResourceNotFoundException{
+    public ResponseEntity<?> invite(@PathVariable(value = "id") Long homeID, @Valid @RequestBody String email) throws  ResourceNotFoundException{
         Home home = homeRepository.findById(homeID).orElseThrow( () -> new ResourceNotFoundException("House not found for this id :: " + homeID));
-        Client client = clientRepository.findByEmail(email).orElseThrow( () -> new ResourceNotFoundException("No Client Found with that Email"));
+        Client invite_client = clientRepository.findByEmail(email);
 
-        Invite new_inv = new Invite();
+        if (invite_client == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        this.authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Client inviter = permissionService.getClient(this.authenticateduser);
+
+        if (! permissionService.checkClientHome(home, this.authenticateduser)){
+            List<Invite> invites = inviteRepository.findAllByHome_id(homeID);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        
+        List<Invite> check_invites = inviteRepository.findAllByInvclient_id(invite_client.getId());
+        if (check_invites.size() > 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Already invited this user");
+        }
+
+        Invite new_inv = new Invite(inviter, home, invite_client);
         inviteRepository.save(new_inv);
 
         List<Invite> invites = inviteRepository.findAllByHome_id(homeID);
-        
+
         return ResponseEntity.ok().body(invites);
     }
 
-    // TODO: check user permission
     @DeleteMapping("/homes/{id}/invites/{inv_id}")
     public ResponseEntity<?> deleteHomeInvites(@PathVariable(value = "id") Long homeID, @PathVariable(value = "inv_id") Long inviteID )
         throws ResourceNotFoundException {
         Home home = homeRepository.findById(homeID).orElseThrow( () -> new ResourceNotFoundException("House not found for this id :: " + homeID));
+        
+        this.authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (! permissionService.checkClientHome(home, this.authenticateduser)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
 
         Optional<Invite> invite = inviteRepository.findById(inviteID);
 
