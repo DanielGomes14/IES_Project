@@ -64,7 +64,16 @@ export default function() {
       {
         title: "Invitations",
         htmlBefore: '<i class="material-icons">group</i>',
+<<<<<<< HEAD
         to: "/invitations",
+=======
+        to: "/group-settings",
+      },
+      {
+        title: "Device Logs",
+        htmlBefore: '<i class="material-icons">inventory_2</i>',
+        to: "/device-logs",
+>>>>>>> 583f4ab979123f35668b64c424904ea0970f0d89
       }
     ];
 }

@@ -1,9 +1,9 @@
 package ies.proj.geanihouse.controller;
 import ies.proj.geanihouse.exception.ResourceNotFoundException;
-import ies.proj.geanihouse.model.Division;
-import ies.proj.geanihouse.model.Device;
+import ies.proj.geanihouse.model.*;
 import ies.proj.geanihouse.repository.DeviceRepository;
 import ies.proj.geanihouse.repository.DivisionRepository;
+import ies.proj.geanihouse.repository.NotificationRepository;
 import ies.proj.geanihouse.service.PermissionService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,12 +20,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.integration.support.MessageBuilder;
-import ies.proj.geanihouse.model.MQMessage;
-import ies.proj.geanihouse.model.Type;
 import ies.proj.geanihouse.repository.TypeRepository;
 
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -45,6 +44,10 @@ public class DeviceController {
     private TypeRepository typeRepository;
 
     @Autowired
+    private NotificationRepository notificationRepository;
+
+
+    @Autowired
     Source source;
 
     @Autowired
@@ -52,8 +55,8 @@ public class DeviceController {
 
     private UserDetails authenticateduser;
 
-    @GetMapping("/{id}/devices/")
-    public ResponseEntity<?> getAllDivisionDevices(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
+    @GetMapping("/{divison_id}/devices")
+    public ResponseEntity<?> getAllDivisionDevices(@PathVariable(value = "divison_id") Long id) throws ResourceNotFoundException {
         Division division = this.divisionRepository.findById(id).
                 orElseThrow( () -> new ResourceNotFoundException("Could not find division with id" + id));
         this.authenticateduser= (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -65,7 +68,7 @@ public class DeviceController {
         return ResponseEntity.ok().body(devices);
     }
 
-    @PostMapping("/newdevices")
+    @PostMapping("/devices")
     public ResponseEntity<?> addDeviceToDivision(@Valid @RequestBody Device device) throws ResourceNotFoundException {
         Division d = divisionRepository.findById(device.getDivision().getId())
         .orElseThrow(() -> new ResourceNotFoundException("Could not find division "));
@@ -91,19 +94,28 @@ public class DeviceController {
             
         }
         
-        return  ResponseEntity.ok().body("Successfully added new Device");
+        return  ResponseEntity.ok().body("Successfully updated  Device");
     }
 
     @PutMapping("/devices")
     public ResponseEntity<?> updateDevice(@Valid @RequestBody Device device) throws ResourceNotFoundException {
-        Device n = deviceRepository.findById(device.getId()).
+        Device d = deviceRepository.findById(device.getId()).
         orElseThrow(() -> new ResourceNotFoundException("Could not find Type of Sensor "));
         this.authenticateduser= (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(!this.permissionService.checkClientDivision(n.getDivision(),this.authenticateduser)){
+        if(!this.permissionService.checkClientDivision(d.getDivision(),this.authenticateduser)){
             ResponseEntity.status(403).body("Cannot update a Device from a House you Dont Belong!");
         }
-        n.setState(device.getState());
-        deviceRepository.save(n);
+        d.setState(device.getState());
+
+        String state = d.getState()==0? " Off" : " On";
+        //create notification
+        Notification notf = new Notification(0,"Device State Update",
+                "Device " + d.getName() + "is now " + state,
+                new Timestamp(System.currentTimeMillis()),
+                d.getDivision().getHome()
+        );
+        notificationRepository.save(notf);
+        deviceRepository.save(d);
         return  ResponseEntity.ok().body("Successfully added new Device");
     }
 

@@ -36,7 +36,7 @@ public class NotificationController {
     private PermissionService permissionService;
 
     private  UserDetails authenticateduser;
-    @GetMapping("/{id}/notifications/")
+    @GetMapping("/{id}/notifications")
     public ResponseEntity<?> getAllHomeNotifications(@PathVariable(value = "id") Long id,
                         @RequestParam(required = false, defaultValue = "false") Boolean all) throws ResourceNotFoundException {
         Home h = this.homeRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Could not find home with id" + id));
