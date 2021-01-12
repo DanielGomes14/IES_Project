@@ -2,19 +2,20 @@ import baseURL from "../data/base-url";
 import { auth, current_home, current_user } from '../utils/auth';
 class LocalStorageService {
 
-    get_user(username) {
-        return fetch(baseURL + 'user/' + username, {
+    async get_user(username) {
+        const res = await fetch(baseURL + 'user/' + username, {
             method: 'GET',
             mode: 'cors',
             headers: {
                 'Content-Type': 'application/json',
                 authorization: auth.token()
             }
-        }).then(res=>res.json());
+        });
+        return await res.json();
     }
 
-    get_first_home(){
-        return fetch(baseURL +'homes', {
+    async get_first_home(){
+        const res = await fetch(baseURL + 'homes', {
             method: 'GET',
             mode: 'cors',
             headers: {
@@ -22,7 +23,11 @@ class LocalStorageService {
                 authorization: auth.token()
             }
         })
-        .then(res => res.json()).then(json => json[Object.keys(json)[0]]["id"])
+        .then(res => res.json()).then(json => {
+            if (Object.keys(json).length > 0) {
+                current_home.change_home(json[Object.keys(json)[0]]["id"]);
+            }
+        })
     }
 
 }

@@ -19,20 +19,18 @@ class DefaultLayout extends React.Component {
     this.noFooter = props.noFooter;
     
 		this.state = {
-			current_home: current_home.current_home(),
+      current_home: current_home.current_home(),
+      refresh: false,
 		}
   }
 
   componentDidMount() {
-    LocalStorageService.get_first_home()
-    .then(data=> {
-      this.setState({ current_home: data });
-    });
-
+    LocalStorageService.get_first_home();
+    this.setState({ current_home:  current_home.current_home(), refresh:true });
   }
   
 	render() {
-		if (this.state.current_home == null){
+		if (this.state.refresh == false){
       return (
         <Container fluid>
           <Row>

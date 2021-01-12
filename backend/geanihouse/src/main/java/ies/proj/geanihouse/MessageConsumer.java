@@ -52,6 +52,7 @@ public class MessageConsumer {
 
     @StreamListener(Sink.INPUT)
     public void log(ReceivedSensingData msg) throws ResourceNotFoundException,ErrorDetails {
+        LOG.info("received data: "+ msg);
 
         if (msg.getMethod().equals("SENSORDATA")){
             long sensor_id = msg.getId();
@@ -150,6 +151,9 @@ public class MessageConsumer {
             System.out.println("No config");
             return;
         }
+
+        System.out.println(dc);
+
         double midValue = (dc.getMaxValue()+dc.getMinValue()) / 2;
         
 

@@ -36,8 +36,8 @@ public class SensorDataController {
 
 
     //Division id! All sensordata in a division
-    @GetMapping("divisions/{id}/sensordata/")
-    public ResponseEntity<?>  getDivisionSensorData(@PathVariable(value = "id") long id) throws ResourceNotFoundException {
+    @GetMapping("divisions/{division_id}/sensordata")
+    public ResponseEntity<?>  getDivisionSensorData(@PathVariable(value = "division_id") long id) throws ResourceNotFoundException {
         Division d =this.divisionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Could not find home with id :: "+ id));
         UserDetails authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -49,9 +49,9 @@ public class SensorDataController {
         return ResponseEntity.ok().body(data);
     }
     //get sensor data of a specific sensor
-    @GetMapping("/sensors/{id}/sensordata/")
+    @GetMapping("/sensors/{sensor_id}/sensordata")
     public ResponseEntity<?> getSensorData(
-            @PathVariable(value = "id") long sensorid, @RequestParam(required = false,defaultValue = "false") Boolean latest)
+            @PathVariable(value = "sensor_id") long sensorid, @RequestParam(required = false,defaultValue = "false") Boolean latest)
             throws Throwable {
         Sensor s = sensorRepository.findById(sensorid)
                 .orElseThrow( () -> new ResourceNotFoundException("Could not find Sensor with id :: " + sensorid));

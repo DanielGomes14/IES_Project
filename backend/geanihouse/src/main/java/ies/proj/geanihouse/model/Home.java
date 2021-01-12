@@ -53,7 +53,7 @@ public class Home{
                     @JoinColumn(name = "client_id", referencedColumnName = "id",
                             nullable = false, updatable = false)})
     @JsonIgnoreProperties("homes")
-    private Set<Client> clients = new HashSet<>();
+    private Set<Client> clients = new HashSet<Client>();
 
     public Home(){
 

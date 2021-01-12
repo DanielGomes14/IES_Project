@@ -45,8 +45,8 @@ public class SensorController implements  java.io.Serializable {
     private PermissionService permissionService;
     private  UserDetails authenticateduser;
 
-    @GetMapping("/{id}/sensors/")
-    public ResponseEntity<?> getAllDivisionSensors(@PathVariable(value = "id") Long id) throws ResourceNotFoundException {
+    @GetMapping("/{division_id}/sensors")
+    public ResponseEntity<?> getAllDivisionSensors(@PathVariable(value = "division_id") Long id) throws ResourceNotFoundException {
         Division division = this.divisionRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("Could not find division with id" + id));
         this.authenticateduser =(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(!this.permissionService.checkClientDivision(division,this.authenticateduser)){
@@ -56,7 +56,7 @@ public class SensorController implements  java.io.Serializable {
         return ResponseEntity.ok().body(sensors);
     }
 
-    @PostMapping("/newsensor")
+    @PostMapping("/sensors")
     public ResponseEntity<?> addSensorToDivision(@Valid @RequestBody Sensor sensor) throws ResourceNotFoundException,ErrorDetails {
         Division d = divisionRepository.findById(sensor.getDivision().getId())
                      .orElseThrow(() -> new ResourceNotFoundException("Could not find division "));
