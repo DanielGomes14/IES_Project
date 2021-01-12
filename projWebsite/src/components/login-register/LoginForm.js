@@ -52,7 +52,11 @@ class LoginForm extends React.Component {
 					auth.login(token)
 					
 					LocalStorageService.get_user(this.state.username).then(data=>current_user.login(data));
-					LocalStorageService.get_first_home().then(data=>current_home.change_home(data));
+					LocalStorageService.get_first_home().then(data=>{
+						if (data!=0)
+							current_home.change_home(data);
+						}
+					);
 					
 					this.setState({loggedIn: true});
 				} else if (response.status == "400") {

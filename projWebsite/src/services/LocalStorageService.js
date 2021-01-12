@@ -22,7 +22,13 @@ class LocalStorageService {
                 authorization: auth.token()
             }
         })
-        .then(res => res.json()).then(json => json[Object.keys(json)[0]]["id"])
+        .then(res => res.json()).then(json => {
+            if (Object.keys(json).length > 0) {
+                return json[Object.keys(json)[0]]["id"];
+            } else {
+                return 0;
+            }
+        })
     }
 
 }

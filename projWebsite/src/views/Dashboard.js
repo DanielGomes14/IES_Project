@@ -11,7 +11,7 @@ class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			loading: 0,
+			loading: 1,
 			divisions: [],
 		}
   	}
@@ -21,15 +21,16 @@ class Dashboard extends React.Component {
 
 		DivisionService.getDivisions(current_home.current_home())
 			.then(data => {
-				console.log(data)
-				this.setState({ 
-					divisions: data,
-				});
+				if (data != undefined)
+					this.setState({ divisions: data	});
+				else
+					this.setState({ loading: 2 });
+				return data;
 			}).then( data => {
 				if (this.state.divisions.length == 0){
 					this.setState({ loading: 2 });
 				} else{
-					this.setState({ loading: 0 });
+					this.setState({ loading: 1 });
 				}
 			})
 			.catch(error => {

@@ -57,7 +57,8 @@ public class HomeController {
         LOG.info("GET Request to /homes ");
         User user = userRepository.findByUsername(this.authenticateduser.getUsername());
         Client c = user.getClient();
-        List <Home> userhomes = homeRepository.findAllByClients_id(c.getId());
+        List<Home> userhomes = homeRepository.findAllByClients_id(c.getId());
+
         return ResponseEntity.ok().body(userhomes);
     }
 
