@@ -164,11 +164,13 @@ public class MessageConsumer {
             List<Device> devices = deviceRepository.findAllByDivisionIdAndTypeId(sensor.getDivision().getId(),sensor.getType().getId());
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             for(Device d: devices){
-                d.setState(midValue);
-                deviceRepository.save(d);
-                DeviceLog log = new DeviceLog(d,timestamp,midValue);
-                deviceLogRepository.save(log);
-                System.out.println("changing state");
+                if(d.getState()!=midValue){
+                    d.setState(midValue);
+                    deviceRepository.save(d);
+                    DeviceLog log = new DeviceLog(d,timestamp,midValue);
+                    deviceLogRepository.save(log);
+                    System.out.println("changing state");
+                }
             }
 
         }

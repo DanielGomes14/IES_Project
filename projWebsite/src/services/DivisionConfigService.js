@@ -19,7 +19,7 @@ class DivisionConfigService {
 
     addConfiguration(divisionId, typeName, minValue, maxValue) {
         alert(divisionId + ", " + typeName + ", " + minValue + ", " + maxValue)
-        return fetch(baseURL + "divisions/configuration", {
+        return fetch(baseURL + "divisions/configurations", {
             method: 'POST',
             mode: 'cors',
             headers: {
