@@ -20,7 +20,8 @@ class LoadDatabase {
     CommandLineRunner initDatabase(UserRepository users,ClientRepository clients, HomeRepository homes,
                        DivisionRepository divisions, TypeRepository types, DeviceRepository devices,
                        NotificationRepository notifications, SensorRepository sensors,
-                       SensorDataRepository sensordata, DivisionConfRepository divisionconfs) {
+                       SensorDataRepository sensordata, DivisionConfRepository divisionconfs,
+                       InviteRepository invites, DeviceLogRepository devicelogs) {
 
         return args -> {
 
@@ -37,7 +38,9 @@ class LoadDatabase {
             h1.getClients().addAll(Arrays.asList(c,c1));
             homes.save(h1);
             Home h2 = new Home(2,clients.findByEmail("mongo@gmail.com"),"Casa do Lionel","ali","ok","adeus","zip");
+            h2.getClients().addAll(Arrays.asList(c1));
             homes.save(h2);
+            
 
             Type temperature = new Type(1,"Temperature");
             Type humidity = new Type(2,"Humidity");
@@ -48,19 +51,23 @@ class LoadDatabase {
             types.save(luminosity);
             types.save(eletronic);
 
-            Division division = new Division(1,"sala",h1);
-            divisions.save(division);
-            divisions.save(new Division(2,"WC",h1));
+            Division division1 = new Division(1,"sala",h1);
+            Division division2 = new Division(2,"WC",h1);
+            divisions.save(division1);
+            divisions.save(division2);
             
             //Sensor sensor = new Sensor(1, division, temperature);
             //sensors.save(sensor);
 
-            Device light_bulb = new Device(1, "Lampada", 0.0, eletronic, division);
-            Device coffe_machine = new Device(2, "Máquina de Café", 0.0, eletronic, division);
-            Device air_cond = new Device(3,"Ar Condicionado",0.0,temperature,division);
+            Device light_bulb = new Device(1, "Lampada", 0.0, eletronic, division1);
+            Device coffe_machine = new Device(2, "Máquina de Café", 0.0, eletronic, division1);
+            Device air_cond = new Device(3,"Ar Condicionado",0.0,temperature,division1);
+            Device desumidificador = new Device(3,"Desumidificador",0.0,humidity,division2);
+
             devices.save(light_bulb);
             devices.save(coffe_machine);
             devices.save(air_cond);
+            devices.save(desumidificador);
 
             //SensorData init_data = new SensorData(1, sensor, Timestamp.valueOf("2007-09-23 10:10:10.0"), 25.0);
             //sensordata.save(init_data);
@@ -81,8 +88,34 @@ class LoadDatabase {
             notifications.save(fire_alarm);
 
 
-            DivisionConf dc = new DivisionConf(1,division,temperature,25,35);
+            DivisionConf dc = new DivisionConf(1,division1,temperature,25,35);
             divisionconfs.save(dc);
+
+            DeviceLog log1 = new DeviceLog(1, light_bulb, Timestamp.valueOf("2020-09-23 10:10:10.0"), 0);
+            DeviceLog log2 = new DeviceLog(2, light_bulb, Timestamp.valueOf("2020-09-23 11:10:10.0"), 1);
+            DeviceLog log3 = new DeviceLog(3, air_cond, Timestamp.valueOf("2020-09-23 10:10:10.0"), 20);
+            DeviceLog log4 = new DeviceLog(4, air_cond, Timestamp.valueOf("2020-09-23 11:10:10.0"), 0);
+            DeviceLog log5 = new DeviceLog(5, coffe_machine, Timestamp.valueOf("2020-09-23 10:10:10.0"), 1);
+            DeviceLog log6 = new DeviceLog(6, desumidificador, Timestamp.valueOf("2020-09-23 10:10:10.0"), 40);
+            devicelogs.save(log1);
+            devicelogs.save(log2);
+            devicelogs.save(log3);
+            devicelogs.save(log4);
+            devicelogs.save(log5);
+            devicelogs.save(log6);
+
+
+            User user3 = new User(3,"dgomes", encoder.encode("randomquerty"),"Admin");
+            users.save(user3);
+            Client dg = new Client(3,"Daniel","Gomes","dgomes@ua.pt","Male",user3);
+            clients.save(dg);
+
+            Home h3 = new Home(3,clients.findByEmail("dgomes@ua.pt"),"Casa do Dgomes","UA","tudo","DETI","Autocarro");
+            h3.getClients().addAll(Arrays.asList(dg));
+            homes.save(h3);
+
+            Invite dg_invitation = new Invite(c, h1, dg);
+            invites.save(dg_invitation);
         };
     }
 }

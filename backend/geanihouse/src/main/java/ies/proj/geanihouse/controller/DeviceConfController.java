@@ -8,10 +8,13 @@ import ies.proj.geanihouse.model.MQMessage;
 import ies.proj.geanihouse.repository.DeviceConfRepository;
 import ies.proj.geanihouse.repository.DeviceRepository;
 import ies.proj.geanihouse.service.DeviceConfigurationService;
+import ies.proj.geanihouse.service.PermissionService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,15 +39,21 @@ public class DeviceConfController {
     @Autowired
     private DeviceConfigurationService deviceConfigurationService;
 
-    @GetMapping("/devices/configurations")
-    public List<DeviceConf> getAllDeviceConfigurations() {
-        return deviceConfRepository.findAll();
-    }
+    @Autowired
+    private PermissionService permissionService;
 
-    @GetMapping("/devices/{id}/configurations")
-    public ResponseEntity<?> getDeviceConfigurations(@PathVariable(value = "id") Long id, @RequestParam(required = false,defaultValue = "false") Boolean latest) throws ResourceNotFoundException{
+    private UserDetails authenticatedUser;
+
+
+
+    @GetMapping("/devices/{device_id}/configurations")
+    public ResponseEntity<?> getDeviceConfigurations(@PathVariable(value = "device_id") Long id, @RequestParam(required = false,defaultValue = "false") Boolean latest) throws ResourceNotFoundException{
         Device device = deviceRepository.findById(id)
                 .orElseThrow( () -> new ResourceNotFoundException("Could not Find Device with id :: " + id));
+        this.authenticatedUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!this.permissionService.checkClientDivision(device.getDivision(), authenticatedUser)){
+            return ResponseEntity.status(403).body("Cannot get Device Configurations of Houses you don't have access!");
+        }
         LOG.info("Returning all configurations from specificDevice");
         List<DeviceConf> deviceConfList = deviceConfRepository.findAllByDevice_Id(device.getId());
         return  ResponseEntity.ok().body(deviceConfList);
@@ -54,7 +63,11 @@ public class DeviceConfController {
     @PostMapping("/devices/configurations")
     public ResponseEntity<?> addNewConfiguration(@Valid @RequestBody DeviceConf deviceConf) throws ResourceNotFoundException,ErrorDetails {
         Device device = deviceRepository.findById(deviceConf.getDevice().getId())
-                .orElseThrow( () -> new ResourceNotFoundException("Could not find Device with id :: " + deviceConf.getDevice().getId() ));
+            .orElseThrow( () -> new ResourceNotFoundException("Could not find Device with id :: " + deviceConf.getDevice().getId() ));
+        this.authenticatedUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!this.permissionService.checkClientDivision(device.getDivision(), authenticatedUser)){
+            return ResponseEntity.status(403).body("Cannot add Device Configurations to Devices you don't have access!");
+        }
         Timestamp begindate = deviceConf.getTimeBegin();
         Timestamp enddate = deviceConf.getTimeEnd();
         if (!checkDates(deviceConf,begindate,enddate))  throw  new ErrorDetails("Invalid Scheduled Hours!");
@@ -82,6 +95,10 @@ public class DeviceConfController {
     @PutMapping("/devices/configurations/{id}")
     public ResponseEntity<?> editConfiguration(@PathVariable(value = "id") Long id,@Valid @RequestBody DeviceConf deviceConf) throws ResourceNotFoundException,ErrorDetails {
         DeviceConf saveddeviceConf = deviceConfRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Could not Found Configuration with id :: " + id));
+        this.authenticatedUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!this.permissionService.checkClientDivision(saveddeviceConf.getDevice().getDivision(), authenticatedUser)){
+            return ResponseEntity.status(403).body("Cannot get Device Configurations of Houses you don't have access!");
+        }
         Timestamp begindate = deviceConf.getTimeBegin();
         Timestamp enddate = deviceConf.getTimeEnd();
         saveddeviceConf.setTimeBegin(begindate);
@@ -90,8 +107,6 @@ public class DeviceConfController {
         
         if (!checkDates(deviceConf,begindate,enddate))  throw  new ErrorDetails("Invalid Scheduled Hours!");
         final DeviceConf updatedConf = deviceConfRepository.save(saveddeviceConf);
-        
-
 
         if(!updatedConf.getDevice().getType().equals("Eletronic")){
             Device device =updatedConf.getDevice();
@@ -113,9 +128,16 @@ public class DeviceConfController {
     @DeleteMapping("/devices/configurations/{id}")
     public Map<String,Boolean> removeConfiguration(@PathVariable(value = "id") Long id) throws ResourceNotFoundException{
         DeviceConf deviceConf = deviceConfRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Could not Found Configuration with id :: " + id));
+        this.authenticatedUser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Map<String,Boolean> response = new HashMap<>();
+        if(! permissionService.checkClientDivision(deviceConf.getDevice().getDivision(),this.authenticatedUser)){
+            // Forbidden!
+            response.put("deleted",Boolean.FALSE);
+            return response;
+        }
         LOG.info("Removing new Device Configuration");
         deviceConfigurationService.cancelSchedule(deviceConf);
-        Map<String,Boolean> response = new HashMap<>();
         deviceConfRepository.delete(deviceConf);
         response.put("deleted",Boolean.TRUE);
         return response;

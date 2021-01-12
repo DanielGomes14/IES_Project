@@ -13,7 +13,8 @@ import ComponentsOverview from "../views/ComponentsOverview";
 import Tables from "../views/Tables";
 import BlogPosts from "../views/BlogPosts";
 import HouseSettings from "../views/HouseSettings"
-import GroupSettings from "../views/GroupSettings";
+import Invites from "../views/Invites";
+import MyInvites from "../views/MyInvites";
 import Dashboard from "../views/Dashboard";
 import Automation from "../views/Automation";
 import NewDevice from "../views/NewDevice";
@@ -23,6 +24,7 @@ import Statistics from "../views/Statistics";
 import UserProfile from "../views/UserProfile";
 import NewHouse from "../views/NewHouse";
 import NewSensor from "../views/NewSensor";
+import DeviceLogPage from "../views/DeviceLog";
 
 export const publicRoutes = [
   {
@@ -108,9 +110,14 @@ export const privateRoutes = [
     component: HouseSettings
   },
   {
-    path: "/group-settings",
+    path: "/invitations",
     layout: DefaultLayout,
-    component: GroupSettings
+    component: Invites
+  },
+  {
+    path: "/my-invites",
+    layout: DefaultLayout,
+    component: MyInvites
   },
   {    
     path: "/newdevice",
@@ -131,5 +138,10 @@ export const privateRoutes = [
     path: "/account",
     layout: DefaultLayout,
     component: UserProfile
+  },
+  {
+    path: "/device-logs",
+    layout: DefaultLayout,
+    component: DeviceLogPage
   }
 ];
