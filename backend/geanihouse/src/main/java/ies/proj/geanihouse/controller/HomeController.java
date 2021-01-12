@@ -7,7 +7,11 @@ import ies.proj.geanihouse.model.Home;
 import ies.proj.geanihouse.model.User;
 import ies.proj.geanihouse.repository.ClientRepository;
 import ies.proj.geanihouse.repository.HomeRepository;
+<<<<<<< HEAD
 import ies.proj.geanihouse.repository.InviteRepository;
+=======
+import ies.proj.geanihouse.service.PermissionService;
+>>>>>>> d6050d8ab29d8e15d7c3b2a4e184e5dbb169b603
 import org.apache.juli.logging.Log;
 
 import java.util.HashMap;
@@ -23,6 +27,7 @@ import ies.proj.geanihouse.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -43,37 +48,29 @@ public class HomeController {
     @Autowired
     private ClientRepository clientRepository;
 
+    @Autowired
+    private PermissionService permissionService;
+
+    private UserDetails authenticateduser;
 
     @GetMapping("/homes")
     public ResponseEntity<?> getAllUserHomes() throws ErrorDetails,ResourceNotFoundException{
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        LOG.info(authentication.getName());
-        //ver melhor
+        this.authenticateduser =  (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         LOG.info("GET Request to /homes ");
-        if(!authentication.getName().equals("anonymousUser")) {
-            LOG.debug("User is authenticated");
-            User user = userRepository.findByUsername(authentication.getName());
-            Client c = user.getClient();
-
-            List<Home> homes = homeRepository.findAll();
-
-            for (Home home : homes) {
-                LOG.info("-->" + home.getClients());
-            }
-            System.out.println(homeRepository.findAllByClients_id(c.getId()));
-            //MISSING OR ELSE THROW
-            List <Home> userhomes = homeRepository.findAllByClients_id(c.getId());
-            return ResponseEntity.ok().body(userhomes);
-        }
-        LOG.error("User not authenticated!");
-        throw  new ErrorDetails("User not authenticated!");
+        User user = userRepository.findByUsername(this.authenticateduser.getUsername());
+        Client c = user.getClient();
+        List <Home> userhomes = homeRepository.findAllByClients_id(c.getId());
+        return ResponseEntity.ok().body(userhomes);
     }
 
     @GetMapping("/homes/{id}")
     public ResponseEntity<?> getHomeById(@PathVariable(value="id") Long id) throws ErrorDetails,ResourceNotFoundException{
-        System.out.println("------------------------------------------"+id);
         Home home = homeRepository.findById(id).orElseThrow( () -> new ResourceNotFoundException("House not found for this id :: " + id));
-        System.out.println(home);
+       this.authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+       if (!permissionService.checkClientHome(home,this.authenticateduser)){
+           return ResponseEntity.status(403).body("Can only Access your Homes!");
+       }
+
         return ResponseEntity.ok().body(home);
     }
 
@@ -94,10 +91,17 @@ public class HomeController {
     public Map<String,Boolean> deleteHouse(@PathVariable(value = "id") Long homeId)
     throws ResourceNotFoundException {
         Home home = homeRepository.findById(homeId)
-        .orElseThrow( () -> new ResourceNotFoundException("House not found for this id :: " + homeId));
+                .orElseThrow( () -> new ResourceNotFoundException("House not found for this id :: " + homeId));
+        this.authenticateduser= (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Map<String,Boolean> response = new HashMap<>();
+        if(! permissionService.checkClientHome(home,this.authenticateduser)){
+            // Forbidden!
+            response.put("deleted",Boolean.FALSE);
+            return response;
+        }
         LOG.debug("deleting house: "+ home);
         homeRepository.delete(home);
-        Map<String,Boolean> response = new HashMap<>();
+
         response.put("deleted",Boolean.TRUE);
         return response;
     }
@@ -136,7 +140,7 @@ public class HomeController {
         if (invite.isPresent()) {
             inviteRepository.delete(invite.get());
         }
-        
+
         List<Invite> invites = inviteRepository.findAllByHome_id(homeID);
 
         return ResponseEntity.ok().body(invites);
