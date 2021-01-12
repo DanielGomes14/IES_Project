@@ -68,7 +68,7 @@ public class DeviceController {
         return ResponseEntity.ok().body(devices);
     }
 
-    @PostMapping("/newdevices")
+    @PostMapping("/device")
     public ResponseEntity<?> addDeviceToDivision(@Valid @RequestBody Device device) throws ResourceNotFoundException {
         Division d = divisionRepository.findById(device.getDivision().getId())
         .orElseThrow(() -> new ResourceNotFoundException("Could not find division "));
