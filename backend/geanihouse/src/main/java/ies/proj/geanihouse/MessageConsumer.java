@@ -164,6 +164,7 @@ public class MessageConsumer {
                 deviceRepository.save(d);
                 DeviceLog log = new DeviceLog(d,timestamp,midValue);
                 deviceLogRepository.save(log);
+                System.out.println("changing state");
             }
 
         }
