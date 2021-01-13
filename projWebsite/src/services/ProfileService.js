@@ -17,7 +17,8 @@ class ProfileService {
             .then(res => res.json());
     }
 
-    updateProfile() {
+    updateProfile(firstName,lastName,email,sex,birth) {
+        birth = Date.parse(birth);
         return fetch(baseURL + PROFILE_CONFIG_REST_API_URL , {
             method: 'PUT',
             mode: 'cors',
@@ -25,7 +26,7 @@ class ProfileService {
                 'Content-Type': 'application/json',
                 authorization: auth.token(),
             },
-            body: JSON.stringify({})
+            body: JSON.stringify({firstName: firstName, lastName: lastName, email:email, sex:sex, birth: birth})
         })
     }
 }
