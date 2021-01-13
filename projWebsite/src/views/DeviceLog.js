@@ -19,7 +19,7 @@ class DeviceLogPage extends React.Component {
 	componentDidMount() {
 		this.setState({ loading: 1 });
 
-		DeviceLogService.getDeviceLogs(1) // CHANGE DIS
+		DeviceLogService.getDeviceLogs()
 			.then(data => {
 				this.setState({
 					deviceLogs: this.transformData(data),
@@ -76,19 +76,29 @@ class DeviceLogPage extends React.Component {
 										<thead className="bg-light">
 											<tr>
 												<th scope="col" className="border-0">
-													<a href="#" name="division" onClick={this.sortData}>Division</a>
+													<a href="#" name="division" onClick={this.sortData}>
+														Division<i class="material-icons">expand_more</i>
+													</a>
 												</th>
 												<th scope="col" className="border-0">
-													<a href="#" name="type" onClick={this.sortData}>Type</a>
+													<a href="#" name="type" onClick={this.sortData}>
+														Type<i class="material-icons">expand_more</i>
+													</a>
 												</th>
 												<th scope="col" className="border-0">
-													<a href="#" name="device" onClick={this.sortData}>Device</a>
+													<a href="#" name="device" onClick={this.sortData}>
+														Device<i class="material-icons">expand_more</i>
+													</a>
 												</th>
 												<th scope="col" className="border-0">
-													<a href="#" name="data" onClick={this.sortData}>Data</a>
+													<a href="#" name="data" onClick={this.sortData}>
+														Data<i class="material-icons">expand_more</i>
+													</a>
 												</th>
 												<th scope="col" className="border-0">
-													<a href="#" name="timestamp" onClick={this.sortData}>Timestamp</a>
+													<a href="#" name="timestamp" onClick={this.sortData}>
+														Timestamp<i class="material-icons">expand_more</i>
+													</a>
 												</th>
 											</tr>
 										</thead>
