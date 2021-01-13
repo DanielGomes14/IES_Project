@@ -25,7 +25,8 @@ class DefaultLayout extends React.Component {
   }
 
   componentDidMount() {
-    LocalStorageService.get_first_home();
+    if (!current_home.current_home())
+      LocalStorageService.get_first_home();
     this.setState({ current_home:  current_home.current_home(), refresh:true });
   }
   
