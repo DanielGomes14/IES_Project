@@ -19,7 +19,7 @@ class DeviceConfigService {
     }
 
     addConfiguration(deviceId, timeBegin, timeEnd, value) {
-        return fetch(baseURL + DEVICE_CONFIG_REST_API_URL, {
+        return fetch(baseURL + "devices/configurations", {
             method: 'POST',
             mode: 'cors',
             headers: {

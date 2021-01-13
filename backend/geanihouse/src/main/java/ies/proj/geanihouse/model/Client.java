@@ -52,7 +52,7 @@ public class Client {
 
     @ManyToMany(mappedBy = "clients", fetch = FetchType.LAZY)
     @JsonIgnore
-    private Set<Home> homes = new HashSet<>();
+    private Set<Home> homes;
 
     public  Client(){
 

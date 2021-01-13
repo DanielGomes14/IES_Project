@@ -9,6 +9,7 @@ import ies.proj.geanihouse.repository.DeviceRepository;
 import ies.proj.geanihouse.repository.DivisionConfRepository;
 import ies.proj.geanihouse.repository.NotificationRepository;
 
+import java.sql.Timestamp;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,6 +52,7 @@ public class MessageConsumer {
 
     @StreamListener(Sink.INPUT)
     public void log(ReceivedSensingData msg) throws ResourceNotFoundException,ErrorDetails {
+        LOG.info("received data: "+ msg);
 
         if (msg.getMethod().equals("SENSORDATA")){
             long sensor_id = msg.getId();
@@ -149,17 +151,28 @@ public class MessageConsumer {
             System.out.println("No config");
             return;
         }
+
+        System.out.println(dc);
+
         double midValue = (dc.getMaxValue()+dc.getMinValue()) / 2;
         
-        if (value > dc.getMaxValue()){
-            System.out.println("Value is higher than configuration");
+
+        if (value > dc.getMaxValue() || value < dc.getMinValue()){
+            LOG.info("Value is outside desired configuraions");
             MQMessage msg = new MQMessage("START_CONF",sensor.getId(),sensor.getType().getName(),midValue);
             smservice.sendMessage(msg);
-        }else if(value < dc.getMinValue()){
-            System.out.println("Value is lower than configuration");
-            MQMessage msg = new MQMessage("START_CONF",sensor.getId(),sensor.getType().getName(),midValue);
-            smservice.sendMessage(msg);
-        
+            List<Device> devices = deviceRepository.findAllByDivisionIdAndTypeId(sensor.getDivision().getId(),sensor.getType().getId());
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            for(Device d: devices){
+                if(d.getState()!=midValue){
+                    d.setState(midValue);
+                    deviceRepository.save(d);
+                    DeviceLog log = new DeviceLog(d,timestamp,midValue);
+                    deviceLogRepository.save(log);
+                    System.out.println("changing state");
+                }
+            }
+
         }
     }
 

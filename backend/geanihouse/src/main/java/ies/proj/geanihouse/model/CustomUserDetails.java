@@ -10,7 +10,6 @@ import java.util.HashSet;
 public class CustomUserDetails extends User implements UserDetails {
 
    private User user;
-
     // create client and the User will be used for this
     public CustomUserDetails(User user) {
         this.user = user;
@@ -48,5 +47,8 @@ public class CustomUserDetails extends User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return user.isActive();
+    }
+    public User getUser(){
+        return this.user;
     }
 }

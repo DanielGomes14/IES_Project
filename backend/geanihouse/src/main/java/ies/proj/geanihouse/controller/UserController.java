@@ -5,9 +5,16 @@ import ies.proj.geanihouse.model.Client;
 import ies.proj.geanihouse.model.User;
 import ies.proj.geanihouse.repository.ClientRepository;
 import ies.proj.geanihouse.repository.UserRepository;
+import ies.proj.geanihouse.service.PermissionService;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,7 +31,8 @@ public class UserController {
     private UserRepository userRepository;
     @Autowired
     private ClientRepository clientRepository;
-
+    @Autowired
+    private PermissionService permissionService;
 
     @GetMapping("/users")
     public  List<User>  getAllUsers(){
@@ -64,4 +72,29 @@ public class UserController {
         return response;
     }
 
+    @GetMapping("/profile")
+    public ResponseEntity<User> getProfile() throws ResourceNotFoundException {
+        UserDetails authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User u = userRepository.findByUsername(authenticateduser.getUsername());
+        if (u == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        return  ResponseEntity.ok().body(u);
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<?> updateProfile(@Valid Client client) throws ResourceNotFoundException {
+        UserDetails authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Client c = this.permissionService.getClient(authenticateduser);
+        if (c == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        
+        // TODO: atualizar client
+        if (c.getId() != client.getId())
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        clientRepository.save(c);
+
+        return ResponseEntity.ok().body(c);
+
+    }
 }
