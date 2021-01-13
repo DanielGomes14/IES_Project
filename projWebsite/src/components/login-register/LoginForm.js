@@ -39,10 +39,6 @@ class LoginForm extends React.Component {
 	};
 	
 	handleSubmit(event) {
-		alert('Login : '
-		+ '\n' + this.state.username
-		+ '\n' + this.state.password
-		);
 		var token = 'Basic ' + window.btoa(this.state.username + ":" + this.state.password);
 		AuthenticationService.login(token)
 			.then((response) => {

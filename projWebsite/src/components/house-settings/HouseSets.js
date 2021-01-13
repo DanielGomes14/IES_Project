@@ -102,24 +102,6 @@ class HouseSets extends React.Component {
 											/>
 										</Col>
 									</Row>
-									<Row form>
-										{/* Permissions */}
-										<Col md="12" className="form-group">
-											<label htmlFor="Permissions for This Division">Permissions for This Division</label>
-											<FormSelect id="feInputState" name="custom" onChange={ this.handleChange }>
-												<option checked={ this.state.custom }>Everyone can Configure</option>
-												<option>Custom</option>
-											</FormSelect>
-										</Col>
-									</Row>  
-									<Row form>
-										{/* Users Added */}
-										<Col md="12" className="form-group">
-											{ content }
-										</Col>
-									</Row>
-									<Row form>
-									</Row>
 									<Button type="submit" theme="accent" value="Submit">Add new Division</Button>
 								</Form>
 							</Col>
