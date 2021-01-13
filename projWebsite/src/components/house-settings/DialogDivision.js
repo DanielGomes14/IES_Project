@@ -74,7 +74,7 @@ export default function MaxWidthDialog({content,al}) {
           </DialogContentText>
           <FormControl component="fieldset" className={classes.formControl}>
                 <FormGroup>
-                {
+                  {
                     state.users.map(person => (
                         <div key={person.id}>
                           <FormControlLabel
