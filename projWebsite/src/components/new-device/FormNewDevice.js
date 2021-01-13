@@ -74,7 +74,6 @@ class FormNewDevice extends React.Component {
 	};
 	
 	handleSubmit(event) {
-		alert('Device submitted:\n ' + this.state.name + '\n' + this.division + '\n' + this.state.selectedType.id + '\n' + this.state.notes);
 		DeviceService.addDevice(
 			this.division, this.state.selectedType.id, this.state.name
 		);

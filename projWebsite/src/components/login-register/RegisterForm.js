@@ -40,12 +40,6 @@ class RegisterForm extends React.Component {
 	};
 	
 	handleSubmit(event) {
-		alert('Register :\n ' + this.state.firstName
-		+ '\n' + this.state.lastName
-		+ '\n' + this.state.email
-		+ '\n' + this.state.username
-		+ '\n' + this.state.password
-		);
 		var auth = 'Basic ' + window.btoa(this.state.username + ":" + this.state.password);
 		AuthenticationService.register(
 			this.state.firstName, 
