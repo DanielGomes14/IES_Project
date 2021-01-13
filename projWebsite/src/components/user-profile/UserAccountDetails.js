@@ -17,7 +17,7 @@ import {
   Button
 } from "shards-react";
 import UserDetails from "../user-profile-lite/UserDetails";
-
+import ProfileService from "../../services/ProfileService";
 
 class UserAccountDetails extends React.Component {
 
@@ -25,7 +25,6 @@ class UserAccountDetails extends React.Component {
   constructor(props){
     super(props);
     this.state = {user: props.user};
-    this.state.user.password = "";
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
@@ -34,24 +33,23 @@ class UserAccountDetails extends React.Component {
   handleChange(event) {
     const {name, value} = event.target;
     
-    if (name !== "password")
-      this.setState({ user:{
-                    ...this.state.user,
-                    client:{
-                      [name]: value
-                    },
-                  } });
-    else
-      this.setState({ user:{
-        ...this.state.user,
+    this.setState({ user:{
+      ...this.state.user,
+      client:{
+        ...this.state.user.client,
         [name]: value
-      } });           
+      },
+    } });      
 
     
 	}
 
 
   handleSubmit(event) {
+    let client = this.state.user.client;
+    ProfileService.updateProfile(client.firstName,client.lastName,client.email,client.sex,client.birth).then(
+      response => {if(response.ok) alert("Profile Updated successfully.") }   
+    );
     event.preventDefault();
   }
 
@@ -67,7 +65,7 @@ class UserAccountDetails extends React.Component {
           <ListGroupItem className="p-3">
             <Row>
               <Col>
-                <Form>
+                <Form onSubmit={this.handleSubmit}>
                   <Row form>
                     <Col md="6" className="form-group">
                       <label htmlFor="feFirstName">First Name</label>
@@ -91,7 +89,7 @@ class UserAccountDetails extends React.Component {
                     </Col>
                   </Row>
                   <Row form>
-                    <Col md="6" className="form-group">
+                    <Col md="12" className="form-group">
                       <label htmlFor="feEmail">Email</label>
                       <FormInput
                         type="email"
@@ -103,33 +101,6 @@ class UserAccountDetails extends React.Component {
                         autoComplete="email"
                       />
                     </Col>
-                    <Col md="6" className="form-group">
-                      <label htmlFor="fePassword">Password</label>
-                      <FormInput
-                        type="password"
-                        id="fePassword"
-                        placeholder="Password"
-                        name= "password"
-                        value={ this.state.user.password }
-                        onChange={ this.handleChange }
-                        autoComplete="current-password"
-                      />
-                    </Col>
-                  </Row>
-                  <Row form>
-                    <Col md="12">
-                      <label htmlFor="fePhoto">Profile Picture</label>
-                      <InputGroup>
-                        <FormInput name="profile_pic"
-                         onChange={this.handleChange}
-                         value={this.state.user.client.profile_pic} p
-                         laceholder="Enter here your profile pic" />
-
-                        <InputGroupAddon type="append">
-                          <Button theme="primary">Upload Photo</Button>
-                        </InputGroupAddon>
-                      </InputGroup>
-                    </Col>
                   </Row>
                   <Row style={{ paddingTop: "15px" }} form>
                     <Col md="3" className="form-group">
@@ -137,7 +108,7 @@ class UserAccountDetails extends React.Component {
                       <FormInput
                         id="feBirth"
                         name= "birth"
-                        placeholder="Birth Date: dd/mm/yyyy"
+                        placeholder="Birth Date: yyyy/mm/dd"
                         value={this.state.user.client.birth}
                         onChange={ this.handleChange }
                       />
