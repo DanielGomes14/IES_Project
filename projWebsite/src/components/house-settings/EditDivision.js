@@ -121,13 +121,6 @@ class EditDivision extends React.Component{
 				</CardHeader>
 				<CardBody className="p-0 pb-3">
 					<table className="table mb-0">
-						<thead className="bg-light">
-							<tr>
-								<th scope="col" className="border-0">
-									<a href="#" name="division" onClick={this.sortData}>Name of Division</a>
-								</th>
-							</tr>
-						</thead>
 						<tbody>
 							{this.state.divisions.map((e, index) => (
 								<tr key={index}>
