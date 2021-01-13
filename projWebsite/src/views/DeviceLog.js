@@ -12,14 +12,19 @@ class DeviceLogPage extends React.Component {
 		this.state = {
 			loading: 1,
 			deviceLogs: [],
+			sort: {
+				type: 'division',
+				order: true,
+			}
 		}
 		this.sortData = this.sortData.bind(this);
+		this.handleClick = this.handleClick.bind(this);
 	}
 
 	componentDidMount() {
 		this.setState({ loading: 1 });
 
-		DeviceLogService.getDeviceLogs(1) // CHANGE DIS
+		DeviceLogService.getDeviceLogs()
 			.then(data => {
 				this.setState({
 					deviceLogs: this.transformData(data),
@@ -46,9 +51,19 @@ class DeviceLogPage extends React.Component {
 		return data2;
 	}
 
-	sortData(event) {
-		const prop = event.target.name;
-		const asc = true; // NOTE: not implemented, but ready to dynamically change the order
+	handleClick(event) {
+		this.setState({
+			sort: {
+				type: event.target.name,
+				order: !this.state.sort.order,
+			}
+		}, () => {this.sortData();});
+		event.preventDefault();
+	}
+
+	sortData() {
+		const prop = this.state.sort.type;
+		const asc = this.state.sort.order;
 		this.setState({
 			deviceLogs: [].concat(this.state.deviceLogs).sort((a, b) => {
 				if (asc) {
@@ -58,7 +73,7 @@ class DeviceLogPage extends React.Component {
 				}
 			})
 		});	
-  }
+  	}
 
 	render() {
 		var content = ""
@@ -66,47 +81,43 @@ class DeviceLogPage extends React.Component {
 			case 0:
 				content = (
 					<Row>
-						<Col>
-							<Card small className="mb-4">
-								<CardHeader className="border-bottom">
-									<h6 className="m-0">Device Logs</h6>
-								</CardHeader>
-								<CardBody className="p-0 pb-3">
-									<table className="table mb-0">
-										<thead className="bg-light">
-											<tr>
-												<th scope="col" className="border-0">
-													<a href="#" name="division" onClick={this.sortData}>Division</a>
-												</th>
-												<th scope="col" className="border-0">
-													<a href="#" name="type" onClick={this.sortData}>Type</a>
-												</th>
-												<th scope="col" className="border-0">
-													<a href="#" name="device" onClick={this.sortData}>Device</a>
-												</th>
-												<th scope="col" className="border-0">
-													<a href="#" name="data" onClick={this.sortData}>Data</a>
-												</th>
-												<th scope="col" className="border-0">
-													<a href="#" name="timestamp" onClick={this.sortData}>Timestamp</a>
-												</th>
-											</tr>
-										</thead>
-										<tbody>
-											{this.state.deviceLogs.map((e, index) => (
-												<tr key={index}>
-													<td>{e.division}</td>
-													<td>{e.type}</td>
-													<td>{e.device}</td>
-													<td>{e.data}</td>
-													<td>{new Date(e.timestamp).toLocaleString()}</td>
-												</tr>
-											))}
-										</tbody>
-									</table>
-								</CardBody>
-							</Card>
-						</Col>
+					<Col>
+					<Card small className="mb-4">
+						<CardHeader className="border-bottom">
+							<h6 className="m-0">Device Logs</h6>
+						</CardHeader>
+						<CardBody className="p-0 pb-3">
+							<table className="table mb-0">
+								<thead className="bg-light">
+									<tr>
+										{['division', 'type', 'device', 'data', 'timestamp'].map((elem, index) => (
+											<th key={index} scope="col" className="border-0">
+												<a href="#" name={elem} onClick={this.handleClick}>
+													{elem.charAt(0).toUpperCase() + elem.slice(1)} 
+													{this.state.sort.type == elem ? 
+														<i className="material-icons">
+															expand_{this.state.sort.order ? 'less' : 'more'}
+														</i> : null}
+												</a>
+											</th>
+										))}
+									</tr>
+								</thead>
+								<tbody>
+									{this.state.deviceLogs.map((e, index) => (
+										<tr key={index}>
+											<td>{e.division}</td>
+											<td>{e.type}</td>
+											<td>{e.device}</td>
+											<td>{e.data}</td>
+											<td>{new Date(e.timestamp).toLocaleString()}</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+						</CardBody>
+					</Card>
+					</Col>
 					</Row>
 				);
 				break;

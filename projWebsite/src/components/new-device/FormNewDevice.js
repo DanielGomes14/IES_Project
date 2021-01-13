@@ -79,7 +79,7 @@ class FormNewDevice extends React.Component {
 			this.division, this.state.selectedType.id, this.state.name
 		);
 		event.preventDefault();
-		window.location.pathname = '/'
+		window.location.pathname = '/';
 	}
 
 	render() {
