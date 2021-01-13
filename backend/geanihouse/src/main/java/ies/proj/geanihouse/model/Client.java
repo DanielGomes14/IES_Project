@@ -41,9 +41,6 @@ public class Client {
     @Column(name = "birth")
     private java.sql.Date birth;
 
-    @Lob
-    @Column(name="profilepic")
-    private byte[] profilepic;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
