@@ -14,7 +14,6 @@ import {
 } from 'react-vis';
 import SensorDataService from '../../services/SensorDataService';
 import DivisionService from '../../services/DivisionService';
-import { auth,current_user,current_home } from "../../utils/auth";
 import { Card,CardBody,FormSelect,CardHeader } from 'shards-react';
 
 
@@ -45,20 +44,16 @@ export default class SensorVis extends React.Component {
 		});
 	}
     
-    componentDidMount() {
-        
-        this.loadDivisions()
-        this.loadData()
-        this.interval=setInterval(this.loadData, 5000);
-        
-        
+    componentDidMount() {  
+        this.loadDivisions();
+        this.loadData();
+        this.interval = setInterval(this.loadData, 5000);
     }
     
     componentWillUnmount() {
-        
-        clearInterval(this.interval)
-        
+        clearInterval(this.interval)  
     }
+
     async loadData() {
         console.log(this.state)
         if(this.state.division_id != null){
@@ -85,7 +80,7 @@ export default class SensorVis extends React.Component {
     
     loadDivisions(){
         try {
-            DivisionService.getDivisions(current_home.current_home())
+            DivisionService.getDivisions()
                 .then(data => {
                     const tmp_arr = [];
                     data.map((div) => {

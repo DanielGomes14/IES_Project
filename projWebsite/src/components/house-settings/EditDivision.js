@@ -59,7 +59,7 @@ class EditDivision extends React.Component{
 
 	componentDidMount() {
 		this.setState({ loading: 1 });
-		DivisionService.getDivisions(current_home.current_home())
+		DivisionService.getDivisions()
 			.then(data => { 
 				console.log(data);
 				this.setState({ 
@@ -98,12 +98,12 @@ class EditDivision extends React.Component{
 				label: 'Yes',
 				onClick: () => {
 					DivisionService.deleteDivision(division_id)
-					.then(data => { 
-						this.componentDidMount()
-					})
-					.catch(error => {
-						alert(error);
-					});
+						.then(data => { 
+							this.componentDidMount()
+						})
+						.catch(error => {
+							alert(error);
+						});
 				}
 			},
 			{

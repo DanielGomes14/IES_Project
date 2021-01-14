@@ -8,11 +8,9 @@ import {
 	Col,
 	Form,
 	FormInput,
-	FormSelect,
 	Button,
 	FormCheckbox,
 } from "shards-react";
-import { current_home } from "../../utils/auth";
 
 import DivisionService from "./../../services/DivisionService";
 import EditDivision from "./EditDivision"
@@ -54,9 +52,7 @@ class HouseSets extends React.Component {
 		if (!this.state.name.replace(/\s/g, '').length){
 			alert("Division's must have a name");
 		} else {
-			var response = DivisionService.addDivision(
-				current_home.current_home(), this.state.name
-			);
+			var response = DivisionService.addDivision(this.state.name);
 			EditDivision.ComponentDidMount();
 			event.preventDefault();
 		}

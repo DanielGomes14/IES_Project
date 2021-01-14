@@ -3,7 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import {
-    Container, Row, Button
+    Container, Row
 } from "shards-react";
 
 import AutomationTab from "../components/automation/AutomationTab";
@@ -71,7 +71,7 @@ class Automation extends React.Component {
     componentDidMount() {
 		this.setState({ loading: 1 });
 
-		DivisionService.getDivisions(1) // HARDCODED
+		DivisionService.getDivisions()
 			.then(data => {
 				this.setState({ 
 					divisions: data,
