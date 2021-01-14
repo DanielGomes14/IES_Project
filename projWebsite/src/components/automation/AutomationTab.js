@@ -100,7 +100,7 @@ class AutomationTab extends React.Component {
             })
             if (!exists)
                 remaining[i].error = "Cannot add a division configuration "
-                    + "when there's no device or sensor of type " + remaining[i].name;
+                    + "when there's no device nor sensor of type " + remaining[i].name;
         }
         return remaining;
     }
