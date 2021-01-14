@@ -113,7 +113,11 @@ class FormDivisionConfig extends React.Component {
                 ) : null}
                 <CardBody>
                     <h3>{this.state.type.name}</h3>
-                    <form noValidate style={{'width':"100%"}} onSubmit={this.handleSubmit}>
+
+                    {(this.state.type.error !== undefined) ?
+                        this.state.type.error
+                    : (
+                        <form noValidate style={{'width':"100%"}} onSubmit={this.handleSubmit}>
                         <Slider
                             start={[this.state.value[0], this.state.value[1]]}
                             pips={{
@@ -140,6 +144,7 @@ class FormDivisionConfig extends React.Component {
                             </div>
                         ) : null}
                     </form>
+                    )}
                 </CardBody>
             </Card>
         )

@@ -8,25 +8,9 @@ import EditDeviceConfigs from "./EditDeviceConfigs";
 
 import DivisionConfigService from "../../services/DivisionConfigService";
 import DeviceService from "../../services/DeviceService";
+import SensorService from "../../services/SensorService";
 
 
-
-function remainingTypeOptions(divisionConfigs) {
-    var remaining = [
-        {id: 1, name: "Temperature"},
-        {id: 2, name: "Humidity"},
-        {id: 3, name: "Luminosity"},
-    ]
-    divisionConfigs.forEach((opt) => {
-        for (var i = 0; i < remaining.length; i++) {
-            if (remaining[i].id == opt.type.id) {
-                remaining.splice(i, 1);
-                break;
-            }
-        }
-    })
-    return remaining;
-}
 
 class AutomationTab extends React.Component {
 
@@ -36,41 +20,89 @@ class AutomationTab extends React.Component {
         this.state = {
             edit: false,
             addConfig: false,
-            loading1: 0,
-            loading2: 0,
+            loading: 0,
             divisionConfigs: [],
             devices: [],
+            sensors: [],
         }
         this.toggleEdit = this.toggleEdit.bind(this);
         this.toggleAddConfig = this.toggleAddConfig.bind(this);
     }
 
     componentDidMount() {
-        this.setState({ loading1: 1, loading2: 1 });
+        this.setState({ loading: 1 });
         
         DivisionConfigService.getConfigurations(this.division.id)
-			.then(data => {
+			.then((data) => {
 				this.setState({ 
 					divisionConfigs: data,
-					loading1: 0
 				});
 			})
-			.catch(error => {
-				console.log(error) ;
-				this.setState({ loading1: 2 })
-			});
-        
-		DeviceService.getDevices(this.division.id)
-			.then(data => {
-				this.setState({ 
-					devices: data,
-					loading2: 0
-				});
-			})
-			.catch(error => {
-				console.log(error) ;
-				this.setState({ loading2: 2 })
-            });
+			.catch((error) => {
+				console.log(error);
+                this.setState({ loading: 2 });
+                return
+            })
+            .then(() => DeviceService.getDevices(this.division.id)
+                .then(data => {
+                    this.setState({ 
+                        devices: data,
+                    });
+                })
+                .catch(error => {
+                    console.log(error) ;
+                    this.setState({ loading: 2 })
+                    return;
+                })
+                .then(() => SensorService.getSensors(this.division.id)
+                    .then(data => {
+                        this.setState({ 
+                            sensors: data,
+                            loading: 0
+                        });
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        this.setState({ loading: 2 });
+                        return;
+                    })
+                )
+            );
+    }
+
+    remainingTypeOptions() {
+        let remaining = [
+            {id: 1, name: "Temperature"},
+            {id: 2, name: "Humidity"},
+            {id: 3, name: "Luminosity"},
+        ]
+        // remove options which have already division configuration
+        this.state.divisionConfigs.forEach((opt) => {
+            for (var i = 0; i < remaining.length; i++) {
+                if (remaining[i].id === opt.type.id) {
+                    remaining.splice(i, 1);
+                    break;
+                }
+            }
+        })
+        for (var i = 0; i < remaining.length; i++) {
+            // remove options when there's no such device
+            let exists = this.state.device.some((opt) => {
+                if (remaining[i].id === opt.type.id)
+                    return true;
+                return false;
+            })
+            // remove options when there's no such sensor
+            exists &= this.state.sensors.some((opt) => {
+                if (remaining[i].id === opt.type.id)
+                    return true;
+                return false;
+            })
+            if (!exists)
+                remaining[i].error = "Cannot add a division configuration"
+                    + "when there's no device or sensor of the respective type.";
+        }
+        return remaining;
     }
     
     toggleEdit() {
@@ -84,6 +116,13 @@ class AutomationTab extends React.Component {
     }
     
     render() {
+        switch (this.state.loading) {
+            case 1:
+                return "Loading...";
+            case 2:
+                return "Something went wrong...";
+        }
+
         return !this.state.edit ? (
             <div>
                 <Button className="float-right mx-2 mb-3">Set Default</Button>
@@ -111,7 +150,7 @@ class AutomationTab extends React.Component {
             </div>
         ) : (
             <div>
-                {remainingTypeOptions(this.state.divisionConfigs).length != 0 ? (
+                {this.remainingTypeOptions.length !== 0 ? (
                     <Button className="float-left mx-2 mb-3" theme="info" onClick={this.toggleAddConfig}>
                         {this.state.addConfig ? "Cancel" : "Add Division Configuration"}
                     </Button>
@@ -123,7 +162,7 @@ class AutomationTab extends React.Component {
                     <Row>
                         <Col lg="6">
                             
-                            <FormDivisionConfig division={this.division} types={remainingTypeOptions(this.state.divisionConfigs)} />
+                            <FormDivisionConfig division={this.division} types={this.remainingTypeOptions} />
 
                         </Col>
                     </Row>
