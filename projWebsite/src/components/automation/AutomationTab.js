@@ -32,42 +32,42 @@ class AutomationTab extends React.Component {
     componentDidMount() {
         this.setState({ loading: 1 });
         
-        // DivisionConfigService.getConfigurations(this.division.id)
-		// 	.then((data) => {
-		// 		this.setState({ 
-		// 			divisionConfigs: data,
-		// 		});
-		// 	})
-		// 	.catch((error) => {
-		// 		console.log(error);
-        //         this.setState({ loading: 2 });
-        //         return
-        //     })
-        //     .then(() => DeviceService.getDevices(this.division.id)
-        //         .then(data => {
-        //             this.setState({ 
-        //                 devices: data,
-        //             });
-        //         })
-        //         .catch(error => {
-        //             console.log(error) ;
-        //             this.setState({ loading: 2 })
-        //             return;
-        //         })
-        //         .then(() => SensorService.getSensors(this.division.id)
-        //             .then(data => {
-        //                 this.setState({ 
-        //                     sensors: data,
-        //                     loading: 0
-        //                 });
-        //             })
-        //             .catch(error => {
-        //                 console.log(error);
-        //                 this.setState({ loading: 2 });
-        //                 return;
-        //             })
-        //         )
-        //     );
+        DivisionConfigService.getConfigurations(this.division.id)
+			.then((data) => {
+				this.setState({ 
+					divisionConfigs: data,
+				});
+			})
+			.catch((error) => {
+				console.log(error);
+                this.setState({ loading: 2 });
+                return
+            })
+            .then(() => DeviceService.getDevices(this.division.id)
+                .then(data => {
+                    this.setState({ 
+                        devices: data,
+                    });
+                })
+                .catch(error => {
+                    console.log(error) ;
+                    this.setState({ loading: 2 })
+                    return;
+                })
+                .then(() => SensorService.getSensors(this.division.id)
+                    .then(data => {
+                        this.setState({ 
+                            sensors: data,
+                            loading: 0
+                        });
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        this.setState({ loading: 2 });
+                        return;
+                    })
+                )
+            );
     }
 
     remainingTypeOptions() {
