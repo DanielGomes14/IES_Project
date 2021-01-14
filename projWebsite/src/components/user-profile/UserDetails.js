@@ -24,12 +24,43 @@ const calculate_age = (dob1) => {
 
 class UserDetails extends React.Component {
 
+<<<<<<< Updated upstream
   constructor(props) {
     super(props);
     this.client = props.client;
   }
 
   
+=======
+const UserDetails = ({ userDetails }) => (
+  <Card small className="mb-4 pt-3">
+    <CardHeader className="border-bottom text-center">
+      <div className="mb-3 mx-auto">
+        <img
+          className="rounded-circle"
+          src={require("./../../images/avatars/3.jpg")}
+          alt={userDetails.name}
+          width="110"
+        />
+      </div>
+      <h4 className="mb-0">{userDetails.name}</h4>
+      <span className="text-muted d-block mb-2">Age: {calculate_age(userDetails.birth)}</span>
+      <h5><Badge theme="info">
+        {userDetails.email}
+      </Badge></h5>
+    </CardHeader>
+    <ListGroup flush>
+      <ListGroupItem className="p-4">
+        <strong className="text-muted d-block mb-2">
+          Division Permissions:
+        </strong>
+        <span>Kitchen, Living Room, Bedroom #1</span>
+      </ListGroupItem>
+    </ListGroup>
+   
+  </Card>
+);
+>>>>>>> Stashed changes
 
   render() {
 
