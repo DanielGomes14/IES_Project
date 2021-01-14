@@ -165,7 +165,7 @@ public class MessageConsumer {
         
             // turns on the device at the midvalue of the division configuration
         for(Device d: devices)
-            if (d.getState() != midValue && value > dc.getMaxValue() || value < dc.getMinValue()){
+            if (d.getState() != midValue && (value > dc.getMaxValue() || value < dc.getMinValue())){
 
                 LOG.info("Value is outside desired configuraions");
                 
