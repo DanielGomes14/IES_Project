@@ -87,7 +87,7 @@ class AutomationTab extends React.Component {
         })
         for (var i = 0; i < remaining.length; i++) {
             // remove options when there's no such device
-            let exists = this.state.device.some((opt) => {
+            let exists = this.state.devices.some((opt) => {
                 if (remaining[i].id === opt.type.id)
                     return true;
                 return false;
@@ -99,8 +99,8 @@ class AutomationTab extends React.Component {
                 return false;
             })
             if (!exists)
-                remaining[i].error = "Cannot add a division configuration"
-                    + "when there's no device or sensor of the respective type.";
+                remaining[i].error = "Cannot add a division configuration "
+                    + "when there's no device or sensor of type " + remaining[i].name;
         }
         return remaining;
     }
@@ -132,25 +132,21 @@ class AutomationTab extends React.Component {
                 <Row>
                     {this.state.divisionConfigs.map((config, index) => (
                         <Col key={index} lg="6">
-                            
                             <DivisionConfig config={config} />
-
                         </Col>
                     ))}
                 </Row>
                 <Row>
                     {this.state.devices.map((device, index) => (
                         <Col key={index} lg="4" className="py-3">
-                            
                             <DeviceConfigs device={device} />
-
                         </Col>
                     ))}
                 </Row>
             </div>
         ) : (
             <div>
-                {this.remainingTypeOptions.length !== 0 ? (
+                {this.remainingTypeOptions().length !== 0 ? (
                     <Button className="float-left mx-2 mb-3" theme="info" onClick={this.toggleAddConfig}>
                         {this.state.addConfig ? "Cancel" : "Add Division Configuration"}
                     </Button>
@@ -158,30 +154,22 @@ class AutomationTab extends React.Component {
                 
                 <Button className="float-right mx-2 mb-3" theme="danger" onClick={this.toggleEdit}>Close</Button>
                 <div className="clearfix"></div>
-                {this.state.addConfig ? (
-                    <Row>
-                        <Col lg="6">
-                            
-                            <FormDivisionConfig division={this.division} types={this.remainingTypeOptions} />
-
-                        </Col>
-                    </Row>
-                ) : null}
                 <Row>
+                    {this.state.addConfig ? (
+                        <Col lg="6">
+                            <FormDivisionConfig division={this.division} types={this.remainingTypeOptions()} />
+                        </Col>
+                    ) : null}
                     {this.state.divisionConfigs.map((config, index) => (
                         <Col key={index} lg="6">
-                            
                             <FormDivisionConfig config={config} />
-
                         </Col>
                     ))}
                 </Row>
                 <Row>
                     {this.state.devices.map((device, index) => (
                         <Col key={index} lg="12" className="py-3">
-                            
                             <EditDeviceConfigs device={device} />
-
                         </Col>
                     ))}
                 </Row>

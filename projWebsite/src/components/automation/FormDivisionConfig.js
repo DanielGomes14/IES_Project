@@ -5,12 +5,6 @@ import DivisionConfigService from "../../services/DivisionConfigService";
 
 
 
-const typeOptions = {
-    1: {id: 1, name: "Temperature"},
-    2: {id: 2, name: "Humidity"},
-    3: {id: 3, name: "Luminosity"},
-}
-
 class FormDivisionConfig extends React.Component {
 
     constructor(props) {
@@ -66,14 +60,15 @@ class FormDivisionConfig extends React.Component {
     }
 
     handleSelect(event) {
-        var theme;
-        var range;
-        [theme, range] = this.getThemeNRange(typeOptions[event.target.value].name)
+        let theme;
+        let range;
+        let type = this.props.types.find(item => item.id == event.target.value);
+        [theme, range] = this.getThemeNRange(type.name);
         this.setState({
             theme: theme,
             range: range,
             value: range,
-            type: typeOptions[event.target.value],
+            type: type,
         })
 	}
 
@@ -98,8 +93,6 @@ class FormDivisionConfig extends React.Component {
     }
     
     render() {
-        console.log(this.state);
-
         if (!this.state.range || !this.state.value)
             return null;
         return (
@@ -112,38 +105,39 @@ class FormDivisionConfig extends React.Component {
                     </FormSelect>
                 ) : null}
                 <CardBody>
-                    <h3>{this.state.type.name}</h3>
-
                     {(this.state.type.error !== undefined) ?
-                        this.state.type.error
+                        <span className="text-danger">{this.state.type.error}</span>
                     : (
-                        <form noValidate style={{'width':"100%"}} onSubmit={this.handleSubmit}>
-                        <Slider
-                            start={[this.state.value[0], this.state.value[1]]}
-                            pips={{
-                                mode: "positions",
-                                values: [0, 25, 50, 75, 100],
-                                stepped: true,
-                                density: 5
-                            }}
-                            range={{ min: this.state.range[0], max: this.state.range[1] }}
-                            step={1}
-                            margin={5}
-                            theme={this.state.theme}
-                            animate={true}
-                            connect
-                            tooltips={this.state.tooltip}
-                            onSlide={this.handleSlide}
-                            onEnd={e => this.setState({tooltip: false})}
-                        />
-                        {this.state.apply ? (
-                            <div>
-                                <div className="my-5"></div>
-                                <Button type="submit" className="float-right">Apply Changes</Button>
-                                <div className="clearfix"></div>
-                            </div>
-                        ) : null}
-                    </form>
+                        <div>
+                            <h3>{this.state.type.name}</h3>
+                            <form noValidate style={{'width':"100%"}} onSubmit={this.handleSubmit}>
+                                <Slider
+                                    start={[this.state.value[0], this.state.value[1]]}
+                                    pips={{
+                                        mode: "positions",
+                                        values: [0, 25, 50, 75, 100],
+                                        stepped: true,
+                                        density: 5
+                                    }}
+                                    range={{ min: this.state.range[0], max: this.state.range[1] }}
+                                    step={1}
+                                    margin={5}
+                                    theme={this.state.theme}
+                                    animate={true}
+                                    connect
+                                    tooltips={this.state.tooltip}
+                                    onSlide={this.handleSlide}
+                                    onEnd={e => this.setState({tooltip: false})}
+                                />
+                                {this.state.apply ? (
+                                    <div>
+                                        <div className="my-5"></div>
+                                        <Button type="submit" className="float-right">Apply Changes</Button>
+                                        <div className="clearfix"></div>
+                                    </div>
+                                ) : null}
+                            </form>
+                        </div>
                     )}
                 </CardBody>
             </Card>
