@@ -157,23 +157,38 @@ public class MessageConsumer {
         double midValue = (dc.getMaxValue()+dc.getMinValue()) / 2;
         
 
-        if (value > dc.getMaxValue() || value < dc.getMinValue()){
-            LOG.info("Value is outside desired configuraions");
-            MQMessage msg = new MQMessage("START_CONF",sensor.getId(),sensor.getType().getName(),midValue);
-            smservice.sendMessage(msg);
-            List<Device> devices = deviceRepository.findAllByDivisionIdAndTypeId(sensor.getDivision().getId(),sensor.getType().getId());
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            for(Device d: devices){
-                if(d.getState()!=midValue){
-                    d.setState(midValue);
-                    deviceRepository.save(d);
-                    DeviceLog log = new DeviceLog(d,timestamp,midValue);
-                    deviceLogRepository.save(log);
-                    System.out.println("changing state");
-                }
+        // Only sends message if the value of the device is not already set to that value
+        List<Device> devices = deviceRepository.findAllByDivisionIdAndTypeId(
+            sensor.getDivision().getId(), 
+            sensor.getType().getId()
+            );
+        
+            // turns on the device at the midvalue of the division configuration
+        for(Device d: devices)
+            if (d.getState() != midValue && value > dc.getMaxValue() || value < dc.getMinValue()){
+
+                LOG.info("Value is outside desired configuraions");
+                
+                // sends start configuration message to sensors 
+                MQMessage msg = new MQMessage("START_CONF",sensor.getId(),sensor.getType().getName(),midValue);
+                smservice.sendMessage(msg);
+
+                // finds all devices in that division of that type and turns them on at that value
+                // adds the event to the device log
+                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+               
+                d.setState(midValue);
+                deviceRepository.save(d);
+                DeviceLog log = new DeviceLog(d,timestamp,midValue);
+                deviceLogRepository.save(log);
+                Notification n = new Notification(0,"Device State Update",
+                    "Device " + d.getName() + "is now " + midValue,
+                    timestamp,
+                    d.getDivision().getHome());
+                notificationRepository.save(n);
             }
 
-        }
+            
     }
 
 }
