@@ -175,8 +175,9 @@ public class MessageConsumer {
 
                 // finds all devices in that division of that type and turns them on at that value
                 // adds the event to the device log
+                // creates a notification
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-               
+                
                 d.setState(midValue);
                 deviceRepository.save(d);
                 DeviceLog log = new DeviceLog(d,timestamp,midValue);
