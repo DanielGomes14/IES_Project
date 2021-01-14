@@ -19,7 +19,9 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String[] AUTH_WHITELIST = {
-            "/register", "/login","/v2-api-docs","/configuration/**", "/swagger*/**", "/webjars/**"
+            "/register", "/login","/v2-api-docs","/configuration/**",
+            "/v2/api-docs",
+            "/swagger*/**", "/webjars/**"
     };
 
     @Autowired
