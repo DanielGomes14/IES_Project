@@ -46,15 +46,15 @@ class DeviceGroup extends React.Component {
 				<a href={"/newdevice?div="+this.division.id}><Button className="float-right mb-2 mr-2" theme="success" style={{ fontSize: "16px", height: '100%'}}>Add Device</Button></a>
 				<div className="clearfix" style={{paddingBottom: "15px"}}></div>
 				<Row>
-          		{	
-					this.state.sensors.map((sen) => (
+          		{
+					this.state.sensors && this.state.sensors.map((sen) => (
 							<Col key={sen.id} lg="12" md="12" sm="12" className="mb-4">
 							<SensorCard sensor={sen} />
 						</Col>
 						))
 				}
 				{
-					this.state.devices.map((dev) => (
+					this.state.devices && this.state.devices.map((dev) => (
 						<Col key={dev.id} lg="12" md="12" sm="12" className="mb-4">
 							<DeviceCard device={dev} />
 						</Col>

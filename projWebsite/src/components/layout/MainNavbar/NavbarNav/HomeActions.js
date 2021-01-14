@@ -29,11 +29,17 @@ export default class HomeActions extends React.Component {
     this.current_home={"id":-1,"name":"error"};
     this.selected_home = this.current_home;
     this.toggleHomeActions = this.toggleHomeActions.bind(this);
+    this.loadData = this.loadData.bind(this);
   }
 
   componentDidMount(){
     HomeService.getHomes().then(data=>{this.homes=data});
     
+    this.loadData();
+  }
+
+    
+  loadData() {
     HomeService.getHomeById()
     .then(data => {
       this.setState({ 
@@ -41,7 +47,6 @@ export default class HomeActions extends React.Component {
         current_home:data
       });
     });
-    
   }
 
   toggleHomeActions() {
@@ -83,7 +88,9 @@ export default class HomeActions extends React.Component {
 				content = "Ups! Something Went Wrong...";
 				break;
     }
-    
+    if (content== undefined) {
+			this.loadData();
+		}
     return (
         <NavItem className="border-right" tag={Dropdown} caret toggle={this.toggleHomeActions}>
             <DropdownToggle caret tag={NavLink} className="text-nowrap px-3" style={{paddingTop: "20px"}}>

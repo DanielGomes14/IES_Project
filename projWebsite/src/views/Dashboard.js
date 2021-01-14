@@ -14,45 +14,46 @@ class Dashboard extends React.Component {
 			loading: 1,
 			divisions: [],
 		}
+		this.loadData.bind(this);
   	}
 
 	componentDidMount() {
 		this.setState({ loading: 1 });
 
-		DivisionService.getDivisions(current_home.current_home())
-			.then(data => {
-				if (data !== undefined){
-					this.setState({ divisions: data	});
-				} else
-					this.setState({ loading: 2 });
-				return data;
-			}).then( () => {
-				if (this.state.divisions.length === 0){
-					this.setState({ loading: 2 });
-				} else{
-					this.setState({ loading: 0 });
-				}
-			})
-			.catch(error => {
-				console.log(error) ;
-				this.setState({ loading: 3 })
-			});
-		/*
-		if (this.state.divisions.length == 0){
-			this.setState({ loading: 2 });
-		} else{
-			this.setState({ loading: 0 });
-		}
-		*/
+		this.loadData();
+	}
+
+	loadData() {
+		let cur_home = current_home.current_home();
+		DivisionService.getDivisions(cur_home)
+		.then(data => {
+			if (data != undefined){
+				this.setState({ divisions: data	});
+			} else
+				this.setState({ loading: 2 });
+			return data;
+		}).then( data => {
+			if (this.state.divisions.length == 0) {
+				this.setState({ loading: 2 });
+			} else {
+				this.setState({ loading: 0 });
+			}
+		})
+		.catch(error => {
+			console.log(error) ;
+			this.setState({ loading: 3 })
+		});
 	}
   
 	render() {
 		var content = ""
 		switch(this.state.loading) {
 			case 0:
-				content = this.state.divisions.map((div) => 
-					<DeviceGroup key={div.id} division={div} />
-				);
+				if (Array.isArray(this.state.divisions))
+					content =  this.state.divisions.map((div) => (
+							<DeviceGroup key={div.id} division={div} />
+						)
+					)
 				break;
 			case 1:
 				content = "Loading...";
@@ -63,7 +64,9 @@ class Dashboard extends React.Component {
 			case 3:
 				content = "Ups! Something Went Wrong...";
 				break;
-
+		}
+		if (content=="") {
+			this.loadData();
 		}
 		return (
 			<Container fluid className="main-content-container px-4">
@@ -91,7 +94,7 @@ class Dashboard extends React.Component {
 				<DeviceCard title="Zumifier" progress={55} type="humidity" />
 				<DeviceCard title="Radiator" progress={40} type="temperature" />
 				<DeviceCard title="Presence Light" progress={5} type="light" />
-				</DeviceGroup> */}
+				</DeviceGroup>  */}
 			</Container>
 		)
 	}
