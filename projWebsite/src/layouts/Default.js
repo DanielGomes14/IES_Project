@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Container, Row, Col } from "shards-react";
+import { Container, Row, Col, timeoutsShape } from "shards-react";
 
 import MainNavbar from "../components/layout/MainNavbar/MainNavbar";
 import MainSidebar from "../components/layout/MainSidebar/MainSidebar";
@@ -21,16 +21,24 @@ class DefaultLayout extends React.Component {
 		this.state = {
       current_home: current_home.current_home(),
       refresh: false,
-		}
+    }
+    this.loadFirstHome.bind(this);
   }
 
   componentDidMount() {
+    this.loadFirstHome();
+  }
+
+  loadFirstHome() {
     if (!current_home.current_home())
       LocalStorageService.get_first_home();
-    this.setState({ current_home:  current_home.current_home(), refresh:true });
+    this.setState({ current_home:  current_home.current_home(), refresh:true })
   }
   
 	render() {
+    if (this.current_home == null) {
+      LocalStorageService.get_first_home();
+    }
 		if (this.state.refresh == false){
       return (
         <Container fluid>
