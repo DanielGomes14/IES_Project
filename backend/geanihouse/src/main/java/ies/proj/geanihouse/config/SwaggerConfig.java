@@ -16,7 +16,7 @@ public class SwaggerConfig {
         Docket docket = new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("ies.proj.geanihouse"))
-                .paths(PathSelectors.any())
+                .paths(PathSelectors.regex("/.*"))
                 .build();
 
         return docket;
