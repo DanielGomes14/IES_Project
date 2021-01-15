@@ -44,6 +44,16 @@ class DeviceConfigService {
             body: JSON.stringify({id: id, device: {id: deviceId}, timeBegin: hourToTimestamp(timeBegin), timeEnd: hourToTimestamp(timeEnd), value: value})
         })
     }
+
+    deleteConfiguration(id){
+        return fetch(baseURL + DEVICE_CONFIG_REST_API_URL + '/' + id, {
+            method: 'DELETE',
+            mode: 'cors',
+            headers: {
+                authorization: auth.token(),
+            },
+        })
+    }
 }
 
 export default new DeviceConfigService();

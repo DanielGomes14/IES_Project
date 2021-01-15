@@ -67,7 +67,6 @@ class EditDeviceConfigs extends React.Component {
                             <Col key={index} sm="12" className="my-2">
                                 <div style={{border: "solid 2px #E5E8E8", padding: "10px", borderRadius: "5px"}}>
                                     <FormDeviceConfig config={config} />
-                                    <Button className="btn btn-danger">DELETE</Button>
                                 </div>
                             </Col>
                         ))}

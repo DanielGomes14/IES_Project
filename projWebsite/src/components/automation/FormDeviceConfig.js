@@ -37,6 +37,8 @@ class FormDeviceConfig extends React.Component {
         
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.deleteConfig = this.deleteConfig.bind(this);
+
     }
 
     handleChange(event) {
@@ -58,6 +60,10 @@ class FormDeviceConfig extends React.Component {
             ).then(() => window.location.reload());
         event.preventDefault();
 	}
+
+    deleteConfig(){
+        DeviceConfigService.deleteConfiguration(this.props.config.id).then(() => window.location.reload());
+    }
 
     render() {
         return (
@@ -118,6 +124,12 @@ class FormDeviceConfig extends React.Component {
                                 step: 300, // 5 min
                             }}
                         />
+                    </Col>
+                    
+                </Row>
+                <Row>
+                    <Col>
+                        <Button onClick={this.deleteConfig} className="btn btn-danger">DELETE</Button>
                     </Col>
                 </Row>
                 {this.state.apply ? (
