@@ -40,6 +40,16 @@ class DivisionConfigService {
             body: JSON.stringify({id: id, division: {id: divisionId}, type: {name: typeName}, minValue: minValue, maxValue: maxValue})
         })
     }
+
+    deleteConfiguration(id){
+        return fetch(baseURL + DIVISION_CONFIG_REST_API_URL + '/' + id, {
+            method: 'DELETE',
+            mode: 'cors',
+            headers: {
+                authorization: auth.token(),
+            },
+        })
+    }
 }
 
 export default new DivisionConfigService();

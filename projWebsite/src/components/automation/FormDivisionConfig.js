@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardBody, Button, Slider, FormSelect } from "shards-react";
+import { Card, CardBody, Button, Slider, FormSelect, Row, Col } from "shards-react";
 
 import DivisionConfigService from "../../services/DivisionConfigService";
 
@@ -45,6 +45,7 @@ class FormDivisionConfig extends React.Component {
         this.handleSelect = this.handleSelect.bind(this);
         this.handleSlide = this.handleSlide.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.deleteConfig = this.deleteConfig.bind(this);
     }
 
     getThemeNRange(typeName) {
@@ -92,9 +93,16 @@ class FormDivisionConfig extends React.Component {
         event.preventDefault();
     }
     
+    deleteConfig(){
+        console.log()
+        DivisionConfigService.deleteConfiguration(this.props.config.id).then(() => window.location.reload());
+    }
+
+
     render() {
         if (!this.state.range || !this.state.value)
             return null;
+        console.log(this.props.config);
         return (
             <Card className="">
                 {!this.props.config ? (
@@ -129,13 +137,22 @@ class FormDivisionConfig extends React.Component {
                                     onSlide={this.handleSlide}
                                     onEnd={e => this.setState({tooltip: false})}
                                 />
-                                {this.state.apply ? (
-                                    <div>
-                                        <div className="my-5"></div>
-                                        <Button type="submit" className="float-right">Apply Changes</Button>
-                                        <div className="clearfix"></div>
-                                    </div>
-                                ) : null}
+                                <Row>
+                                    {this.props.config? (
+                                    <Col lg="6" className="my-2">
+                                        <Button onClick={ this.deleteConfig } className="btn btn-danger ">DELETE</Button>
+                                    </Col>
+                                    ) : null}
+                                    <Col lg="6">
+                                        {this.state.apply ? (
+                                            <div>
+                                                <div className="my-2"></div>
+                                                <Button type="submit" className="float-right">Apply Changes</Button>
+                                                <div className="clearfix"></div>
+                                            </div>
+                                        ) : null}
+                                    </Col>
+                                </Row>
                             </form>
                         </div>
                     )}
