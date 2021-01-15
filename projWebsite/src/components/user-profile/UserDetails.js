@@ -42,8 +42,8 @@ class UserDetails extends React.Component {
           <div className="mb-3 mx-auto">
             <img
               className="rounded-circle"
-              //src={this.user.client.profile_pic}
-              //alt={this.user.client.name}
+              src={require("./../../images/avatars/default-profile-picture.jpg").default}
+              alt={this.client.firstName}
               width="110"
             />
           </div>
