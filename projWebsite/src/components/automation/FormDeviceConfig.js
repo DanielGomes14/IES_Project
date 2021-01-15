@@ -127,11 +127,13 @@ class FormDeviceConfig extends React.Component {
                     </Col>
                     
                 </Row>
+                {this.props.config ?(
                 <Row>
                     <Col>
                         <Button onClick={this.deleteConfig} className="btn btn-danger">DELETE</Button>
                     </Col>
                 </Row>
+                ) : null}
                 {this.state.apply ? (
                     <div>
                         <Button type="submit" className="float-right">Apply Changes</Button>
