@@ -178,7 +178,7 @@ public class MessageConsumer {
         
             // turns on the device at the midvalue of the division configuration
         for(Device d: devices)
-            if (d.getState() != midValue && value > dc.getMaxValue() || value < dc.getMinValue()){
+            if (d.getState() != midValue && (value > dc.getMaxValue() || value < dc.getMinValue())){
 
                 LOG.info("Value is outside desired configuraions");
                 
@@ -188,8 +188,9 @@ public class MessageConsumer {
 
                 // finds all devices in that division of that type and turns them on at that value
                 // adds the event to the device log
+                // creates a notification
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-               
+                
                 d.setState(midValue);
                 deviceRepository.save(d);
                 DeviceLog log = new DeviceLog(d,timestamp,midValue);
