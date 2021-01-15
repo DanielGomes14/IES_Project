@@ -1,23 +1,23 @@
 import baseURL from "./../data/base-url";
-import { auth } from "../utils/auth";
+import { auth, current_home } from "../utils/auth";
 
 const DIVISIONS_REST_API_URL = "divisions"
 
 class DivisionService {
 
-    getDivisions(home_id) {
-        return fetch(baseURL + (home_id + '/') + DIVISIONS_REST_API_URL + '/', {
-                method: 'GET',
-                mode: 'cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                    authorization: auth.token(),
-                }
-            })
-            .then(res => res.json());
+    async getDivisions() {
+        const res = await fetch(baseURL + (current_home.current_home() + '/') + DIVISIONS_REST_API_URL + '/', {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                authorization: auth.token(),
+            }
+        });
+        return await res.json();
     }
 
-    addDivision(home_id, name) {
+    addDivision(name) {
         return fetch(baseURL + "divisions", {
                 method: 'POST',
                 mode: 'cors',
@@ -25,7 +25,7 @@ class DivisionService {
                     'Content-Type': 'application/json',
                     authorization: auth.token(),
                 },
-                body: JSON.stringify({ name: name, home: {id: home_id} })
+                body: JSON.stringify({ name: name, home: {id: current_home.current_home()} })
             })
 
     }

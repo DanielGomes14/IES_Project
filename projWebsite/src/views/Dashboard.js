@@ -5,7 +5,6 @@ import PageTitle from "../components/common/PageTitle";
 import DeviceGroup from "../components/dashboard/DeviceGroup";
 
 import DivisionService from "../services/DivisionService";
-import { current_home } from "../utils/auth";
 
 class Dashboard extends React.Component {
 	constructor(props) {
@@ -19,30 +18,28 @@ class Dashboard extends React.Component {
 
 	componentDidMount() {
 		this.setState({ loading: 1 });
-
 		this.loadData();
 	}
 
 	loadData() {
-		let cur_home = current_home.current_home();
-		DivisionService.getDivisions(cur_home)
-		.then(data => {
-			if (data != undefined){
-				this.setState({ divisions: data	});
-			} else
-				this.setState({ loading: 2 });
-			return data;
-		}).then( data => {
-			if (this.state.divisions.length == 0) {
-				this.setState({ loading: 2 });
-			} else {
-				this.setState({ loading: 0 });
-			}
-		})
-		.catch(error => {
-			console.log(error) ;
-			this.setState({ loading: 3 })
-		});
+		DivisionService.getDivisions()
+			.then(data => {
+				if (data != undefined){
+					this.setState({ divisions: data	});
+				} else
+					this.setState({ loading: 2 });
+				return data;
+			}).then( () => {
+				if (this.state.divisions.length == 0) {
+					this.setState({ loading: 2 });
+				} else {
+					this.setState({ loading: 0 });
+				}
+			})
+			.catch(error => {
+				console.log(error) ;
+				this.setState({ loading: 3 })
+			});
 	}
   
 	render() {
