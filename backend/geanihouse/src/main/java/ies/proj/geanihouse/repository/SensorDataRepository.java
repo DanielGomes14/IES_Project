@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Date;
 
 @Repository
 public interface SensorDataRepository extends JpaRepository<SensorData, Long>{
@@ -26,4 +27,5 @@ public interface SensorDataRepository extends JpaRepository<SensorData, Long>{
     List<SensorData> findAllBySensor_Id(long id);
     List<SensorData> findFirstBySensor_IdOrderByTimestampDateDesc(long id);
     List<SensorData> findTop5BySensor_IdOrderByTimestampDateDesc(long id);
+    void deleteByTimestampDateBefore(Date expireDate);
 }
