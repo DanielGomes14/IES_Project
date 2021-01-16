@@ -36,6 +36,7 @@ export default class SensorVis extends React.Component {
             luminosity: [],
             selectedDate: new Date(Date.now() - 7*24*3600*1000),
             selectedEndDate: new Date(),
+            endDateOn: false,
             types: ["Temperature","Humidity","Luminosity"],
             selectedtypes: ["Temperature","Humidity","Luminosity"],
             series : { "Humidity" : "#5bc0de", "Temperature": "#d9534f", "Luminosity": "#f0ad4e"}
@@ -47,20 +48,17 @@ export default class SensorVis extends React.Component {
         this.handleDateChange = this.handleDateChange.bind(this);
         this.handleEndDateChange = this.handleEndDateChange.bind(this);
         this.handleTypeFilter = this.handleTypeFilter.bind(this);
-
+        this.handleClick = this.handleClick.bind(this);
     }
     
     handleEndDateChange(event){
-        console.log(event)
-        console.log(this.state.selectedEndDate)
         this.setState({
-            selectedEndDate: event
+            endDateOn: true,
+            selectedEndDate: event,
         });
     }
 
     handleDateChange(event) {
-        console.log(event)
-        console.log(this.state.selectedDate)
         this.setState({
             selectedDate: event
         });
@@ -83,11 +81,14 @@ export default class SensorVis extends React.Component {
         let newState = this.state
         newState.selectedtypes=event
         this.setState({ ...this.state, ...newState });
-        console.log("STATE")
-        console.log(this.state.selectedtypes)
     }
-
-
+    
+    handleClick() {
+        let endDate = new Date();
+        this.setState({endDateOn: false, selectedEndDate: endDate});
+        console.log("STATE FALSE",this.state.endDateOn)
+    }
+    
     componentDidMount() {  
         this.loadDivisions();
         this.loadData();
@@ -100,18 +101,31 @@ export default class SensorVis extends React.Component {
 
     async loadData() {
         if(this.state.division_id != null){
-            console.log(this.state.division_id)
             try {
+                let endDate = new Date();
+                if (this.state.endDateOn) {
+                    endDate = this.state.selectedEndDate;
+                }
                 SensorDataService.getSensorData(
                     this.state.division_id,
                     this.state.selectedDate,
-                    this.state.selectedEndDate,
+                    endDate,
                     this.state.selectedtypes
                     )
                     .then(data => {
                         if (data.length != 0) {
-                            this.setState({loading: 0 });
                             this.processData(data);
+                            this.setState({loading: 0 });
+                            if (!this.state.endDateOn) {
+                                this.setState({
+                                    loading: 0,
+                                    selectedEndDate: new Date(),
+                                });
+                            } else {
+                                this.setState({
+                                    loading: 0,
+                                })
+                            }
                         } else {
                             this.setState({loading: 2 });
                         }
@@ -177,6 +191,7 @@ export default class SensorVis extends React.Component {
     
     render() {
         new dateFnsLocalizer();
+
         const plot = (
             <div>
             <FlexibleWidthXYPlot height={600} xType="time">
@@ -216,13 +231,7 @@ export default class SensorVis extends React.Component {
                     curve={'curveMonotoneX'}
                 />
                 <LineSeries animation="wobbly" data={this.state.temperature} curve={'curveMonotoneX'} color={"#d9534f"} />
-                <LineSeries animation="wobbly" data={this.state.humidity} curve={'curveMonotoneX'} color={"#5bc0de"}
-                    onSeriesClick={(event)=>{
-                        console.log("Ola Chico!")
-                        // does something on click
-                        // you can access the value of the event
-                    }}
-                />
+                <LineSeries animation="wobbly" data={this.state.humidity} curve={'curveMonotoneX'} color={"#5bc0de"} />
                 <LineSeries animation="wobbly" data={this.state.luminosity} curve={'curveMonotoneX'} color={"#f0ad4e"} />
             </FlexibleWidthXYPlot>
             <DiscreteColorLegend
@@ -259,17 +268,23 @@ export default class SensorVis extends React.Component {
                 <h6 className="m-0">Starting Date</h6>
 
                 <DateTimePicker
-                    value= {this.state.selectedDate}
-                    onChange= {this.handleDateChange}
+                    date={true}
+                    time={true}
+                    value={this.state.selectedDate}
+                    onChange={this.handleDateChange}
+                    format={{ raw: 'yyyy MMM, dd' }}
                 />
                 </Col>
-                <Col>
+                <Col>   
                 <h6 className="m-0">Ending Date</h6>
-
-                <DateTimePicker  
-                    value= {this.state.selectedEndDate}
-                    onChange= {this.handleEndDateChange}
+                <DateTimePicker
+                    value={this.state.selectedEndDate}
+                    format={{ raw: 'yyyy MMM, dd' }}
+                    onChange={this.handleEndDateChange}
                 />
+                {this.state.endDateOn ? (
+                    <Button onClick={this.handleClick}  theme="light">Reset</Button>
+                ): null }
                 </Col>
                 <Col lg="4">
                 <h6 className="m-0">Sensor Types</h6>
