@@ -6,10 +6,13 @@ import ies.proj.geanihouse.exception.ResourceNotFoundException;
 import ies.proj.geanihouse.model.Division;
 import ies.proj.geanihouse.model.DivisionConf;
 import ies.proj.geanihouse.model.Sensor;
+import ies.proj.geanihouse.model.Device;
+import ies.proj.geanihouse.model.Home;
 import ies.proj.geanihouse.model.Type;
 import ies.proj.geanihouse.repository.DivisionConfRepository;
 import ies.proj.geanihouse.repository.DivisionRepository;
 import ies.proj.geanihouse.repository.TypeRepository;
+import ies.proj.geanihouse.repository.HomeRepository;
 import ies.proj.geanihouse.service.PermissionService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,6 +41,9 @@ public class DivisionConfController {
     private DivisionRepository divisionRepository;
 
     @Autowired
+    private HomeRepository homeRepository;
+
+    @Autowired
     private TypeRepository typeRepository;
 
     @Autowired
@@ -60,6 +66,46 @@ public class DivisionConfController {
         return  ResponseEntity.ok().body(divisionConfs);
     }
 
+
+    @PostMapping("/divisions/configurations/default")
+    public ResponseEntity<?> addDefaultDivisionConfs(@Valid @RequestBody Division division) throws  ResourceNotFoundException, ErrorDetails{
+        Division d = this.divisionRepository.findById(division.getId()).orElseThrow( () -> new ResourceNotFoundException("Could not Found division with id" + division.getId()));
+
+        UserDetails authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!this.permissionService.checkClientDivision(d, authenticateduser)){
+            return ResponseEntity.status(403).body("Can only Access Divisions Configurations of your Houses!");
+        };
+
+        for (Sensor s : d.getSensors()) {
+            Type type = typeRepository.findByName(s.getType().getName());
+            double minValue = 0;
+            double maxValue = 0;
+            
+            if (type.getName().equals("Temperature")){
+                minValue = 17;
+                maxValue = 22;
+            } else if (type.getName().equals("Humidity")){
+                minValue = 50;
+                maxValue = 55;
+            } else if (type.getName().equals("Luminosity")){
+                minValue = 55;
+                maxValue = 60;
+            }
+
+            DivisionConf divisionConf = new DivisionConf(0, d, s.getType(), minValue, maxValue);
+
+            String error_message = checkConfsTypes(divisionConf, d);
+            if (error_message == null) {
+                divisionConfRepository.save(divisionConf);
+            }
+        }
+
+        LOG.info("Success adding default configurations for division " + d.getId());
+        return ResponseEntity.ok().body("Success adding default configurations");
+    }
+
+
+
     @PostMapping("/divisions/configurations")
     public ResponseEntity<?> addDivisionConfs(@Valid @RequestBody DivisionConf divisionConf) throws  ResourceNotFoundException, ErrorDetails{
 
@@ -71,7 +117,6 @@ public class DivisionConfController {
         if(!this.permissionService.checkClientDivision(division, authenticateduser)){
             return  ResponseEntity.status(403).body("Cannot add Configurations of a Division you Dont Belong!");
         }
-        //check if the type is valid
 
         Type type = typeRepository.findByName(divisionConf.getType().getName());
         if(type == null){
@@ -172,22 +217,34 @@ public class DivisionConfController {
         return error_message;
     }
 
-    private String checkConfsTypes(DivisionConf divisionConf,Division division){
+    private String checkConfsTypes(DivisionConf divisionConf, Division division){
         //verify if there's not a sensor of the type present on the configuration that we want to add
         String error_message = null;
         boolean valid = false;
+        boolean validdevice=false;
+
         for(Sensor s : division.getSensors()){
             if (s.getType().getName().equals(divisionConf.getType().getName())) {
                 valid = true;
                 break;
             }
         }
-        if(!valid){
+        if (!valid){
             error_message="Cannot add a configuration of type " + divisionConf.getType().getName() + " without a sensor of this type";
             LOG.warn(error_message);
             return error_message;
         }
-        for(DivisionConf conf : division.getDivisionConf()){
+        for (Device d : division.getDevices()){
+            if(d.getType().getName().equals(divisionConf.getType().getName())){
+                validdevice=true;
+            }
+        }
+        if (!validdevice) {
+            error_message="Cannot add a configuration of type " + divisionConf.getType().getName() + " without a device of this type";
+            LOG.warn(error_message);
+            return error_message;
+        }
+        for (DivisionConf conf : division.getDivisionConf()){
             if(conf.getType().getName().equals(divisionConf.getType().getName())){
                 error_message = "Cannot have two configurations of same type in the division " + division.getId();
                 LOG.warn(error_message);

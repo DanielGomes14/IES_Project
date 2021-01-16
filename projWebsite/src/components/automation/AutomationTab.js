@@ -27,6 +27,7 @@ class AutomationTab extends React.Component {
         }
         this.toggleEdit = this.toggleEdit.bind(this);
         this.toggleAddConfig = this.toggleAddConfig.bind(this);
+        this.setDefault = this.setDefault.bind(this);
     }
 
     componentDidMount() {
@@ -115,6 +116,19 @@ class AutomationTab extends React.Component {
         this.setState({addConfig: !this.state.addConfig});
     }
     
+    setDefault(){
+        DivisionConfigService.addDefaultConfigurations(this.division.id)
+			.then((data) => {
+                console.log(data)
+				//window.location.reload();
+			})
+			.catch((error) => {
+				console.log(error);
+                this.setState({ loading: 2 });
+                return
+            })
+    }
+    
     render() {
         switch (this.state.loading) {
             case 1:
@@ -125,13 +139,12 @@ class AutomationTab extends React.Component {
 
         return !this.state.edit ? (
             <div>
-                <Button className="float-right mx-2 mb-3">Set Default</Button>
-                <Button className="float-right mx-2 mb-3">Set Economics</Button>
+                <Button className="float-right mx-2 mb-3" onClick={this.setDefault}>Set Default</Button>
                 <Button className="float-right mx-2 mb-3" onClick={this.toggleEdit}>Custom Edit</Button>
                 <div className="clearfix"></div>
                 <Row>
                     {this.state.divisionConfigs.map((config, index) => (
-                        <Col key={index} lg="6">
+                        <Col key={index} lg="6" className="py-3">
                             <DivisionConfig config={config} />
                         </Col>
                     ))}

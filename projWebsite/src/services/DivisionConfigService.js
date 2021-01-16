@@ -29,6 +29,19 @@ class DivisionConfigService {
         })
     }
 
+
+    addDefaultConfigurations(divisionId){
+        return fetch(baseURL + "divisions/configurations/default", {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                authorization: auth.token(),
+            },
+            body: JSON.stringify({id: divisionId})
+        })
+    }
+
     updateConfiguration(id, divisionId, typeName, minValue, maxValue) {
         return fetch(baseURL + DIVISION_CONFIG_REST_API_URL + '/' + id, {
             method: 'PUT',
