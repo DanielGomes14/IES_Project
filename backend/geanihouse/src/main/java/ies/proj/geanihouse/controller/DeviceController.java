@@ -67,6 +67,19 @@ public class DeviceController {
         return ResponseEntity.ok().body(devices);
     }
 
+    @GetMapping("/devices/{device_id}")
+    public ResponseEntity<?> getDevice(@PathVariable(value = "device_id") Long id) throws ResourceNotFoundException {
+        Device device = this.deviceRepository.findById(id).
+                orElseThrow( () -> new ResourceNotFoundException("Could not find device with id" + id));
+                
+        this.authenticateduser= (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!this.permissionService.checkClientDivision(device.getDivision(),this.authenticateduser)){
+        return  ResponseEntity.status(403).body("Cannot get Devices from a House you Dont Belong!");
+        }
+
+        return ResponseEntity.ok().body(device);
+    }
+
     @PostMapping("/devices")
     public ResponseEntity<?> addDeviceToDivision(@Valid @RequestBody Device device) throws ResourceNotFoundException {
         Division d = divisionRepository.findById(device.getDivision().getId())

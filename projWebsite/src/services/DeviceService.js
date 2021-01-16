@@ -42,7 +42,7 @@ class DeviceService {
     }
 
     async getDeviceState(device_id) {
-        const res = await fetch(baseURL + (device_id + '/') + DEVICES_REST_API_URL, {
+        const res = await fetch(baseURL + '/' + DEVICES_REST_API_URL + "/" + device_id, {
             method: 'GET',
             mode: 'cors',
             headers: {
