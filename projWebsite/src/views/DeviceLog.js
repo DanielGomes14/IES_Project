@@ -4,7 +4,9 @@ import { Container, Row, Col, Card, CardHeader, CardBody } from "shards-react";
 import PageTitle from "../components/common/PageTitle";
 
 import DeviceLogService from "../services/DeviceLogService";
-import { current_home } from "../utils/auth";
+
+import {pageLoading, pageError} from "../components/common/Loading";
+
 
 class DeviceLogPage extends React.Component {
 	constructor(props) {
@@ -131,10 +133,10 @@ class DeviceLogPage extends React.Component {
 				);
 				break;
 			case 1:
-				content = "Loading...";
+				content = pageLoading;
 				break;
 			case 2:
-				content = "Something went wrong...";
+				content = pageError;
 				break;
 		}
 		return (

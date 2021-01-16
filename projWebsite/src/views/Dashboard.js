@@ -5,7 +5,7 @@ import PageTitle from "../components/common/PageTitle";
 import DeviceGroup from "../components/dashboard/DeviceGroup";
 
 import DivisionService from "../services/DivisionService";
-
+import {pageLoading, pageError} from "../components/common/Loading";
 
 class Dashboard extends React.Component {
 	constructor(props) {
@@ -44,37 +44,30 @@ class Dashboard extends React.Component {
 	}
   
 	render() {
-		let imageStyle = {
-			width: '100px',
-			height: '100px',
-			position: 'absolute',             /* 2 */
-			top: '45%',                       /* 3 */
-			left: '45%' }   /* 4 */
+		
 		var content = ""
 		switch(this.state.loading) {
-			case -1:
+			case 0:
 				if (Array.isArray(this.state.divisions))
 					content =  this.state.divisions.map((div) => (
 							<DeviceGroup key={div.id} division={div} />
 						)
 					)
 				break;
-			case 0:
 			case 1:
-				content = <img style={imageStyle} src={require('./../assets/loading.gif').default} alt="loading..." />;
+				content = pageLoading;
 				break;
 			case 2:
 				content = "No divisions yet";
 				break;
 			case 3:
-				content = "Ups! Something Went Wrong...";
+				content = pageError;
 				break;
 		}
 		if (content=="") {
 			this.loadData();
 		}
 		
-		 
 		return (
 			<Container fluid className="main-content-container px-4">
 				{/* Page Header */}

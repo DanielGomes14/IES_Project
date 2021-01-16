@@ -16,6 +16,7 @@ import SensorDataService from '../../services/SensorDataService';
 import DivisionService from '../../services/DivisionService';
 import { Card,CardBody,FormSelect,CardHeader } from 'shards-react';
 
+import {pageLoading, pageError} from "../../components/common/Loading";
 
 
 export default class SensorVis extends React.Component {
@@ -206,12 +207,12 @@ export default class SensorVis extends React.Component {
                 <CardBody>
                     {(() => {
                         switch(this.state.loading) {
-                            case 0 :
+                            case 0:
                                 return plot;
-                            case 1 :
-                                return "No Content available. Might take a while..";
-                            case 2 :
-                                return "Something went wrong..";
+                            case 1:
+                                return pageLoading;
+                            case 2:
+                                return pageError;
                         }
                     })()}
                 </CardBody>
