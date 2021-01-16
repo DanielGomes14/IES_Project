@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.integration.support.MessageBuilder;
 
-
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -46,6 +45,7 @@ public class DeviceController {
     @Autowired
     private DeviceLogRepository deviceLogRepository;
 
+    
     @Autowired
     Source source;
 
@@ -65,6 +65,19 @@ public class DeviceController {
         Set <Device> devices = division.getDevices();
 
         return ResponseEntity.ok().body(devices);
+    }
+
+    @GetMapping("/devices/{device_id}")
+    public ResponseEntity<?> getDevice(@PathVariable(value = "device_id") Long id) throws ResourceNotFoundException {
+        Device device = this.deviceRepository.findById(id).
+                orElseThrow( () -> new ResourceNotFoundException("Could not find device with id" + id));
+                
+        this.authenticateduser= (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(!this.permissionService.checkClientDivision(device.getDivision(),this.authenticateduser)){
+        return  ResponseEntity.status(403).body("Cannot get Devices from a House you Dont Belong!");
+        }
+
+        return ResponseEntity.ok().body(device);
     }
 
     @PostMapping("/devices")
@@ -99,15 +112,16 @@ public class DeviceController {
     @PutMapping("/devices")
     public ResponseEntity<?> updateDevice(@Valid @RequestBody Device device) throws ResourceNotFoundException {
         Device d = deviceRepository.findById(device.getId()).
-        orElseThrow(() -> new ResourceNotFoundException("Could not find Type of Sensor "));
+        orElseThrow(() -> new ResourceNotFoundException("Could not find device with id " + device.getId()));
         this.authenticateduser= (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(!this.permissionService.checkClientDivision(d.getDivision(),this.authenticateduser)){
             ResponseEntity.status(403).body("Cannot update a Device from a House you Dont Belong!");
         }
         
         d.setState(device.getState());
-        
-        String state = d.getState()==0? " Off" : " On";
+
+        String state = d.getState()==0? "Off" : "On";
+
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         DeviceLog log = new DeviceLog(d,timestamp,d.getState());
         deviceLogRepository.save(log);
@@ -123,6 +137,30 @@ public class DeviceController {
         new Timestamp(System.currentTimeMillis()),
         d.getDivision().getHome()
         );
+
+        if (!d.getType().getName().equals("Eletronic")) {
+            if (d.getState()>0){
+                for (Sensor sensor :  d.getDivision().getSensors()) {
+                    if (sensor.getType().getName() == d.getType().getName()) {
+                        LOG.info("Updated State: START_CONF");
+                        MQMessage msg = new MQMessage("START_CONF", sensor.getId(), sensor.getType().getName(), d.getState());
+                        source.output().send(MessageBuilder.withPayload(msg).build());
+                        break;
+                    }
+                }
+            } else{
+                for (Sensor sensor :  d.getDivision().getSensors()) {
+                    if (sensor.getType().getName() == d.getType().getName()) {
+                        LOG.info("Updated State: END_CONF");
+                        MQMessage msg = new MQMessage("END_CONF", sensor.getId(), sensor.getType().getName(), d.getState());
+                        source.output().send(MessageBuilder.withPayload(msg).build());
+                        break;
+                    }
+                }
+            }
+
+        }
+
         notificationRepository.save(notf);
         deviceRepository.save(d);
         return  ResponseEntity.ok().body("Successfully added new Device");
