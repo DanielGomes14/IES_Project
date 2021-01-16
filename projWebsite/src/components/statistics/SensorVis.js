@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../../../node_modules/react-vis/dist/style.css';
+import "react-widgets/dist/css/react-widgets.css";
 import {
     XYPlot,
     XAxis,
@@ -14,13 +15,17 @@ import {
 } from 'react-vis';
 import SensorDataService from '../../services/SensorDataService';
 import DivisionService from '../../services/DivisionService';
-import { Card,CardBody,FormSelect,CardHeader } from 'shards-react';
+import { Card,CardBody,FormSelect,CardHeader, Form, Col, Row,Button } from 'shards-react';
 
 
+import DateTimePicker from 'react-widgets/lib/DateTimePicker'
+import dateFnsLocalizer from 'react-widgets-date-fns';
+import Multiselect from 'react-widgets/lib/Multiselect'
 
 export default class SensorVis extends React.Component {
     constructor(props) {
         super(props);
+        
         this.state = {
             loading: 1,
             asyncreq: true,
@@ -29,12 +34,42 @@ export default class SensorVis extends React.Component {
             temperature: [],
             humidity: [],
             luminosity: [],
+            selectedDate: new Date(Date.now() - 7*24*3600*1000),
+            selectedEndDate: new Date(),
+            types: ["Temperature","Humidity","Luminosity"],
+            selectedtypes: ["Temperature","Humidity","Luminosity"],
             series : { "Humidity" : "#5bc0de", "Temperature": "#d9534f", "Luminosity": "#f0ad4e"}
         };
+        
         this.loadDivisions = this.loadDivisions.bind(this);
         this.loadData = this.loadData.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleDateChange = this.handleDateChange.bind(this);
+        this.handleEndDateChange = this.handleEndDateChange.bind(this);
+        this.handleTypeFilter = this.handleTypeFilter.bind(this);
+
     }
+    
+    handleEndDateChange(event){
+        console.log(event)
+        console.log(this.state.selectedEndDate)
+        this.setState({
+            selectedEndDate: event
+        });
+    }
+
+    handleDateChange(event) {
+        console.log(event)
+        console.log(this.state.selectedDate)
+        this.setState({
+            selectedDate: event
+        });
+    };
+
+    handleColor(time) {
+        return time.getHours() > 12 ? "text-success" : "text-error";
+    };
+    
 
     handleChange(event) {
 		const {name, value} = event.target;
@@ -44,6 +79,15 @@ export default class SensorVis extends React.Component {
 		});
 	}
     
+    handleTypeFilter(event){
+        let newState = this.state
+        newState.selectedtypes=event
+        this.setState({ ...this.state, ...newState });
+        console.log("STATE")
+        console.log(this.state.selectedtypes)
+    }
+
+
     componentDidMount() {  
         this.loadDivisions();
         this.loadData();
@@ -55,11 +99,15 @@ export default class SensorVis extends React.Component {
     }
 
     async loadData() {
-        console.log(this.state)
         if(this.state.division_id != null){
             console.log(this.state.division_id)
             try {
-                SensorDataService.getSensorData(this.state.division_id)
+                SensorDataService.getSensorData(
+                    this.state.division_id,
+                    this.state.selectedDate,
+                    this.state.selectedEndDate,
+                    this.state.selectedtypes
+                    )
                     .then(data => {
                         if (data.length != 0) {
                             this.setState({loading: 0 });
@@ -109,11 +157,11 @@ export default class SensorVis extends React.Component {
                 luminosity: []
             };
             data.map(d => {
-                if (d.sensor.type.name ==  "Temperature"){
+                if (d.sensor.type.name ==  "Temperature" && this.state.types.includes("Temperature")){
                     dataSeries.temperature.push({x: new Date(d.timestampDate), y: d.data})
-                } else if (d.sensor.type.name == "Humidity") {
+                } else if (d.sensor.type.name == "Humidity" && this.state.types.includes("Humidity")) {
                     dataSeries.humidity.push({x: new Date(d.timestampDate), y: d.data})
-                } else if (d.sensor.type.name == "Luminosity") {
+                } else if (d.sensor.type.name == "Luminosity" && this.state.types.includes("Luminosity")) {
                     dataSeries.luminosity.push({x: new Date(d.timestampDate), y: d.data})
                 }
             });
@@ -128,6 +176,7 @@ export default class SensorVis extends React.Component {
     
     
     render() {
+        new dateFnsLocalizer();
         const plot = (
             <div>
             <FlexibleWidthXYPlot height={600} xType="time">
@@ -187,22 +236,54 @@ export default class SensorVis extends React.Component {
                 })
                 }
             />
-          </div>
+        </div>
             
         )
-
         return (
             <Card>
                 <CardHeader className="border-bottom">
                     <h6 className="m-0"> Division Statistics - Sensor Data</h6>
                 </CardHeader>
+                <Row className="px-3 py-4">
                 {this.state.division_id ? (
+                    <Col>
+                    <h6 className="m-0">Division</h6>
                     <FormSelect name="division_id" value={this.state.division_id} onChange={this.handleChange}>
                     {this.state.divisions.map((div, index) => 
                         <option key={index} value={div.id}>{div.name}</option>
-                    )}
+                    )}                    
                 </FormSelect>
+                </Col>
                 ) : null}
+                <Col>
+                <h6 className="m-0">Starting Date</h6>
+
+                <DateTimePicker
+                    value= {this.state.selectedDate}
+                    onChange= {this.handleDateChange}
+                />
+                </Col>
+                <Col>
+                <h6 className="m-0">Ending Date</h6>
+
+                <DateTimePicker  
+                    value= {this.state.selectedEndDate}
+                    onChange= {this.handleEndDateChange}
+                />
+                </Col>
+                <Col lg="4">
+                <h6 className="m-0">Sensor Types</h6>
+                {
+                    <Multiselect
+                            data={this.state.types}
+                            value={this.state.selectedtypes}
+                            defaultValue={this.state.types}
+                            onChange={this.handleTypeFilter}
+                            />
+                }
+                </Col>
+                </Row>
+
                 <CardBody>
                     {(() => {
                         switch(this.state.loading) {
@@ -219,3 +300,16 @@ export default class SensorVis extends React.Component {
         );
     }
 }
+
+/*
+  <DatePicker
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={20}
+                    timeCaption="time"
+                    dateFormat="MMMM d, yyyy h:mm aa"
+                    selected={this.state.selectedDate}
+                    onChange={this.handleDateChange}
+                />
+                
+*/
