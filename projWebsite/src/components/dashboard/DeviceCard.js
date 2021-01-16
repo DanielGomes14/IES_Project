@@ -17,7 +17,8 @@ import {
 	Button,
 	Badge,
 	Col,
-	Row
+	Row,
+	Slider
 } from "shards-react";
 
 
@@ -42,14 +43,21 @@ const types = {
 
 class DeviceCard extends React.Component {
     constructor(props) {
-        super(props);
-        this.device = props.device;
+		super(props);
+		this.theme = null;
+		this.range = null;
+		this.device = props.device;
 		this.state = {
 			connected: 0,
-			refresh: false
+			refresh: false,
+			theme: "",
+			range: [0,100],
+			tooltip: false,
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.submit = this.submit.bind(this);
+		this.getThemeNRange = this.getThemeNRange.bind(this);
+		this.getThemeNRange(props.device.type.name)
 	}
 
 	componentDidMount() {
@@ -63,6 +71,28 @@ class DeviceCard extends React.Component {
                 console.log(error) ;
             });
 	}
+
+
+	getThemeNRange(typeName) {
+        if (typeName == "Temperature") {
+			this.setState({
+				theme: "danger",
+				range: [15, 35]
+			})
+        } else if (typeName == "Humidity") {
+			this.setState({
+				theme: "info",
+				range: [40, 60]
+			})
+        } else if (typeName == "Luminosity") {
+			this.setState({
+				theme: "warning",
+				range: [20, 80]
+			})
+		} else if (!typeName == "Eletronic") {
+            throw new Error('Unexpected props');
+        }
+    }
 
 	handleChange(event) {
 		const {id, name, value} = event.target;
@@ -99,6 +129,7 @@ class DeviceCard extends React.Component {
 	render() {
 		if (this.state.refresh === true)
 			return <Redirect to='/' />
+
 		return (
 			<Card small className="h-100">
 				{/* Card Header */}
@@ -116,7 +147,7 @@ class DeviceCard extends React.Component {
 							</div>
 						</Col>
 						<Col sm="6" md="4" lg="4">
-							<Button className="float-right" theme="white" style={{ width: "100%", height:"100%", minWidth: "160px", marginRight: "25px"}}>
+							<Button className="float-right" theme="white" style={{height:"100%", marginRight: "25px"}}>
 								<FormCheckbox toggle defaultChecked={this.device.state} ref={this.device.id}	name="connected" id={this.device.id} onChange={ e => this.handleChange(e) }>
 									Enable Device
 								</FormCheckbox>
@@ -124,24 +155,29 @@ class DeviceCard extends React.Component {
 						</Col>
 					</Row>
 				</CardHeader>
-				{/* { this.state.connected ? (
+				{ this.state.connected && this.device.type.name != "Eletronic" ? (
 					<CardBody className="d-flex flex-column">
-						<div className="progress-wrapper">
-						<strong className="text-muted d-block mb-2">
-							Device's Progress
-						</strong>
-						<Progress
-								theme={types[this.device.type.name].theme}
-								style={{ height: "5px" }}
-								className="mb-3"
-								value={50}
-						>
-							<span className="progress-value">{50}%</span>
-						</Progress>
-						</div>
+						<Slider
+							start={[this.state.connected-2.5,this.state.connected +2.5 ] }
+							pips={{
+								mode: "positions",
+								values: [0, 25, 50, 75, 100],
+								stepped: true,
+								density: 5
+							}}
+							range={{ min: this.state.range[0], max: this.state.range[1] }}
+							step={1}
+							margin={5}
+							theme={this.state.theme}
+							animate={true}
+							connect
+							tooltips={this.state.tooltip}
+							onSlide={this.handleSlide}
+							onEnd={e => this.setState({tooltip: false})}
+						/>
 					</CardBody>
-					) : ""
-				} */}
+				) :null }
+
 			</Card>
 		)
 	}
