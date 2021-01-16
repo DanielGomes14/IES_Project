@@ -6,6 +6,7 @@ import DeviceGroup from "../components/dashboard/DeviceGroup";
 
 import DivisionService from "../services/DivisionService";
 
+
 class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
@@ -43,17 +44,24 @@ class Dashboard extends React.Component {
 	}
   
 	render() {
+		let imageStyle = {
+			width: '100px',
+			height: '100px',
+			position: 'absolute',             /* 2 */
+			top: '45%',                       /* 3 */
+			left: '45%' }   /* 4 */
 		var content = ""
 		switch(this.state.loading) {
-			case 0:
+			case -1:
 				if (Array.isArray(this.state.divisions))
 					content =  this.state.divisions.map((div) => (
 							<DeviceGroup key={div.id} division={div} />
 						)
 					)
 				break;
+			case 0:
 			case 1:
-				content = "Loading...";
+				content = <img style={imageStyle} src={require('./../assets/loading.gif').default} alt="loading..." />;
 				break;
 			case 2:
 				content = "No divisions yet";
@@ -65,6 +73,8 @@ class Dashboard extends React.Component {
 		if (content=="") {
 			this.loadData();
 		}
+		
+		 
 		return (
 			<Container fluid className="main-content-container px-4">
 				{/* Page Header */}

@@ -37,6 +37,8 @@ class DeviceGroup extends React.Component {
 				console.log(error) ;
 			});
 	}
+
+
   
 	render() {
 		return (

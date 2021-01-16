@@ -3,7 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import {
-    Container, Row
+    Container, Row, Button
 } from "shards-react";
 
 import AutomationTab from "../components/automation/AutomationTab";
@@ -18,7 +18,7 @@ import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 
 // import NewConfiguration from "../components/automation/NewConfiguration";
-
+import {activateAlert} from "../components/common/TransitionAlert";
 
 
 function TabPanel(props) {
@@ -99,6 +99,7 @@ class Automation extends React.Component {
     render() {
         return (
             <Container fluid className="main-content-container px-4">
+                <Button onClick={() => activateAlert()}>fnwaoeiç</Button>
                 <Row noGutters className="page-header py-4">
                     <PageTitle sm="4" title="Automation" subtitle="Dashboard" className="text-sm-left" />
                 </Row>
