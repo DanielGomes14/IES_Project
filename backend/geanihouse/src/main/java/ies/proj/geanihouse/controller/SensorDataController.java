@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 @CrossOrigin(origins="*", allowedHeaders = "*")
@@ -45,16 +46,13 @@ public class SensorDataController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end_date
             )
             throws ResourceNotFoundException {
-
         Division d =this.divisionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Could not find home with id :: "+ id));
-
         UserDetails authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(!this.permissionService.checkClientDivision(d,authenticateduser)){
             return ResponseEntity.status(403).body("Cannot get Data from Sensors you don't have access");
         }
-
-        List<SensorData> sensorData_list = new ArrayList<>();
+        List<SensorData> sensorData_list;
 
         if(types != null && start_date != null){
             Date start =  java.sql.Timestamp.valueOf(start_date);
@@ -103,9 +101,12 @@ public class SensorDataController {
                    id,end
            );
         }
+        // In order to not return a massive ammount of Data we only return data from Sensors of this division of today
         else {
-            sensorData_list = sensorDataRepository.findAllBySensor_Division_Id(
-                    id
+            LocalDateTime now2 = LocalDateTime.now();
+            Date end = Timestamp.valueOf(now2.with(LocalTime.MIN));
+            sensorData_list = sensorDataRepository.findAllBySensor_Division_IdAndTimestampDateIsGreaterThan(
+                    id,end
             );
         }
 
