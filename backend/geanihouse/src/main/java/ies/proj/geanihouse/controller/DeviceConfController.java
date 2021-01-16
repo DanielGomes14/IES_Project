@@ -81,12 +81,20 @@ public class DeviceConfController {
                                 device.getType().getName(),
                                 deviceConf.getValue());
             deviceConfigurationService.scheduling(deviceConf,message,begindate);
+            message = new MQMessage(message);
             message.setMethod("END_CONF");
             deviceConfigurationService.scheduling(deviceConf,message,enddate);
         }
         else {
-            deviceConfigurationService.scheduling(deviceConf,null,begindate);
-            deviceConfigurationService.scheduling(deviceConf,null,enddate);
+            MQMessage message =new MQMessage("START_CONF",
+                                device.getId(),
+                                device.getType().getName(),
+                                1);
+            deviceConfigurationService.scheduling(deviceConf,message,begindate);
+            message = new MQMessage(message);
+            message.setMethod("END_CONF");
+            message.setValue(0);
+            deviceConfigurationService.scheduling(deviceConf,message,enddate);
         }
 
         return  ResponseEntity.ok().body("Success inserting new Configuration for this Device");
