@@ -8,6 +8,7 @@ from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime
 import RPi.GPIO as GPIO
 import time
+import requests
 
 
 # client, user and device details
@@ -54,11 +55,12 @@ class Generator:
             count += 1
 
 
-class Sensor(Generator):
+class Device:
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)#Button to GPIO23
     GPIO.setup(24, GPIO.OUT)  #LED to GPIO24
     lit = False
+    url = 'http://www.localhost:8080/devices'
 
     @classmethod
     def setLit(cls, value):
@@ -66,13 +68,16 @@ class Sensor(Generator):
         GPIO.output(24, value)
     
     @classmethod
+    def button_press(cls):
+        r = requests.put(cls.url, data = {id:1, state:not cls.lit})
+
+    @classmethod
     def start(cls):
         try:
             while True:
                 button_state = GPIO.input(23)
                 if button_state == False:
-                    cls.lit = not cls.lit
-                    GPIO.output(24, cls.lit)
+                    cls.button_press()
                     print('Button Pressed...')
                     time.sleep(0.2)
         except:
@@ -173,31 +178,21 @@ def on_message(client, userdata, message):
     
     message = json.loads(message.payload.decode())
 
-    method = message['method']
-    sensor_type = message['type'] 
-    sensor_id = message['id']
-    value = message['value']
+    method = message.get('method')
+    sensor_type = message.get('type') 
+    sensor_id = message.get('id')
+    value = message.get('value')
     # receive message from rabbit
     if method == 'ADDSENSOR':
         if sensor_type == 'Temperature':
-            #if Sensor.temperature_sensor == None:
-            #    Sensor.temperature_sensor = id
-            #else:
             Temperature.sensor_mu[sensor_id] = [value,None]
-            print(sensor_id,sensor_type)
         elif sensor_type == 'Humidity':
-            #if Sensor.humidity_sensor == None:
-            #    Sensor.humidity_sensor = id
-            #else:
             Humidity.sensor_mu[sensor_id] = [value,None]
         elif sensor_type == 'Luminosity':
             Luminosity.sensor_mu[sensor_id] = [value,None]
 
     elif method == 'REMOVESENSOR':
-        if Sensor.temperature_sensor == sensor_id:
-            Sensor.temperature_sensor = None
-        if Sensor.humidity_sensor == sensor_id:
-            Sensor.humidity_sensor = None
+        
         elif sensor_type == 'Temperature':
             del Temperature.sensor_mu[sensor_id]
         elif sensor_type == 'Humidity':
@@ -206,10 +201,7 @@ def on_message(client, userdata, message):
             del Luminosity.sensor_mu[sensor_id]        
         
     elif method == 'START_CONF':
-        #if Sensor.temperature_sensor == id:
-            #Sensor.temperature_config = value
-        #if Sensor.humidity_sensor == id:
-            #Sensor.humidity_config = value
+        
         if sensor_type == 'Temperature':
             Temperature.sensor_mu[sensor_id][1] = value
         elif sensor_type == 'Humidity':
@@ -218,10 +210,7 @@ def on_message(client, userdata, message):
             Luminosity.sensor_mu[sensor_id][1] = value 
 
     elif method == 'END_CONF':
-        if Sensor.temperature_sensor == id:
-            Sensor.temperature_config = value
-        if Sensor.humidity_sensor == id:
-            Sensor.humidity_config = value
+        
         elif sensor_type == 'Temperature':
             Temperature.sensor_mu[sensor_id][1] = None
         elif sensor_type == 'Humidity':
@@ -229,7 +218,8 @@ def on_message(client, userdata, message):
         elif sensor_type == 'Luminosity':
             Luminosity.sensor_mu[sensor_id][1] = None 
 
-
+    elif method == "DEVICE":
+        Device.setLit(value)
 
 def publish(topic, message, waitForAck=False):
     mid = client.publish(topic, message)[1]
