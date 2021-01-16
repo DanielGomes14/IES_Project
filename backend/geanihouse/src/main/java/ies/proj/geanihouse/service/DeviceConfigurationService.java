@@ -2,8 +2,10 @@ package ies.proj.geanihouse.service;
 
 
 import ies.proj.geanihouse.controller.DeviceConfController;
+import ies.proj.geanihouse.controller.DeviceLogController;
 import ies.proj.geanihouse.model.Device;
 import ies.proj.geanihouse.model.DeviceConf;
+import ies.proj.geanihouse.model.DeviceLog;
 import ies.proj.geanihouse.model.MQMessage;
 import ies.proj.geanihouse.model.Notification;
 import ies.proj.geanihouse.repository.DeviceConfRepository;
@@ -30,6 +32,7 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @EnableBinding(Source.class)
@@ -42,6 +45,9 @@ public class DeviceConfigurationService {
 
     @Autowired
     NotificationRepository notificationRepository;
+
+    @Autowired
+    DeviceLogController deviceLogController;
 
     private final Map<Long, ScheduledFuture<?>> scheduledTasks = new IdentityHashMap<>();
     private static final Logger LOG = LogManager.getLogger(DeviceConfigurationService.class);
@@ -63,13 +69,17 @@ public class DeviceConfigurationService {
                 source.output().send(MessageBuilder.withPayload(message).build());
                 scheduledTasks.remove(deviceConf.getId());
             }
-            else   LOG.info("Changed State for Device");
+            else{
+                LOG.info("Changed State for Device");
+            }   
 
+            double state = deviceConf.getValue();
             Device d = deviceConf.getDevice();
-            if(d.getState() == 1){
-                d.setState(0);
-            }
-            else d.setState(1);
+            d.setState(state);
+
+            DeviceLog log = new DeviceLog(d,System.currentTimeMillis(),state);
+
+            deviceLogController.save(log);
             deviceRepository.save(d);
             savenewNotification(d);
 
