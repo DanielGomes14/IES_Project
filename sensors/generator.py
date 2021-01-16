@@ -6,6 +6,9 @@ import json
 import threading
 from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime
+import RPi.GPIO as GPIO
+import time
+
 
 # client, user and device details
 serverUrl   = "crow.rmq.cloudamqp.com"
@@ -52,23 +55,29 @@ class Generator:
 
 
 class Sensor(Generator):
-    temperature_sensor = None
-    humidity_sensor    = None
-    temperature_config = None
-    humidity_config    = None
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)#Button to GPIO23
+    GPIO.setup(24, GPIO.OUT)  #LED to GPIO24
+    lit = False
 
     @classmethod
-    async def start(cls):
-        while True:
-            humidity, temperature = Adafruit_DHT.read_retry(11, 4)
+    def setLit(cls, value):
+        cls.lit = value
+        GPIO.output(24, value)
+    
+    @classmethod
+    def start(cls):
+        try:
+            while True:
+                button_state = GPIO.input(23)
+                if button_state == False:
+                    cls.lit = not cls.lit
+                    GPIO.output(24, cls.lit)
+                    print('Button Pressed...')
+                    time.sleep(0.2)
+        except:
+            GPIO.cleanup()
 
-            sensor_data = {}
-            if temperature_sensor != None:
-                sensor_data[temperature_sensor] = temperature if temperature_config==None else temperature_config+(1/temperature)*random.random()*2-1
-            if humidity_sensor != None:
-                sensor_data[humidity_sensor] = humidity if humidity_config==None else humidity_config+(1/humidity)*random.random()*2-1
-            
-            await cls.send_shuffled(sensor_data)
 
 
 class Temperature(Generator):
