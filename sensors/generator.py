@@ -9,6 +9,7 @@ from datetime import datetime
 import RPi.GPIO as GPIO
 import time
 import requests
+import aiohttp
 
 
 # client, user and device details
@@ -57,32 +58,14 @@ class Generator:
 
 class Device:
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)#Button to GPIO23
     GPIO.setup(24, GPIO.OUT)  #LED to GPIO24
     lit = False
-    url = 'http://www.localhost:8080/devices'
 
     @classmethod
     def setLit(cls, value):
+        print('Light on' if (value) else 'Light off')
         cls.lit = value
-        GPIO.output(24, value)
-    
-    @classmethod
-    def button_press(cls):
-        r = requests.put(cls.url, data = {id:1, state:not cls.lit})
-
-    @classmethod
-    def start(cls):
-        try:
-            while True:
-                button_state = GPIO.input(23)
-                if button_state == False:
-                    cls.button_press()
-                    print('Button Pressed...')
-                    time.sleep(0.2)
-        except:
-            GPIO.cleanup()
-
+        GPIO.output(24, value) 
 
 
 class Temperature(Generator):
@@ -192,8 +175,7 @@ def on_message(client, userdata, message):
             Luminosity.sensor_mu[sensor_id] = [value,None]
 
     elif method == 'REMOVESENSOR':
-        
-        elif sensor_type == 'Temperature':
+        if sensor_type == 'Temperature':
             del Temperature.sensor_mu[sensor_id]
         elif sensor_type == 'Humidity':
             del Humidity.sensor_mu[sensor_id]
@@ -201,7 +183,6 @@ def on_message(client, userdata, message):
             del Luminosity.sensor_mu[sensor_id]        
         
     elif method == 'START_CONF':
-        
         if sensor_type == 'Temperature':
             Temperature.sensor_mu[sensor_id][1] = value
         elif sensor_type == 'Humidity':
@@ -210,8 +191,7 @@ def on_message(client, userdata, message):
             Luminosity.sensor_mu[sensor_id][1] = value 
 
     elif method == 'END_CONF':
-        
-        elif sensor_type == 'Temperature':
+        if sensor_type == 'Temperature':
             Temperature.sensor_mu[sensor_id][1] = None
         elif sensor_type == 'Humidity':
             Humidity.sensor_mu[sensor_id][1] = None
@@ -219,7 +199,7 @@ def on_message(client, userdata, message):
             Luminosity.sensor_mu[sensor_id][1] = None 
 
     elif method == "DEVICE":
-        Device.setLit(value)
+        Device.setLit(value > 0)
 
 def publish(topic, message, waitForAck=False):
     mid = client.publish(topic, message)[1]
