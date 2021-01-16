@@ -56,10 +56,10 @@ class LoadDatabase {
             divisions.save(division1);
             divisions.save(division2);
             
-            //Sensor sensor = new Sensor(1, division1, temperature);
-            //Sensor sensor2 = new Sensor(2,division1,humidity);
-            //sensors.save(sensor);
-            //sensors.save(sensor2);
+            Sensor sensor = new Sensor(1, division1, temperature);
+            Sensor sensor2 = new Sensor(2,division1,humidity);
+            sensors.save(sensor);
+            sensors.save(sensor2);
 
             Device light_bulb = new Device(1, "Lampada", 0.0, eletronic, division1);
             Device coffe_machine = new Device(2, "Máquina de Café", 0.0, eletronic, division1);
@@ -71,10 +71,10 @@ class LoadDatabase {
             devices.save(air_cond);
             devices.save(desumidificador);
 
-            //SensorData init_data = new SensorData(1, sensor, Timestamp.valueOf("2007-09-23 10:10:10.0"), 25.0);
-            //SensorData init_data2 = new SensorData(2, sensor2, Timestamp.valueOf("2007-09-23 10:10:10.0"), 25.0);
-            //sensordata.save(init_data);
-            // sensordata.save(init_data2);
+            SensorData init_data = new SensorData(1, sensor, Timestamp.valueOf("2007-09-23 10:10:10.0"), 25.0);
+            SensorData init_data2 = new SensorData(2, sensor2, Timestamp.valueOf("2007-09-23 10:10:10.0"), 25.0);
+            sensordata.save(init_data);
+            sensordata.save(init_data2);
 
             Notification fire_alarm = new Notification(1, "Temperature Alarm", "Sensor 1 detected temperature above 40°Celsius.", Timestamp.valueOf("2007-09-23 10:10:10.0"), h1);
             notifications.save(fire_alarm);
