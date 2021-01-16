@@ -121,7 +121,6 @@ class Automation extends React.Component {
 
                             </Tabs>
                         </AppBar>
-                       
                         {this.state.divisions.map((division, index) => (
                             <TabPanel key={index} value={this.state.value} index={index}>
                                 <AutomationTab division={division}></AutomationTab>

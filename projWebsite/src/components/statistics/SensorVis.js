@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../../../node_modules/react-vis/dist/style.css';
 import {
     XYPlot,
@@ -14,8 +14,9 @@ import {
 } from 'react-vis';
 import SensorDataService from '../../services/SensorDataService';
 import DivisionService from '../../services/DivisionService';
-import { Card,CardBody,FormSelect,CardHeader } from 'shards-react';
-
+import { Card,CardBody,FormSelect,CardHeader, Form } from 'shards-react';
+import DateTimePicker from "react-datetime-picker"
+import DatePicker from "react-date-picker"
 
 
 export default class SensorVis extends React.Component {
@@ -29,12 +30,28 @@ export default class SensorVis extends React.Component {
             temperature: [],
             humidity: [],
             luminosity: [],
+            selectedDate: new Date(),
             series : { "Humidity" : "#5bc0de", "Temperature": "#d9534f", "Luminosity": "#f0ad4e"}
         };
         this.loadDivisions = this.loadDivisions.bind(this);
         this.loadData = this.loadData.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleDateChange = this.handleDateChange.bind(this);
     }
+
+
+    handleDateChange(event) {
+        console.log(event)
+        this.setState({
+            selectedDate: event
+        });
+    };
+
+    handleColor(time) {
+        return time.getHours() > 12 ? "text-success" : "text-error";
+    };
+    
+
 
     handleChange(event) {
 		const {name, value} = event.target;
@@ -128,6 +145,7 @@ export default class SensorVis extends React.Component {
     
     
     render() {
+
         const plot = (
             <div>
             <FlexibleWidthXYPlot height={600} xType="time">
@@ -187,7 +205,7 @@ export default class SensorVis extends React.Component {
                 })
                 }
             />
-          </div>
+        </div>
             
         )
 
@@ -203,6 +221,23 @@ export default class SensorVis extends React.Component {
                     )}
                 </FormSelect>
                 ) : null}
+                <DateTimePicker
+                    value= {this.state.selectedDate}
+                    onChange= {this.handleDateChange}
+                />
+
+                <DatePicker
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={20}
+                    timeCaption="time"
+                    dateFormat="MMMM d, yyyy h:mm aa"
+                    selected={this.state.selectedDate}
+                    onChange={this.handleDateChange}
+                />
+
+
+
                 <CardBody>
                     {(() => {
                         switch(this.state.loading) {

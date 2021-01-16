@@ -1,9 +1,7 @@
 package ies.proj.geanihouse.controller;
 import ies.proj.geanihouse.exception.ResourceNotFoundException;
 import ies.proj.geanihouse.model.*;
-import ies.proj.geanihouse.repository.DeviceRepository;
-import ies.proj.geanihouse.repository.DivisionRepository;
-import ies.proj.geanihouse.repository.NotificationRepository;
+import ies.proj.geanihouse.repository.*;
 import ies.proj.geanihouse.service.PermissionService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.integration.support.MessageBuilder;
-import ies.proj.geanihouse.repository.TypeRepository;
 
 
 import javax.validation.Valid;
@@ -46,6 +43,8 @@ public class DeviceController {
     @Autowired
     private NotificationRepository notificationRepository;
 
+    @Autowired
+    private DeviceLogRepository deviceLogRepository;
 
     @Autowired
     Source source;
@@ -108,6 +107,10 @@ public class DeviceController {
         d.setState(device.getState());
 
         String state = d.getState()==0? " Off" : " On";
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        DeviceLog log = new DeviceLog(d,timestamp,d.getState());
+        deviceLogRepository.save(log);
+
         //create notification
         Notification notf = new Notification(0,"Device State Update",
                 "Device " + d.getName() + "is now " + state,
