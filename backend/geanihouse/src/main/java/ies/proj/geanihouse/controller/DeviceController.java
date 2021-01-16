@@ -104,18 +104,24 @@ public class DeviceController {
         if(!this.permissionService.checkClientDivision(d.getDivision(),this.authenticateduser)){
             ResponseEntity.status(403).body("Cannot update a Device from a House you Dont Belong!");
         }
+        
         d.setState(device.getState());
-
+        
         String state = d.getState()==0? " Off" : " On";
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         DeviceLog log = new DeviceLog(d,timestamp,d.getState());
         deviceLogRepository.save(log);
 
         //create notification
+        if(d.getId() == 1){
+            System.out.println("Received message for light");
+            MQMessage message = new MQMessage("DEVICE",1,null,d.getState());
+            source.output().send(MessageBuilder.withPayload(message).build());
+        }
         Notification notf = new Notification(0,"Device State Update",
-                "Device " + d.getName() + "is now " + state,
-                new Timestamp(System.currentTimeMillis()),
-                d.getDivision().getHome()
+        "Device " + d.getName() + "is now " + state,
+        new Timestamp(System.currentTimeMillis()),
+        d.getDivision().getHome()
         );
         notificationRepository.save(notf);
         deviceRepository.save(d);
