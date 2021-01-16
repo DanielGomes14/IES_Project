@@ -94,6 +94,7 @@ class AutomationTab extends React.Component {
                 return false;
             })
             // remove options when there's no such sensor
+    
             exists &= this.state.sensors.some((opt) => {
                 if (remaining[i].id === opt.type.id)
                     return true;
@@ -145,7 +146,8 @@ class AutomationTab extends React.Component {
                 <Row>
                     {this.state.divisionConfigs.map((config, index) => (
                         <Col key={index} lg="6" className="py-3">
-                            <DivisionConfig config={config} />
+                            <DivisionConfig sensor={this.state.sensors.find(
+                                (n) => n.type.id === config.type.id ) } config={config} />
                         </Col>
                     ))}
                 </Row>
