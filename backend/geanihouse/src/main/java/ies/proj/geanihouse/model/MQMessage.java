@@ -25,6 +25,13 @@ public class MQMessage{
         this.type = type;
     }
 
+    public MQMessage(MQMessage copy){
+        this.method = copy.method;
+        this.id = copy.id;
+        this.type = copy.type;
+        this.value = copy.value;
+    }
+
 
 }
 
