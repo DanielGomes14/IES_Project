@@ -9,11 +9,12 @@ import {
 import PageTitle from "../components/common/PageTitle";
 import Graph from "../components/statistics/Graph";
 import DivisionGraph from "../components/statistics/DivisionGraph";
+import HouseStatistics from "../components/statistics/HouseStatistics";
 import SensorVis from "../components/statistics/SensorVis";
 import ReactVisCharts from "../components/statistics/ReactVisCharts";
 import { DynamicCrosshair, ScatterPlotOnNearestXY, LineChartMouseOverSeries, LineChartMouseOverXY, LinkedCharts, Example} from "../components/statistics/DynamicCrosshair";
 import { MarkSeries, LineSeries, VerticalBarSeries } from "react-vis";
-
+import ReactVisPieChart from "../components/statistics/ReactVisPieChart";
 /*
     Users Overview @param: title,charData
     
@@ -54,6 +55,16 @@ const statistics = () => (
                 <DivisionGraph />    
             </Col>
         </Row>  */}
+        <Row className="px-3 py-4">
+            <Col lg="4" md="6" sm="12" >
+                <ReactVisPieChart />    
+            </Col>
+            <Col>
+            
+                <HouseStatistics />  
+     
+            </Col>
+        </Row> 
         <Row className="px-3">
             <Col lg="12" md="12" sm="12" >
                 <SensorVis /> 
