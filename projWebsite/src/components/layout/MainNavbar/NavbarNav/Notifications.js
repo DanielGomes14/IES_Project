@@ -2,7 +2,6 @@ import React from "react";
 import { NavItem, NavLink, Badge, Collapse, DropdownItem } from "shards-react";
 import { FaTemperatureHigh } from "react-icons/fa";
 import NotificationService from "../../../../services/NotificationService";
-import { current_home } from "../../../../utils/auth";
 
 export default class Notifications extends React.Component {
   constructor(props) {
@@ -21,7 +20,7 @@ export default class Notifications extends React.Component {
     this.setState({
       visible: !this.state.visible,
     });
-    NotificationService.getTop5Notifications(current_home.current_home())
+    NotificationService.getTop5Notifications()
       .then(data => {
         this.setState({ 
           notifications: data,
@@ -33,7 +32,7 @@ export default class Notifications extends React.Component {
   }
 
   loadAllNotifications() {
-    NotificationService.getAllNotifications(current_home.current_home())
+    NotificationService.getAllNotifications()
       .then(data => {
         this.setState({ 
           notifications: data,

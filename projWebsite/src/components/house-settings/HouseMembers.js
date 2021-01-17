@@ -43,7 +43,7 @@ class HouseMembers extends React.Component{
 
 	componentDidMount() {
 		this.setState({ loading: 1 });
-		HomeService.getHomeById(current_home.current_home())
+		HomeService.getHomeById()
 			.then(data => { 
                 console.log(data);
 				this.setState({ 

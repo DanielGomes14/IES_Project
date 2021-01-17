@@ -1,12 +1,15 @@
 import baseURL from "./../data/base-url";
 import { auth } from "../utils/auth";
+import { current_home } from "../utils/auth";
 
-const NOTIFICATIONS_REST_API_URL = "notifications/"
+const NOTIFICATIONS_REST_API_URL = "notifications/";
 
 class NotificationService {
 
-    async getTop5Notifications(home_id) {
-        const res = await fetch(baseURL + (home_id + '/') + NOTIFICATIONS_REST_API_URL, {
+    async getTop5Notifications() {
+        if (!current_home.current_home())
+            return [];
+        const res = await fetch(baseURL + (current_home.current_home() + '/') + NOTIFICATIONS_REST_API_URL, {
             method: 'GET',
             mode: 'cors',
             headers: {
@@ -17,8 +20,10 @@ class NotificationService {
         return await res.json();
     }
 
-    async getAllNotifications(home_id) {
-        const res = await fetch(baseURL + (home_id + '/') + NOTIFICATIONS_REST_API_URL + '?all=True', {
+    async getAllNotifications() {
+        if (!current_home.current_home())
+            return [];
+        const res = await fetch(baseURL + (current_home.current_home() + '/') + NOTIFICATIONS_REST_API_URL + '?all=True', {
             method: 'GET',
             mode: 'cors',
             headers: {

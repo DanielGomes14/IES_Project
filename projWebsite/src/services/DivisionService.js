@@ -6,6 +6,8 @@ const DIVISIONS_REST_API_URL = "divisions"
 class DivisionService {
 
     async getDivisions() {
+        if (!current_home.current_home())
+            return [];
         const res = await fetch(baseURL + (current_home.current_home() + '/') + DIVISIONS_REST_API_URL + '/', {
             method: 'GET',
             mode: 'cors',
