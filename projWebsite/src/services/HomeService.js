@@ -1,5 +1,5 @@
 import baseURL from "../data/base-url";
-import { auth,current_user,current_home } from "../utils/auth";
+import { auth,current_home } from "../utils/auth";
 
 const HOME_REST_API_URL = "homes"
 

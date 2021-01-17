@@ -3,13 +3,7 @@ import { Card, CardBody, Button, Slider, FormSelect } from "shards-react";
 
 import DivisionConfigService from "../../services/DivisionConfigService";
 
-
-
-const typeOptions = {
-    1: {id: 1, name: "Temperature"},
-    2: {id: 2, name: "Humidity"},
-    3: {id: 3, name: "Luminosity"},
-}
+import {transitionAlertTrigger} from "../common/TransitionAlertTrigger";
 
 class FormDivisionConfig extends React.Component {
 
@@ -66,14 +60,15 @@ class FormDivisionConfig extends React.Component {
     }
 
     handleSelect(event) {
-        var theme;
-        var range;
-        [theme, range] = this.getThemeNRange(typeOptions[event.target.value].name)
+        let theme;
+        let range;
+        let type = this.props.types.find(item => item.id == event.target.value);
+        [theme, range] = this.getThemeNRange(type.name);
         this.setState({
             theme: theme,
             range: range,
             value: range,
-            type: typeOptions[event.target.value],
+            type: type,
         })
 	}
 
@@ -86,22 +81,35 @@ class FormDivisionConfig extends React.Component {
     }
 
     handleSubmit(event) {
-        if (this.props.config)
-            DivisionConfigService.updateConfiguration(
-                this.props.config.id, this.division.id, this.state.type.name, this.state.value[0], this.state.value[1]
-            ).then(() => window.location.reload());
-        else
-            DivisionConfigService.addConfiguration(
-                this.division.id, this.state.type.name, this.state.value[0], this.state.value[1]
-            ).then(() => window.location.reload());
+        const name = event.target.name;
+        if (name === "add")
+            if (this.props.config)
+                DivisionConfigService.updateConfiguration(
+                        this.props.config.id, this.division.id, this.state.type.name, this.state.value[0], this.state.value[1])
+                    .then(() => transitionAlertTrigger(
+                        "Division configuration updated with success.", "success"));
+            else
+                DivisionConfigService.addConfiguration(
+                        this.division.id, this.state.type.name, this.state.value[0], this.state.value[1])
+                    .then(() => transitionAlertTrigger(
+                        "Division configuration created with success.", "success"));
+        else if (name === "delete")
+            DivisionConfigService.deleteConfiguration(this.props.config.id)
+                .then((res) => {
+                    if (res.ok)
+                        transitionAlertTrigger(
+                            "Division configuration deleted with success.", "success")
+                    else
+                        transitionAlertTrigger("Division already deleated.", "error", false)
+                    });
         event.preventDefault();
     }
     
-    render() {
-        console.log(this.state);
 
+    render() {
         if (!this.state.range || !this.state.value)
             return null;
+        console.log(this.props.config);
         return (
             <Card className="">
                 {!this.props.config ? (
@@ -112,34 +120,50 @@ class FormDivisionConfig extends React.Component {
                     </FormSelect>
                 ) : null}
                 <CardBody>
-                    <h3>{this.state.type.name}</h3>
-                    <form noValidate style={{'width':"100%"}} onSubmit={this.handleSubmit}>
-                        <Slider
-                            start={[this.state.value[0], this.state.value[1]]}
-                            pips={{
-                                mode: "positions",
-                                values: [0, 25, 50, 75, 100],
-                                stepped: true,
-                                density: 5
-                            }}
-                            range={{ min: this.state.range[0], max: this.state.range[1] }}
-                            step={1}
-                            margin={5}
-                            theme={this.state.theme}
-                            animate={true}
-                            connect
-                            tooltips={this.state.tooltip}
-                            onSlide={this.handleSlide}
-                            onEnd={e => this.setState({tooltip: false})}
-                        />
-                        {this.state.apply ? (
-                            <div>
-                                <div className="my-5"></div>
-                                <Button type="submit" className="float-right">Apply Changes</Button>
-                                <div className="clearfix"></div>
-                            </div>
-                        ) : null}
-                    </form>
+                    {(this.state.type.error !== undefined) ?
+                        <span className="text-danger">{this.state.type.error}</span>
+                    : (
+                        <div>
+                            <h3>{this.state.type.name}</h3>
+                            <form noValidate style={{'width':"100%"}}>
+                                <Slider
+                                    start={[this.state.value[0], this.state.value[1]]}
+                                    pips={{
+                                        mode: "positions",
+                                        values: [0, 25, 50, 75, 100],
+                                        stepped: true,
+                                        density: 5
+                                    }}
+                                    range={{ min: this.state.range[0], max: this.state.range[1] }}
+                                    step={1}
+                                    margin={5}
+                                    theme={this.state.theme}
+                                    animate={true}
+                                    connect
+                                    tooltips={this.state.tooltip}
+                                    onSlide={this.handleSlide}
+                                    onEnd={e => this.setState({tooltip: false})}
+                                />
+                                <div className="clearfix">
+                                    {this.props.config? (
+                                        <div className="float-left" >
+                                            <Button type="submit" name="delete" theme="danger" onClick={this.handleSubmit}>
+                                                DELETE
+                                            </Button>
+                                        </div>
+                                    ) : null}
+                                    {this.state.apply ? (
+                                        <div className="float-right" >
+                                            <div className="my-2"></div>
+                                            <Button type="submit" name="add" onClick={this.handleSubmit}>
+                                                Apply Changes
+                                            </Button>
+                                        </div>
+                                    ) : null}
+                                </div>
+                            </form>
+                        </div>
+                    )}
                 </CardBody>
             </Card>
         )

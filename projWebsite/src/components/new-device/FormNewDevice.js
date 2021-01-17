@@ -1,20 +1,21 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {
-  Card,
-  CardHeader,
-  CardBody,
-  Form,
-  FormGroup,
-  FormInput,
-  FormSelect,
-  FormTextarea,
-  Button,
-  Col,
+Card,
+CardHeader,
+CardBody,
+Form,
+FormGroup,
+FormInput,
+FormSelect,
+FormTextarea,
+Button,
+Col,
 } from "shards-react";
 import Select, { components } from 'react-select'
 import { FaLightbulb, FaTemperatureHigh, FaPlayCircle, FaCoffee, FaWifi, FaWind, FaTv } from "react-icons/fa";
 import { IoWater, IoPower } from "react-icons/io5";
+import { Redirect } from "react-router-dom";
 
 import DeviceService from "./../../services/DeviceService";
 
@@ -56,7 +57,8 @@ class FormNewDevice extends React.Component {
 		this.state = {
 			selectedType: options[3],
 			name: "",
-			notes: ""
+			notes: "",
+			new_device: false,
 		}
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -74,15 +76,20 @@ class FormNewDevice extends React.Component {
 	};
 	
 	handleSubmit(event) {
-		alert('Device submitted:\n ' + this.state.name + '\n' + this.division + '\n' + this.state.selectedType.id + '\n' + this.state.notes);
 		DeviceService.addDevice(
 			this.division, this.state.selectedType.id, this.state.name
 		);
 		event.preventDefault();
-		window.location.pathname = '/';
+		this.setState({
+			new_device: true
+		})
+		
 	}
 
 	render() {
+		if (this.state.new_device) {
+			return <Redirect to='/' />
+		}
 		return (
 			<Card small className="h-100 py-3 col-sm-8">
 

@@ -1,10 +1,14 @@
 import React from "react";
 import {
-Card,
-CardHeader,
-ListGroup,
-
+	CardHeader,
+	ListGroup,
+	Container,
+	Row,
+	Col,
+	Card,
+	CardBody
 } from "shards-react";
+
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -20,6 +24,9 @@ import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import DivisionService from "./../../services/DivisionService";
+
+import {transitionAlertTrigger} from "../common/TransitionAlertTrigger";
+
 
 const StyledTableCell = withStyles((theme) => ({
 	head: {
@@ -43,22 +50,9 @@ const StyledTableRow = withStyles((theme) => ({
 class EditDivision extends React.Component{
 	constructor() {
 		super();
-		this.OPTIONS = [
-			{ id: 0, name: "Daniel", checked: true },
-			{ id: 1, name: "Leandro", checked: true },
-			{ id: 2, name: "Chico", checked: true }, 
-			{ id: 3, name: "Bruno", checked: true }
-		];
-		this.OPTIONS2 = [
-			{ id: 0, name: "Leandro", checked: true },
-			{ id: 1, name: "Chico", checked: true },
-			{ id: 2, name: "Bruno", checked: true },
-			{ id: 3, name: "Daniel", checked: false }
-		];
 		this.state = { 
 			checked: false,
-			title: "Edit Current Divisions' Permissions", 
-			OPTIONS: this.OPTIONS,
+			title: "Current Divisions", 
 			loading: 0,
 			divisions: []
 		};
@@ -68,8 +62,9 @@ class EditDivision extends React.Component{
 
 	componentDidMount() {
 		this.setState({ loading: 1 });
-		DivisionService.getDivisions(current_home.current_home())
+		DivisionService.getDivisions()
 			.then(data => { 
+				console.log(data);
 				this.setState({ 
 					loading: 0,
 					divisions: data
@@ -106,12 +101,12 @@ class EditDivision extends React.Component{
 				label: 'Yes',
 				onClick: () => {
 					DivisionService.deleteDivision(division_id)
-					.then(data => { 
-						this.componentDidMount()
-					})
-					.catch(error => {
-						alert(error);
-					});
+						.then(data => { 
+							this.componentDidMount()
+						})
+						.catch(error => {
+							transitionAlertTrigger("Something went wrong.", "error", false)
+						});
 				}
 			},
 			{
@@ -127,47 +122,22 @@ class EditDivision extends React.Component{
 				<CardHeader className="border-bottom">
 					<h6 className="m-0">{this.state.title}</h6>
 				</CardHeader>
-				<ListGroup flush>
-				<TableContainer component={Paper}>
-					<Table aria-label="customized table">
-						<TableHead>
-							<TableRow>
-								<StyledTableCell>Name of Division</StyledTableCell>
-								<StyledTableCell>People with Permission</StyledTableCell>
-								<StyledTableCell>Number of Members with Permission&nbsp;</StyledTableCell>
-								<StyledTableCell>Edit Division&nbsp;</StyledTableCell>
-							</TableRow>
-						</TableHead>
-						<TableBody>
-							{this.state.divisions.map((row) => (
-								<StyledTableRow key={ row.name }>
-									<StyledTableCell component="th" scope="col">
-										{ row.name }
-									</StyledTableCell>
-									<StyledTableCell component="th" scope="col" > {/* remove */}
-										<ul>
-											{
-												this.OPTIONS2.map((person) => {
-													return person.checked ? (
-														<li key={ person.name }>
-																{ person.name }
-														</li>
-													): null;
-												})
-											}
-										</ul>
-									</StyledTableCell>
-									<StyledTableCell component="th" scope="col">{/* this.getNumChecked(row) */}</StyledTableCell>
-									<StyledTableCell scope="col">
-										{/* <MaxWidthDialog content={ row } />  */}
-										<Button variant="outlined" color="secondary" onClick={() => this.handleRemoveDivision(row.id)}>Remove</Button>
-									</StyledTableCell>
-								</StyledTableRow>
+				<CardBody className="p-0 pb-3">
+					<table className="table mb-0">
+						<tbody>
+							{this.state.divisions && this.state.divisions.map((e, index) => (
+								<tr key={index}>
+									<td>{e.name}</td>
+									<td style={{textAlign: "right"}}>
+										<Button variant="outlined" color="secondary" onClick={() => this.handleRemoveDivision(e.id)}>
+											Delete
+										</Button>
+									</td>
+								</tr>
 							))}
-						</TableBody>
-					</Table>
-				</TableContainer>
-				</ListGroup>
+						</tbody>
+					</table>
+				</CardBody>
 			</Card>
 		);
 	}

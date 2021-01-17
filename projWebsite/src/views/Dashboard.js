@@ -5,7 +5,7 @@ import PageTitle from "../components/common/PageTitle";
 import DeviceGroup from "../components/dashboard/DeviceGroup";
 
 import DivisionService from "../services/DivisionService";
-import { current_home } from "../utils/auth";
+import {pageLoading, pageError} from "../components/common/Loading";
 
 class Dashboard extends React.Component {
 	constructor(props) {
@@ -14,22 +14,26 @@ class Dashboard extends React.Component {
 			loading: 1,
 			divisions: [],
 		}
+		this.loadData.bind(this);
   	}
 
 	componentDidMount() {
 		this.setState({ loading: 1 });
+		this.loadData();
+	}
 
-		DivisionService.getDivisions(current_home.current_home())
+	loadData() {
+		DivisionService.getDivisions()
 			.then(data => {
 				if (data != undefined){
 					this.setState({ divisions: data	});
 				} else
 					this.setState({ loading: 2 });
 				return data;
-			}).then( data => {
-				if (this.state.divisions.length == 0){
+			}).then( () => {
+				if (this.state.divisions.length == 0) {
 					this.setState({ loading: 2 });
-				} else{
+				} else {
 					this.setState({ loading: 0 });
 				}
 			})
@@ -37,35 +41,33 @@ class Dashboard extends React.Component {
 				console.log(error) ;
 				this.setState({ loading: 3 })
 			});
-		/*
-		if (this.state.divisions.length == 0){
-			this.setState({ loading: 2 });
-		} else{
-			this.setState({ loading: 0 });
-		}
-		*/
 	}
   
 	render() {
+		
 		var content = ""
 		switch(this.state.loading) {
 			case 0:
-				content = this.state.divisions.map((div) => (
-						<DeviceGroup key={div.id} division={div} />
+				if (Array.isArray(this.state.divisions))
+					content =  this.state.divisions.map((div) => (
+							<DeviceGroup key={div.id} division={div} />
+						)
 					)
-				)
 				break;
 			case 1:
-				content = "Loading...";
+				content = pageLoading;
 				break;
 			case 2:
 				content = "No divisions yet";
 				break;
 			case 3:
-				content = "Ups! Something Went Wrong...";
+				content = pageError;
 				break;
-
 		}
+		if (content=="") {
+			this.loadData();
+		}
+		
 		return (
 			<Container fluid className="main-content-container px-4">
 				{/* Page Header */}
@@ -92,7 +94,7 @@ class Dashboard extends React.Component {
 				<DeviceCard title="Zumifier" progress={55} type="humidity" />
 				<DeviceCard title="Radiator" progress={40} type="temperature" />
 				<DeviceCard title="Presence Light" progress={5} type="light" />
-				</DeviceGroup> */}
+				</DeviceGroup>  */}
 			</Container>
 		)
 	}

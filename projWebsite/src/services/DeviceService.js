@@ -1,7 +1,7 @@
 import baseURL from "./../data/base-url";
 import { auth } from "../utils/auth";
 
-const DEVICES_REST_API_URL = "devices/"
+const DEVICES_REST_API_URL = "devices"
 
 class DeviceService {
 
@@ -18,7 +18,7 @@ class DeviceService {
     }
 
     addDevice(division_id, type_id, name) {
-        return fetch(baseURL + 'device', {
+        return fetch(baseURL + DEVICES_REST_API_URL, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
@@ -42,7 +42,7 @@ class DeviceService {
     }
 
     async getDeviceState(device_id) {
-        const res = await fetch(baseURL + (device_id + '/') + DEVICES_REST_API_URL, {
+        const res = await fetch(baseURL + '/' + DEVICES_REST_API_URL + "/" + device_id, {
             method: 'GET',
             mode: 'cors',
             headers: {
@@ -54,7 +54,7 @@ class DeviceService {
     }
 
     deleteDevice(device_id){
-        return fetch(baseURL + DEVICES_REST_API_URL+ device_id,{
+        return fetch(baseURL + DEVICES_REST_API_URL+ '/' + device_id,{
             method: 'DELETE',
             mode: 'cors',
             headers: {

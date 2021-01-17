@@ -1,5 +1,5 @@
 export const auth = {
-  login(token) {
+  login(token, username) {
     localStorage.setItem('token', token);
   },
   logout() {
@@ -25,6 +25,12 @@ export const current_home = {
 export const current_user = {
   login(user) {
     localStorage.setItem('current_user', user);
+  },
+  storeUsername(username) {
+    localStorage.setItem('current_username', username);
+  },
+  getUsername() {
+    localStorage.getItem('current_username');
   },
   logout() {
     localStorage.removeItem('current_user');

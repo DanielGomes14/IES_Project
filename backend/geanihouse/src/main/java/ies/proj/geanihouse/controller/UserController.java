@@ -82,15 +82,30 @@ public class UserController {
     }
 
     @PutMapping("/profile")
-    public ResponseEntity<?> updateProfile(@Valid Client client) throws ResourceNotFoundException {
+    public ResponseEntity<?> updateProfile(@Valid @RequestBody Client client) throws ResourceNotFoundException {
         UserDetails authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Client c = this.permissionService.getClient(authenticateduser);
         if (c == null)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         
-        // TODO: atualizar client
-        if (c.getId() != client.getId())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        
+        System.out.println("Update Profile " + c.getEmail());    
+
+        if ( client.getFirstName() != null ){
+            c.setFirstName(client.getFirstName());
+        }
+        if ( client.getLastName() != null ){
+            c.setLastName(client.getLastName());
+        }
+        if ( client.getEmail() != null ){
+            c.setEmail(client.getEmail());
+        }
+        if ( client.getSex() != null ){
+            c.setSex(client.getSex());
+        }
+        if ( client.getBirth() != null ){
+            c.setBirth(client.getBirth());
+        }
 
         clientRepository.save(c);
 

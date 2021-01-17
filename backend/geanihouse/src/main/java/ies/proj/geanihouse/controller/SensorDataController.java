@@ -8,8 +8,10 @@ import ies.proj.geanihouse.repository.DivisionRepository;
 import ies.proj.geanihouse.repository.SensorDataRepository;
 import ies.proj.geanihouse.repository.SensorRepository;
 import ies.proj.geanihouse.service.PermissionService;
+import ies.proj.geanihouse.service.SensorDataService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,9 +19,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.*;
 
 @CrossOrigin(origins="*", allowedHeaders = "*")
 @RestController
@@ -33,21 +36,33 @@ public class SensorDataController {
     private SensorRepository sensorRepository;
     @Autowired
     private PermissionService permissionService;
-
+    @Autowired
+    private SensorDataService sensorDataService;
 
     //Division id! All sensordata in a division
     @GetMapping("divisions/{division_id}/sensordata")
-    public ResponseEntity<?>  getDivisionSensorData(@PathVariable(value = "division_id") long id) throws ResourceNotFoundException {
+    public ResponseEntity<?>  getDivisionSensorData(
+            @PathVariable(value = "division_id") long id,
+            @RequestParam(required = false) List<String> types,
+            @RequestParam(required = false)   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME ) LocalDateTime start_date,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end_date
+            )
+            throws ResourceNotFoundException {
         Division d =this.divisionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Could not find home with id :: "+ id));
         UserDetails authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(!this.permissionService.checkClientDivision(d,authenticateduser)){
             return ResponseEntity.status(403).body("Cannot get Data from Sensors you don't have access");
         }
-        List<SensorData> data = sensorDataRepository.findAllBySensor_Division_Id(id);
-        for(SensorData sd: data) LOG.info(sd);
-        return ResponseEntity.ok().body(data);
+        List<SensorData> sensorData_list = this.sensorDataService.filterData(id,types,start_date,end_date);
+
+        return ResponseEntity.ok().body( sensorData_list);
     }
+
+
+
+
+
     //get sensor data of a specific sensor
     @GetMapping("/sensors/{sensor_id}/sensordata")
     public ResponseEntity<?> getSensorData(
@@ -62,7 +77,6 @@ public class SensorDataController {
         }
         if(latest!=null && latest){
                 List<SensorData> sensorData = sensorDataRepository.findFirstBySensor_IdOrderByTimestampDateDesc(sensorid);
-                sensorData.forEach(sa -> LOG.debug(sa.getTimestampDate()));
                 return ResponseEntity.ok().body(sensorData);
         }
         else{

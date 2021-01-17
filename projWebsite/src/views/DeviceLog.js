@@ -4,7 +4,9 @@ import { Container, Row, Col, Card, CardHeader, CardBody } from "shards-react";
 import PageTitle from "../components/common/PageTitle";
 
 import DeviceLogService from "../services/DeviceLogService";
-import { current_home } from "../utils/auth";
+
+import {pageLoading, pageError} from "../components/common/Loading";
+
 
 class DeviceLogPage extends React.Component {
 	constructor(props) {
@@ -27,7 +29,7 @@ class DeviceLogPage extends React.Component {
 		DeviceLogService.getDeviceLogs()
 			.then(data => {
 				this.setState({
-					deviceLogs: this.transformData(data),
+					deviceLogs: this.transformLogs(data),
 					loading: 0,
 				});
 			})
@@ -37,8 +39,9 @@ class DeviceLogPage extends React.Component {
 			});
 	}
 
-	transformData(data) {
+	transformLogs(data) {
 		let data2 = [];
+		console.log(data)
 		data.forEach(e => {
 			data2.push({
 				division: e.device.division.name,
@@ -48,8 +51,16 @@ class DeviceLogPage extends React.Component {
 				timestamp: e.timestampDate
 			})
 		});
+		console.log(data2)
 		return data2;
 	}
+
+	transformData(data, type) {
+		if (data == 0) {return <span style={{color: 'red'}}>OFF</span>}
+		if (data == 1) {return <span style={{color: 'green'}}>ON</span>}
+		if (type == 'Temperature') {return data + 'ºC'}
+		return data + '%';
+	}	
 
 	handleClick(event) {
 		this.setState({
@@ -109,7 +120,7 @@ class DeviceLogPage extends React.Component {
 											<td>{e.division}</td>
 											<td>{e.type}</td>
 											<td>{e.device}</td>
-											<td>{e.data}</td>
+											<td>{this.transformData(e.data, e.type)}</td>
 											<td>{new Date(e.timestamp).toLocaleString()}</td>
 										</tr>
 									))}
@@ -122,10 +133,10 @@ class DeviceLogPage extends React.Component {
 				);
 				break;
 			case 1:
-				content = "Loading...";
+				content = pageLoading;
 				break;
 			case 2:
-				content = "Something went wrong...";
+				content = pageError;
 				break;
 		}
 		return (

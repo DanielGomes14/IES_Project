@@ -6,10 +6,14 @@ import ies.proj.geanihouse.exception.ResourceNotFoundException;
 import ies.proj.geanihouse.model.Division;
 import ies.proj.geanihouse.model.DivisionConf;
 import ies.proj.geanihouse.model.Sensor;
+import ies.proj.geanihouse.model.Device;
+import ies.proj.geanihouse.model.Home;
 import ies.proj.geanihouse.model.Type;
 import ies.proj.geanihouse.repository.DivisionConfRepository;
 import ies.proj.geanihouse.repository.DivisionRepository;
 import ies.proj.geanihouse.repository.TypeRepository;
+import ies.proj.geanihouse.repository.HomeRepository;
+import ies.proj.geanihouse.service.DivisionConfService;
 import ies.proj.geanihouse.service.PermissionService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -38,10 +42,16 @@ public class DivisionConfController {
     private DivisionRepository divisionRepository;
 
     @Autowired
+    private HomeRepository homeRepository;
+
+    @Autowired
     private TypeRepository typeRepository;
 
     @Autowired
     private PermissionService permissionService;
+
+    @Autowired
+    private DivisionConfService divisionConfService;
 
     @GetMapping("/divisions/configurations")
     public List<DivisionConf> getAllDivisionConfs(){
@@ -60,6 +70,22 @@ public class DivisionConfController {
         return  ResponseEntity.ok().body(divisionConfs);
     }
 
+
+    @PostMapping("/divisions/configurations/default")
+    public ResponseEntity<?> addDefaultDivisionConfs(@Valid @RequestBody Division division) throws  ResourceNotFoundException, ErrorDetails{
+        Division d = this.divisionRepository.findById(division.getId()).orElseThrow( () -> new ResourceNotFoundException("Could not Found division with id" + division.getId()));
+
+        UserDetails authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!this.permissionService.checkClientDivision(d, authenticateduser)){
+            return ResponseEntity.status(403).body("Can only Access Divisions Configurations of your Houses!");
+        };
+        divisionConfService.addDefaultConfigurations(d);
+        LOG.info("Success adding default configurations for division " + d.getId());
+        return ResponseEntity.ok().body("Success adding default configurations");
+    }
+
+
+
     @PostMapping("/divisions/configurations")
     public ResponseEntity<?> addDivisionConfs(@Valid @RequestBody DivisionConf divisionConf) throws  ResourceNotFoundException, ErrorDetails{
 
@@ -71,7 +97,6 @@ public class DivisionConfController {
         if(!this.permissionService.checkClientDivision(division, authenticateduser)){
             return  ResponseEntity.status(403).body("Cannot add Configurations of a Division you Dont Belong!");
         }
-        //check if the type is valid
 
         Type type = typeRepository.findByName(divisionConf.getType().getName());
         if(type == null){
@@ -81,10 +106,10 @@ public class DivisionConfController {
         divisionConf.setType(type);
 
         //check the contraints to create a new Configuration
-        String error_message = checkValuesContraints(divisionConf);
+        String error_message = divisionConfService.checkValuesContraints(divisionConf);
 
         if (error_message != null) throw new ErrorDetails(error_message);
-        error_message = checkConfsTypes(divisionConf,division);
+        error_message = divisionConfService.checkConfsTypes(divisionConf,division);
         if(error_message != null)throw new ErrorDetails(error_message);
 
         LOG.info("Success inserting new Configuration for division " + division.getId());
@@ -112,7 +137,7 @@ public class DivisionConfController {
         }
 
         // validates values
-        String error_message = checkValuesContraints(divisionConf);
+        String error_message = divisionConfService.checkValuesContraints(divisionConf);
         if (error_message != null) throw new ErrorDetails(error_message);
         
         divisionConf.setMinValue(dconf.getMinValue());
@@ -135,66 +160,6 @@ public class DivisionConfController {
         divisionConfRepository.delete(divisionConf);
         response.put("deleted",Boolean.TRUE);
         return response;
-    }
-
-
-    private String checkValuesContraints(DivisionConf divisionConf){
-        String error_message=null;
-        String type = divisionConf.getType().getName();
-        if (divisionConf.getMinValue() > divisionConf.getMaxValue()){
-            error_message = "Invalid Values, minimum value cannot be less than the max value!";
-            LOG.warn(error_message);
-        }
-        else if(divisionConf.getMaxValue() - divisionConf.getMinValue() <= 5){
-            error_message = "Invalid Values, the difference between the max and min value must be greater than 1!";
-            LOG.warn(error_message);
-        }
-        System.out.println(divisionConf.getMinValue());
-        System.out.println(divisionConf.getMaxValue());
-
-        double minValue = divisionConf.getMinValue();
-        double maxValue = divisionConf.getMaxValue();
-
-        if (type.equals("Temperature")){
-            minValue = 15;
-            maxValue = 35;
-        }else if (type.equals("Humidity")){
-            minValue = 40;
-            maxValue = 60;
-        }else if (type.equals("Luminosity")){
-            minValue = 20;
-            maxValue = 80;
-        }
-
-        if ( minValue > divisionConf.getMinValue() || maxValue < divisionConf.getMaxValue())
-            error_message = "Invalid Values, "+type+" values are between "+ minValue+ "-"+maxValue;
-
-        return error_message;
-    }
-
-    private String checkConfsTypes(DivisionConf divisionConf,Division division){
-        //verify if there's not a sensor of the type present on the configuration that we want to add
-        String error_message = null;
-        boolean valid = false;
-        for(Sensor s : division.getSensors()){
-            if (s.getType().getName().equals(divisionConf.getType().getName())) {
-                valid = true;
-                break;
-            }
-        }
-        if(!valid){
-            error_message="Cannot add a configuration of type " + divisionConf.getType().getName() + " without a sensor of this type";
-            LOG.warn(error_message);
-            return error_message;
-        }
-        for(DivisionConf conf : division.getDivisionConf()){
-            if(conf.getType().getName().equals(divisionConf.getType().getName())){
-                error_message = "Cannot have two configurations of same type in the division " + division.getId();
-                LOG.warn(error_message);
-                return error_message;
-            }
-        }
-        return error_message;
     }
 }
 

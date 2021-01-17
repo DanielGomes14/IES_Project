@@ -12,8 +12,10 @@ import java.util.List;
 
 @Repository
 public interface InviteRepository extends  JpaRepository<Invite,Long> {
-    Optional<Invite> findById(long id);
+
     List<Invite> findAllByInvclient_id(long id);
+
+    List<Invite> findAllByInvclient_idAndHome_id(long invclient_id, long home_id);
 
     List<Invite> findAllByHome_id(long id);
 }

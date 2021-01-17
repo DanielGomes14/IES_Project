@@ -18,7 +18,6 @@ class DivisionConfigService {
     }
 
     addConfiguration(divisionId, typeName, minValue, maxValue) {
-        alert(divisionId + ", " + typeName + ", " + minValue + ", " + maxValue)
         return fetch(baseURL + "divisions/configurations", {
             method: 'POST',
             mode: 'cors',
@@ -27,6 +26,19 @@ class DivisionConfigService {
                 authorization: auth.token(),
             },
             body: JSON.stringify({division: {id: divisionId}, type: {name: typeName}, minValue: minValue, maxValue: maxValue})
+        })
+    }
+
+
+    addDefaultConfigurations(divisionId){
+        return fetch(baseURL + "divisions/configurations/default", {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                authorization: auth.token(),
+            },
+            body: JSON.stringify({id: divisionId})
         })
     }
 
@@ -39,6 +51,16 @@ class DivisionConfigService {
                 authorization: auth.token(),
             },
             body: JSON.stringify({id: id, division: {id: divisionId}, type: {name: typeName}, minValue: minValue, maxValue: maxValue})
+        })
+    }
+
+    deleteConfiguration(id){
+        return fetch(baseURL + DIVISION_CONFIG_REST_API_URL + '/' + id, {
+            method: 'DELETE',
+            mode: 'cors',
+            headers: {
+                authorization: auth.token(),
+            },
         })
     }
 }

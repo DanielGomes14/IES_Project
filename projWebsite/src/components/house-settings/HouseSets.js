@@ -8,14 +8,14 @@ import {
 	Col,
 	Form,
 	FormInput,
-	FormSelect,
 	Button,
 	FormCheckbox,
 } from "shards-react";
-import { current_home } from "../../utils/auth";
 
 import DivisionService from "./../../services/DivisionService";
-import EditDivision from "./EditDivision"
+import EditDivision from "./EditDivision";
+
+import {transitionAlertTrigger} from "../common/TransitionAlertTrigger";
 
 
 class HouseSets extends React.Component {
@@ -52,11 +52,9 @@ class HouseSets extends React.Component {
 
 	handleSubmit(event) {
 		if (!this.state.name.replace(/\s/g, '').length){
-			alert("Division's must have a name");
+            transitionAlertTrigger("Division's must have a name", "error", false)
 		} else {
-			var response = DivisionService.addDivision(
-				current_home.current_home(), this.state.name
-			);
+			var response = DivisionService.addDivision(this.state.name);
 			EditDivision.ComponentDidMount();
 			event.preventDefault();
 		}
@@ -101,24 +99,6 @@ class HouseSets extends React.Component {
 												value={ this.state.name } onChange={ this.handleChange }
 											/>
 										</Col>
-									</Row>
-									<Row form>
-										{/* Permissions */}
-										<Col md="12" className="form-group">
-											<label htmlFor="Permissions for This Division">Permissions for This Division</label>
-											<FormSelect id="feInputState" name="custom" onChange={ this.handleChange }>
-												<option checked={ this.state.custom }>Everyone can Configure</option>
-												<option>Custom</option>
-											</FormSelect>
-										</Col>
-									</Row>  
-									<Row form>
-										{/* Users Added */}
-										<Col md="12" className="form-group">
-											{ content }
-										</Col>
-									</Row>
-									<Row form>
 									</Row>
 									<Button type="submit" theme="accent" value="Submit">Add new Division</Button>
 								</Form>

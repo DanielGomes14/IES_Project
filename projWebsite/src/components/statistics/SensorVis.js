@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../../../node_modules/react-vis/dist/style.css';
+import "react-widgets/dist/css/react-widgets.css";
 import {
     XYPlot,
     XAxis,
@@ -14,14 +15,18 @@ import {
 } from 'react-vis';
 import SensorDataService from '../../services/SensorDataService';
 import DivisionService from '../../services/DivisionService';
-import { auth,current_user,current_home } from "../../utils/auth";
-import { Card,CardBody,FormSelect,CardHeader } from 'shards-react';
+import { Card,CardBody,FormSelect,CardHeader, Form, Col, Row,Button } from 'shards-react';
 
+import {pageLoading, pageError} from "../../components/common/Loading";
 
+import DateTimePicker from 'react-widgets/lib/DateTimePicker'
+import dateFnsLocalizer from 'react-widgets-date-fns';
+import Multiselect from 'react-widgets/lib/Multiselect'
 
 export default class SensorVis extends React.Component {
     constructor(props) {
         super(props);
+        
         this.state = {
             loading: 1,
             asyncreq: true,
@@ -30,12 +35,40 @@ export default class SensorVis extends React.Component {
             temperature: [],
             humidity: [],
             luminosity: [],
+            selectedDate: new Date(Date.now() - 7*24*3600*1000),
+            selectedEndDate: new Date(),
+            endDateOn: false,
+            types: ["Temperature","Humidity","Luminosity"],
+            selectedtypes: ["Temperature","Humidity","Luminosity"],
             series : { "Humidity" : "#5bc0de", "Temperature": "#d9534f", "Luminosity": "#f0ad4e"}
         };
+        
         this.loadDivisions = this.loadDivisions.bind(this);
         this.loadData = this.loadData.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleDateChange = this.handleDateChange.bind(this);
+        this.handleEndDateChange = this.handleEndDateChange.bind(this);
+        this.handleTypeFilter = this.handleTypeFilter.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
+    
+    handleEndDateChange(event){
+        this.setState({
+            endDateOn: true,
+            selectedEndDate: event,
+        });
+    }
+
+    handleDateChange(event) {
+        this.setState({
+            selectedDate: event
+        });
+    };
+
+    handleColor(time) {
+        return time.getHours() > 12 ? "text-success" : "text-error";
+    };
+    
 
     handleChange(event) {
 		const {name, value} = event.target;
@@ -45,30 +78,55 @@ export default class SensorVis extends React.Component {
 		});
 	}
     
-    componentDidMount() {
-        
-        this.loadDivisions()
-        this.loadData()
-        this.interval=setInterval(this.loadData, 5000);
-        
-        
+    handleTypeFilter(event){
+        let newState = this.state
+        newState.selectedtypes=event
+        this.setState({ ...this.state, ...newState });
+    }
+    
+    handleClick() {
+        let endDate = new Date();
+        this.setState({endDateOn: false, selectedEndDate: endDate});
+        console.log("STATE FALSE",this.state.endDateOn)
+    }
+    
+    componentDidMount() {  
+        this.loadDivisions();
+        this.loadData();
+        this.interval = setInterval(this.loadData, 5000);
     }
     
     componentWillUnmount() {
-        
-        clearInterval(this.interval)
-        
+        clearInterval(this.interval)  
     }
+
     async loadData() {
-        console.log(this.state)
         if(this.state.division_id != null){
-            console.log(this.state.division_id)
             try {
-                SensorDataService.getSensorData(this.state.division_id)
+                let endDate = new Date();
+                if (this.state.endDateOn) {
+                    endDate = this.state.selectedEndDate;
+                }
+                SensorDataService.getSensorData(
+                    this.state.division_id,
+                    this.state.selectedDate,
+                    endDate,
+                    this.state.selectedtypes
+                    )
                     .then(data => {
                         if (data.length != 0) {
-                            this.setState({loading: 0 });
                             this.processData(data);
+                            this.setState({loading: 0 });
+                            if (!this.state.endDateOn) {
+                                this.setState({
+                                    loading: 0,
+                                    selectedEndDate: new Date(),
+                                });
+                            } else {
+                                this.setState({
+                                    loading: 0,
+                                })
+                            }
                         } else {
                             this.setState({loading: 2 });
                         }
@@ -85,7 +143,7 @@ export default class SensorVis extends React.Component {
     
     loadDivisions(){
         try {
-            DivisionService.getDivisions(current_home.current_home())
+            DivisionService.getDivisions()
                 .then(data => {
                     const tmp_arr = [];
                     data.map((div) => {
@@ -114,11 +172,11 @@ export default class SensorVis extends React.Component {
                 luminosity: []
             };
             data.map(d => {
-                if (d.sensor.type.name ==  "Temperature"){
+                if (d.sensor.type.name ==  "Temperature" && this.state.types.includes("Temperature")){
                     dataSeries.temperature.push({x: new Date(d.timestampDate), y: d.data})
-                } else if (d.sensor.type.name == "Humidity") {
+                } else if (d.sensor.type.name == "Humidity" && this.state.types.includes("Humidity")) {
                     dataSeries.humidity.push({x: new Date(d.timestampDate), y: d.data})
-                } else if (d.sensor.type.name == "Luminosity") {
+                } else if (d.sensor.type.name == "Luminosity" && this.state.types.includes("Luminosity")) {
                     dataSeries.luminosity.push({x: new Date(d.timestampDate), y: d.data})
                 }
             });
@@ -133,9 +191,11 @@ export default class SensorVis extends React.Component {
     
     
     render() {
+        new dateFnsLocalizer();
+
         const plot = (
             <div>
-            <FlexibleWidthXYPlot height={600} xType="time">
+            <FlexibleWidthXYPlot height={600} margin={{left:50, bottom:50}}>
                 <HorizontalGridLines />
                 <VerticalGridLines />
                 <XAxis tickFormat={function tickFormat(d){
@@ -172,13 +232,7 @@ export default class SensorVis extends React.Component {
                     curve={'curveMonotoneX'}
                 />
                 <LineSeries animation="wobbly" data={this.state.temperature} curve={'curveMonotoneX'} color={"#d9534f"} />
-                <LineSeries animation="wobbly" data={this.state.humidity} curve={'curveMonotoneX'} color={"#5bc0de"}
-                    onSeriesClick={(event)=>{
-                        console.log("Ola Chico!")
-                        // does something on click
-                        // you can access the value of the event
-                    }}
-                />
+                <LineSeries animation="wobbly" data={this.state.humidity} curve={'curveMonotoneX'} color={"#5bc0de"} />
                 <LineSeries animation="wobbly" data={this.state.luminosity} curve={'curveMonotoneX'} color={"#f0ad4e"} />
             </FlexibleWidthXYPlot>
             <DiscreteColorLegend
@@ -192,31 +246,69 @@ export default class SensorVis extends React.Component {
                 })
                 }
             />
-          </div>
+        </div>
             
         )
-
         return (
             <Card>
                 <CardHeader className="border-bottom">
                     <h6 className="m-0"> Division Statistics - Sensor Data</h6>
                 </CardHeader>
+                <Row className="px-3 py-4">
                 {this.state.division_id ? (
+                    <Col>
+                    <h6 className="m-0">Division</h6>
                     <FormSelect name="division_id" value={this.state.division_id} onChange={this.handleChange}>
                     {this.state.divisions.map((div, index) => 
                         <option key={index} value={div.id}>{div.name}</option>
-                    )}
+                    )}                    
                 </FormSelect>
+                </Col>
                 ) : null}
+                <Col>
+                <h6 className="m-0">Starting Date</h6>
+
+                <DateTimePicker
+                    date={true}
+                    time={true}
+                    value={this.state.selectedDate}
+                    onChange={this.handleDateChange}
+                    format={{ raw: 'yyyy MMM, dd' }}
+                />
+                </Col>
+                <Col>   
+                <h6 className="m-0">Ending Date</h6>
+                <DateTimePicker
+                    value={this.state.selectedEndDate}
+                    format={{ raw: 'yyyy MMM, dd' }}
+                    onChange={this.handleEndDateChange}
+                />
+                {this.state.endDateOn ? (
+                    <Button onClick={this.handleClick}  theme="light">Reset</Button>
+                ): null }
+                </Col>
+                <Col lg="4">
+                <h6 className="m-0">Sensor Types</h6>
+                {
+                    <Multiselect
+                            data={this.state.types}
+                            value={this.state.selectedtypes}
+                            defaultValue={this.state.types}
+                            onChange={this.handleTypeFilter}
+                            />
+                }
+                </Col>
+                </Row>
+
                 <CardBody>
                     {(() => {
                         switch(this.state.loading) {
-                            case 0 :
+                            case 0:
                                 return plot;
-                            case 1 :
-                                return "No Content available. Might take a while..";
-                            case 2 :
-                                return "Something went wrong..";
+                            case 1:
+                                return pageLoading;
+                            case 2:
+                                return pageError;
                         }
                     })()}
                 </CardBody>
@@ -224,3 +316,16 @@ export default class SensorVis extends React.Component {
         );
     }
 }
+
+/*
+  <DatePicker
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={20}
+                    timeCaption="time"
+                    dateFormat="MMMM d, yyyy h:mm aa"
+                    selected={this.state.selectedDate}
+                    onChange={this.handleDateChange}
+                />
+                
+*/

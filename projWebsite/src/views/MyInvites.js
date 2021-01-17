@@ -39,7 +39,7 @@ class MyInvites extends React.Component{
   }
 
   removeInvite = ev => {
-    InviteService.deleteHomeInvite(ev.currentTarget.value).then(data => { 
+    InviteService.deleteReceivedInvite(ev.currentTarget.value).then(data => { 
       this.setState({ invites: data });
     }).catch(error => {
       console.log(error) ;

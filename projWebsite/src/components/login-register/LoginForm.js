@@ -12,9 +12,8 @@ import {
 
 import AuthenticationService from "../../services/AuthenticationService";
 import { Redirect } from "react-router-dom";
-import { auth, current_home, current_user } from '../../utils/auth';
+import { auth, current_user } from '../../utils/auth';
 import LocalStorageService from '../../services/LocalStorageService';
-import baseURL  from "../../data/base-url";
 
 class LoginForm extends React.Component {
 
@@ -39,10 +38,6 @@ class LoginForm extends React.Component {
 	};
 	
 	handleSubmit(event) {
-		alert('Login : '
-		+ '\n' + this.state.username
-		+ '\n' + this.state.password
-		);
 		var token = 'Basic ' + window.btoa(this.state.username + ":" + this.state.password);
 		AuthenticationService.login(token)
 			.then((response) => {
@@ -51,10 +46,10 @@ class LoginForm extends React.Component {
 					console.log("Login successfull:");
 					auth.login(token)
 					
-					LocalStorageService.get_user(this.state.username).then(data=>current_user.login(data));
-					LocalStorageService.get_first_home();
+					LocalStorageService.get_user(this.state.username).then(data => current_user.login(data));
+					LocalStorageService.get_first_home().then(() => this.setState({loggedIn: true}));
+					current_user.storeUsername(this.state.username);
 					
-					this.setState({loggedIn: true});
 				} else if (response.status == "400") {
 					console.log("400: ");
 				}

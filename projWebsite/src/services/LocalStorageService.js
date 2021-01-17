@@ -1,5 +1,5 @@
 import baseURL from "../data/base-url";
-import { auth, current_home, current_user } from '../utils/auth';
+import { auth, current_home } from '../utils/auth';
 class LocalStorageService {
 
     async get_user(username) {
@@ -14,7 +14,7 @@ class LocalStorageService {
         return await res.json();
     }
 
-    async get_first_home(){
+    async get_first_home() {
         const res = await fetch(baseURL + 'homes', {
             method: 'GET',
             mode: 'cors',

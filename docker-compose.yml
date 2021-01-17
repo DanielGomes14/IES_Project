@@ -10,7 +10,7 @@ services:
       context: backend/geanihouse # Use an image built from the specified dockerfile in the `polling-app-server` directory.
       dockerfile: Dockerfile
     ports:
-      - "8080:8080" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+      - "9001:9001"
     restart: always
     depends_on: 
       - db # This service depends on mysql. Start that first.
@@ -26,9 +26,9 @@ services:
       context: projWebsite # Use an image built from the specified dockerfile in the `polling-app-client` directory.
       dockerfile: Dockerfile
       args:
-        REACT_APP_API_BASE_URL: http://127.0.0.1:8080/
+        REACT_APP_API_BASE_URL: http://127.0.0.1:9001/
     ports:
-      - "3000:3000"
+      - "9000:9000"
     restart: always
     depends_on:
       - app-server

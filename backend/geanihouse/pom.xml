@@ -24,13 +24,40 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-amqp</artifactId>
+			<exclusions>
+				<exclusion> 
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion> 
+					<groupId>log4j</groupId>
+					<artifactId>log4j</artifactId>
+				</exclusion>
+				<exclusion> 
+					<groupId>log4j-to-slf4j</groupId>
+					<artifactId>log4j-to-slf4j</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
-
 
 		<dependency>
 			<groupId>com.rabbitmq</groupId>
 			<artifactId>amqp-client</artifactId>
 			<version>5.10.0</version>
+			<exclusions>
+				<exclusion> 
+				  <groupId>org.slf4j</groupId>
+				  <artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion> 
+				  <groupId>log4j</groupId>
+				  <artifactId>log4j</artifactId>
+				</exclusion>
+			  </exclusions> 
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

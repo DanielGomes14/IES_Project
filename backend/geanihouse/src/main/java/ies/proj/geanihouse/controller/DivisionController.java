@@ -33,6 +33,7 @@ public class DivisionController {
     private HomeRepository homeRepository;
     @Autowired
     private PermissionService permissionService;
+
     private UserDetails authenticateduser;
 
     @GetMapping("/{home_id}/divisions/")

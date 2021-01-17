@@ -17,8 +17,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 
-// import NewConfiguration from "../components/automation/NewConfiguration";
-
+import {TransitionAlertTrigger} from "../components/common/TransitionAlertTrigger";
 
 
 function TabPanel(props) {
@@ -71,7 +70,7 @@ class Automation extends React.Component {
     componentDidMount() {
 		this.setState({ loading: 1 });
 
-		DivisionService.getDivisions(1) // HARDCODED
+		DivisionService.getDivisions()
 			.then(data => {
 				this.setState({ 
 					divisions: data,
@@ -121,7 +120,6 @@ class Automation extends React.Component {
 
                             </Tabs>
                         </AppBar>
-                       
                         {this.state.divisions.map((division, index) => (
                             <TabPanel key={index} value={this.state.value} index={index}>
                                 <AutomationTab division={division}></AutomationTab>
