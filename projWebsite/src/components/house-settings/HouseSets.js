@@ -13,7 +13,9 @@ import {
 } from "shards-react";
 
 import DivisionService from "./../../services/DivisionService";
-import EditDivision from "./EditDivision"
+import EditDivision from "./EditDivision";
+
+import {transitionAlertTrigger} from "../common/TransitionAlertTrigger";
 
 
 class HouseSets extends React.Component {
@@ -50,7 +52,7 @@ class HouseSets extends React.Component {
 
 	handleSubmit(event) {
 		if (!this.state.name.replace(/\s/g, '').length){
-			alert("Division's must have a name");
+            transitionAlertTrigger("Division's must have a name", "error", false)
 		} else {
 			var response = DivisionService.addDivision(this.state.name);
 			EditDivision.ComponentDidMount();

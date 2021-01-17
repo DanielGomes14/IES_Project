@@ -43,9 +43,9 @@ class DeviceGroup extends React.Component {
 	render() {
 		return (
 			<div>
-				<h4 className="float-left" style={{marginLeft: "20px"}}><a href="#" style={{color: "#17c671"}}>{this.division.name}</a></h4>
-				<a href={"/newsensor?div="+this.division.id}><Button className="float-right mb-2 mr-2" theme="success" style={{ fontSize: "16px", height: '100%'}}>Add Sensor</Button></a>
-				<a href={"/newdevice?div="+this.division.id}><Button className="float-right mb-2 mr-2" theme="success" style={{ fontSize: "16px", height: '100%'}}>Add Device</Button></a>
+				<h4 className="float-left" style={{marginLeft: "20px"}}><h4>{this.division.name}</h4></h4>
+				<a href={"/newsensor?div="+this.division.id}><Button className="float-right mb-2 mr-2" theme="info" style={{ fontSize: "16px", height: '100%'}}>Add Sensor</Button></a>
+				<a href={"/newdevice?div="+this.division.id}><Button className="float-right mb-2 mr-2" theme="info" style={{ fontSize: "16px", height: '100%'}}>Add Device</Button></a>
 				<div className="clearfix" style={{paddingBottom: "15px"}}></div>
 				<Row>
           		{

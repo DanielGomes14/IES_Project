@@ -8,6 +8,8 @@ import { TextField } from '@material-ui/core';
 
 import DeviceConfigService from "../../services/DeviceConfigService";
 
+import {transitionAlertTrigger} from "../common/TransitionAlertTrigger";
+
 
 class FormDeviceConfig extends React.Component {
 
