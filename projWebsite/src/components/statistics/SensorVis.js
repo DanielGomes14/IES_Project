@@ -183,6 +183,7 @@ export default class SensorVis extends React.Component {
             this.setState({temperature: dataSeries.temperature});
             this.setState({humidity: dataSeries.humidity});
             this.setState({luminosity: dataSeries.luminosity});
+            console.log(this.state.temperature)
         } else {
             console.log("NOT FOUND")
         }
@@ -269,8 +270,6 @@ export default class SensorVis extends React.Component {
                 <h6 className="m-0">Starting Date</h6>
 
                 <DateTimePicker
-                    date={true}
-                    time={true}
                     value={this.state.selectedDate}
                     onChange={this.handleDateChange}
                     format={{ raw: 'yyyy MMM, dd' }}

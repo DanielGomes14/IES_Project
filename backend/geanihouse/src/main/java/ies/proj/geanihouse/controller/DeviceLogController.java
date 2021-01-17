@@ -29,7 +29,7 @@ public class DeviceLogController {
     @Autowired
     private PermissionService permissionService;
 
-    @GetMapping("/{house_id}/sensorlog")
+    @GetMapping("/{house_id}/devicelog")
     public ResponseEntity<?> getHouseDeviceLog(@PathVariable(value = "house_id") long id) throws ResourceNotFoundException {
         Home h = homeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Could not found home with id" + id));
         UserDetails authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

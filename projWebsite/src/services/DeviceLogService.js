@@ -2,7 +2,7 @@ import baseURL from "../data/base-url";
 import { auth } from "../utils/auth";
 import { current_home } from "../utils/auth"
 
-const DEVICE_LOG_REST_API_URL = "sensorlog";
+const DEVICE_LOG_REST_API_URL = "devicelog";
 
 class DeviceLogService {
 
