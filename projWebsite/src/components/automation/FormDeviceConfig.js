@@ -8,6 +8,8 @@ import { TextField } from '@material-ui/core';
 
 import DeviceConfigService from "../../services/DeviceConfigService";
 
+import {transitionAlertTrigger} from "../common/TransitionAlertTrigger";
+
 
 class FormDeviceConfig extends React.Component {
 
@@ -29,7 +31,7 @@ class FormDeviceConfig extends React.Component {
                 apply: true,
                 timeBegin: '00:00',
                 timeEnd: '00:00',
-                value: 0
+                value: 1
             }
         } else {
             throw new Error('Unexpected props');
@@ -53,16 +55,24 @@ class FormDeviceConfig extends React.Component {
         if (this.props.config)
             DeviceConfigService.updateConfiguration(
                 this.props.config.id, this.device.id, this.state.timeBegin, this.state.timeEnd, this.state.value
-            ).then(() => window.location.reload());
+            ).then(() => transitionAlertTrigger("Division configuration updated with success.", "success"));
         else
             DeviceConfigService.addConfiguration(
-                this.device.id, this.state.timeBegin, this.state.timeEnd, this.state.value
-            ).then(() => window.location.reload());
+                this.device.id, this.state.timeBegin, this.state.timeEnd, this.state.value)
+                .then(() => transitionAlertTrigger("Division configuration added with success.", "success"));
+            
         event.preventDefault();
 	}
 
     deleteConfig(){
-        DeviceConfigService.deleteConfiguration(this.props.config.id).then(() => window.location.reload());
+        DeviceConfigService.deleteConfiguration(this.props.config.id)
+            .then((res) => {
+                if (res.ok)
+                    transitionAlertTrigger(
+                        "Device configuration deleted with success.", "success")
+                else
+                    transitionAlertTrigger("Device already deleated.", "error", false)
+            });
     }
 
     render() {

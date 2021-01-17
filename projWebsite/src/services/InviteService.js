@@ -18,6 +18,7 @@ class InviteService {
     }
 
     inviteUser(email) {
+        console.log(JSON.stringify({home: {id: current_home.current_home() }, invclient: {email: email}}))
         return fetch(baseURL + HOME_REST_API_URL  + INVITE_REST_API_URL, {
             method: 'POST',
             mode: 'cors',
@@ -65,7 +66,6 @@ class InviteService {
     }
 
     deleteReceivedInvite(inv_id){
-        alert(baseURL + INVITE_REST_API_URL + '/' + inv_id)
         return fetch(baseURL + INVITE_REST_API_URL + '/' + inv_id,{
             method: 'DELETE',
             mode: 'cors',

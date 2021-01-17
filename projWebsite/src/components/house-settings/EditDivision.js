@@ -25,6 +25,9 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import DivisionService from "./../../services/DivisionService";
 
+import {transitionAlertTrigger} from "../common/TransitionAlertTrigger";
+
+
 const StyledTableCell = withStyles((theme) => ({
 	head: {
 		backgroundColor: theme.palette.common.black,
@@ -102,7 +105,7 @@ class EditDivision extends React.Component{
 							this.componentDidMount()
 						})
 						.catch(error => {
-							alert(error);
+							transitionAlertTrigger("Something went wrong.", "error", false)
 						});
 				}
 			},
@@ -122,7 +125,7 @@ class EditDivision extends React.Component{
 				<CardBody className="p-0 pb-3">
 					<table className="table mb-0">
 						<tbody>
-							{this.state.divisions.map((e, index) => (
+							{this.state.divisions && this.state.divisions.map((e, index) => (
 								<tr key={index}>
 									<td>{e.name}</td>
 									<td style={{textAlign: "right"}}>

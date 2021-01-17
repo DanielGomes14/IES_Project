@@ -1,8 +1,10 @@
 import baseURL from "./../data/base-url";
 import { auth } from "../utils/auth";
+import {transitionAlertTrigger} from "../components/common/TransitionAlertTrigger";
 
-const SENSORS_REST_API_URL = "sensors/"
-const SENSORDATA_REST_API_URL = "sensordata/"
+const SENSORS_REST_API_URL = "sensors/";
+const SENSORDATA_REST_API_URL = "sensordata/";
+
 
 class SensorService {
 
@@ -33,7 +35,7 @@ class SensorService {
             window.location.pathname = '/';
         }
         else {
-            alert("Cannot add two sensors of same type!");
+            transitionAlertTrigger("Cannot add two sensors of same type!", "error", false)
         }
     }
 

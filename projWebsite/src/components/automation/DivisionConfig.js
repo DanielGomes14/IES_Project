@@ -24,9 +24,11 @@ class DivisionConfig extends React.Component {
     componentDidMount(){
         if(this.props.sensor){
             SensorService.getSensorData(this.props.sensor.id).then(
-                res => {this.setState({value: res[0].data})}
-                );
-            
+                res => {
+                    if (res.length > 0){
+                        this.setState({value: res[0].data})
+                    }
+                })
         }
     }
 
