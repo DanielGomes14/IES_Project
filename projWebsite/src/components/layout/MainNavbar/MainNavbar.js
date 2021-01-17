@@ -7,7 +7,7 @@ import NavbarSearch from "./NavbarSearch";
 import NavbarNav from "./NavbarNav/NavbarNav";
 import NavbarToggle from "./NavbarToggle";
 
-import {TransitionAlert} from "../../common/TransitionAlert";
+import TransitionAlert from "../../common/TransitionAlert";
 
 const MainNavbar = ({ layout, stickyTop }) => {
   const classes = classNames(

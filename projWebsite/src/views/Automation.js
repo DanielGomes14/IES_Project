@@ -17,8 +17,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 
-// import NewConfiguration from "../components/automation/NewConfiguration";
-import {activateAlert} from "../components/common/TransitionAlert";
+import {TransitionAlertTrigger} from "../components/common/TransitionAlertTrigger";
 
 
 function TabPanel(props) {
@@ -99,7 +98,6 @@ class Automation extends React.Component {
     render() {
         return (
             <Container fluid className="main-content-container px-4">
-                <Button onClick={() => activateAlert()}>fnwaoeiç</Button>
                 <Row noGutters className="page-header py-4">
                     <PageTitle sm="4" title="Automation" subtitle="Dashboard" className="text-sm-left" />
                 </Row>

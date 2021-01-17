@@ -5,19 +5,38 @@ import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
 
-export function activateAlert() {
-  this.setState({ open: true })
-}
+// export function activateAlert() {
+//   this.setState({ open: true })
+// }
 
-export class TransitionAlert extends React.Component {
+import { Store } from "../../flux";
+
+export default class TransitionAlert extends React.Component {
   constructor(props) {
     super(props);
-    this.text = props.text;
     this.classes = this.useStyles;
     this.state = {
-      open: false
+      open: Store.getAlertState(),
+      text: Store.getAlertText(),
+      severity: Store.getAlertSeverity(),
     }
-    activateAlert = activateAlert.bind(this);
+    this.onChange = this.onChange.bind(this);
+  }
+
+  componentWillMount() {
+    Store.addAlertListener(this.onChange);
+  }
+
+  componentWillUnmount() {
+    Store.removeAlertListener(this.onChange);
+  }
+
+  onChange() {
+    this.setState({
+      open: Store.getAlertState(),
+      text: Store.getAlertText(),
+      severity: Store.getAlertSeverity(),
+    })
   }
 
   useStyles = makeStyles((theme) => ({
@@ -33,7 +52,7 @@ export class TransitionAlert extends React.Component {
     return (
       <div className={this.classes.root}>
         <Collapse in={this.state.open}>
-          <Alert
+          <Alert severity={this.state.severity}
             action={
               <IconButton
               aria-label="close"
@@ -47,7 +66,7 @@ export class TransitionAlert extends React.Component {
               </IconButton>
             }
             >
-            {this.text}
+            {this.state.text}
           </Alert>
         </Collapse>
       </div>

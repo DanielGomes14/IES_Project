@@ -6,7 +6,10 @@ import getSidebarNavItems from "../data/sidebar-nav-items";
 
 let _store = {
   menuVisible: false,
-  navItems: getSidebarNavItems()
+  navItems: getSidebarNavItems(),
+  alertVisible: false,
+  alertText: '',
+  alertSeverity: '',
 };
 
 class Store extends EventEmitter {
@@ -24,6 +27,9 @@ class Store extends EventEmitter {
       case Constants.TOGGLE_SIDEBAR:
         this.toggleSidebar();
         break;
+      case Constants.ACTIVATE_ALERT:
+          this.activateAlert(payload.text, payload.severity);
+          break;
       default:
     }
   }
@@ -41,12 +47,39 @@ class Store extends EventEmitter {
     return _store.navItems;
   }
 
+  activateAlert(text, severity, askReload) {
+    _store.alertVisible = true;
+    _store.alertText = text;
+    _store.alertSeverity = severity;
+    this.emit(Constants.ACTIVATE_ALERT);
+  }
+
+  getAlertState() {
+    return _store.alertVisible;
+  }
+
+  getAlertText() {
+    return _store.alertText;
+  }
+
+  getAlertSeverity() {
+    return _store.alertSeverity;
+  }
+
   addChangeListener(callback) {
     this.on(Constants.CHANGE, callback);
   }
 
   removeChangeListener(callback) {
     this.removeListener(Constants.CHANGE, callback);
+  }
+
+  addAlertListener(callback) {
+    this.on(Constants.ACTIVATE_ALERT, callback);
+  }
+
+  removeAlertListener(callback) {
+    this.removeListener(Constants.ACTIVATE_ALERT, callback);
   }
 }
 
