@@ -5,11 +5,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Collapse from '@material-ui/core/Collapse';
 import CloseIcon from '@material-ui/icons/Close';
 
-// export function activateAlert() {
-//   this.setState({ open: true })
-// }
-
-import { Store } from "../../flux";
+import { Dispatcher, Constants, Store } from "../../flux";
 
 export default class TransitionAlert extends React.Component {
   constructor(props) {
@@ -21,6 +17,7 @@ export default class TransitionAlert extends React.Component {
       severity: Store.getAlertSeverity(),
     }
     this.onChange = this.onChange.bind(this);
+    this.closeAlert = this.closeAlert.bind(this);
   }
 
   componentWillMount() {
@@ -37,6 +34,12 @@ export default class TransitionAlert extends React.Component {
       text: Store.getAlertText(),
       severity: Store.getAlertSeverity(),
     })
+  }
+
+  closeAlert() {
+    Dispatcher.dispatch({
+        actionType: Constants.CLOSE_ALERT,
+    });
   }
 
   useStyles = makeStyles((theme) => ({
@@ -58,9 +61,7 @@ export default class TransitionAlert extends React.Component {
               aria-label="close"
               color="inherit"
               size="small"
-              onClick={() => {
-                this.setState({open: false})
-              }}
+              onClick={this.closeAlert}
               >
                 <CloseIcon fontSize="inherit" />
               </IconButton>

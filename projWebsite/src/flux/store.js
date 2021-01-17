@@ -9,7 +9,7 @@ let _store = {
   navItems: getSidebarNavItems(),
   alertVisible: false,
   alertText: '',
-  alertSeverity: '',
+  alertSeverity: 'success',
 };
 
 class Store extends EventEmitter {
@@ -28,8 +28,11 @@ class Store extends EventEmitter {
         this.toggleSidebar();
         break;
       case Constants.ACTIVATE_ALERT:
-          this.activateAlert(payload.text, payload.severity);
+          this.activateAlert(true, payload.text, payload.severity);
           break;
+      case Constants.CLOSE_ALERT:
+        this.activateAlert(false, '', 'success');
+        break;
       default:
     }
   }
@@ -47,11 +50,11 @@ class Store extends EventEmitter {
     return _store.navItems;
   }
 
-  activateAlert(text, severity, askReload) {
-    _store.alertVisible = true;
+  activateAlert(open, text, severity) {
+    _store.alertVisible = open;
     _store.alertText = text;
     _store.alertSeverity = severity;
-    this.emit(Constants.ACTIVATE_ALERT);
+    this.emit(Constants.ALERT);
   }
 
   getAlertState() {
@@ -75,11 +78,11 @@ class Store extends EventEmitter {
   }
 
   addAlertListener(callback) {
-    this.on(Constants.ACTIVATE_ALERT, callback);
+    this.on(Constants.ALERT, callback);
   }
 
   removeAlertListener(callback) {
-    this.removeListener(Constants.ACTIVATE_ALERT, callback);
+    this.removeListener(Constants.ALERT, callback);
   }
 }
 
