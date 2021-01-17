@@ -22,6 +22,7 @@ import {pageLoading, pageError} from "../../components/common/Loading";
 import DateTimePicker from 'react-widgets/lib/DateTimePicker'
 import dateFnsLocalizer from 'react-widgets-date-fns';
 import Multiselect from 'react-widgets/lib/Multiselect'
+import { current_home } from '../../utils/auth';
 
 export default class SensorVis extends React.Component {
     constructor(props) {
@@ -143,6 +144,7 @@ export default class SensorVis extends React.Component {
     
     loadDivisions(){
         try {
+            if (current_home.current_home())
             DivisionService.getDivisions()
                 .then(data => {
                     const tmp_arr = [];

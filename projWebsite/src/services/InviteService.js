@@ -6,10 +6,8 @@ const INVITE_REST_API_URL = "invites"
 
 class InviteService {  
    
-    getHomeInvites(){
-        if (!current_home.current_home())
-            return [];
-        return fetch(baseURL + HOME_REST_API_URL + current_home.current_home() + '/' + INVITE_REST_API_URL,{
+    getHomeInvites(home_id){
+        return fetch(baseURL + HOME_REST_API_URL + home_id + '/' + INVITE_REST_API_URL,{
             method: 'GET',
             mode: 'cors',
             headers: {

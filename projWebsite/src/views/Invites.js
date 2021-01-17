@@ -6,7 +6,7 @@ import UserDetails from "../components/user-profile/UserDetails";
 import InviteModel from "../components/invites/InviteModel";
 import InviteService from "../services/InviteService";
 
-
+import {current_home} from '../utils/auth';
 
 
 class Invites extends React.Component{
@@ -18,11 +18,12 @@ class Invites extends React.Component{
   }
   
   componentDidMount() {
-		InviteService.getHomeInvites().then(data => { 
-      this.setState({ invites: data });
-    }).catch(error => {
-      console.log(error) ;
-    });
+    if (current_home.current_home())
+      InviteService.getHomeInvites(current_home.current_home()).then(data => { 
+        this.setState({ invites: data });
+      }).catch(error => {
+        console.log(error) ;
+      });
   }
 
   removeInvite = ev => {

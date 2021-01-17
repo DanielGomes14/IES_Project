@@ -7,6 +7,9 @@ import DeviceGroup from "../components/dashboard/DeviceGroup";
 import DivisionService from "../services/DivisionService";
 import {pageLoading, pageError} from "../components/common/Loading";
 
+import { current_home } from "../utils/auth";
+
+
 class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
@@ -23,6 +26,7 @@ class Dashboard extends React.Component {
 	}
 
 	loadData() {
+        if (current_home.current_home())
 		DivisionService.getDivisions()
 			.then(data => {
 				if (data != undefined){

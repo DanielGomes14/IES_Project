@@ -18,6 +18,7 @@ import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 
 import {TransitionAlertTrigger} from "../components/common/TransitionAlertTrigger";
+import { current_home } from "../utils/auth";
 
 
 function TabPanel(props) {
@@ -70,17 +71,18 @@ class Automation extends React.Component {
     componentDidMount() {
 		this.setState({ loading: 1 });
 
-		DivisionService.getDivisions()
-			.then(data => {
-				this.setState({ 
-					divisions: data,
-					loading: 0
-				});
-			})
-			.catch(error => {
-				console.log(error) ;
-				this.setState({ loading: 2 })
-			});
+        if (current_home.current_home())
+            DivisionService.getDivisions()
+                .then(data => {
+                    this.setState({ 
+                        divisions: data,
+                        loading: 0
+                    });
+                })
+                .catch(error => {
+                    console.log(error) ;
+                    this.setState({ loading: 2 })
+                });
 	}
 
     handleChange = (event, newValue) => {

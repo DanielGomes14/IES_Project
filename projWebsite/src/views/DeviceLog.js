@@ -6,6 +6,7 @@ import PageTitle from "../components/common/PageTitle";
 import DeviceLogService from "../services/DeviceLogService";
 
 import {pageLoading, pageError} from "../components/common/Loading";
+import { current_home } from "../utils/auth";
 
 
 class DeviceLogPage extends React.Component {
@@ -25,18 +26,19 @@ class DeviceLogPage extends React.Component {
 
 	componentDidMount() {
 		this.setState({ loading: 1 });
-
-		DeviceLogService.getDeviceLogs()
-			.then(data => {
-				this.setState({
-					deviceLogs: this.transformLogs(data),
-					loading: 0,
+		
+		if (current_home.current_home())
+			DeviceLogService.getDeviceLogs(current_home.current_home())
+				.then(data => {
+					this.setState({
+						deviceLogs: this.transformLogs(data),
+						loading: 0,
+					});
+				})
+				.catch(error => {
+					console.log(error);
+					this.setState({ loading: 2 })
 				});
-			})
-			.catch(error => {
-				console.log(error);
-				this.setState({ loading: 2 })
-			});
 	}
 
 	transformLogs(data) {

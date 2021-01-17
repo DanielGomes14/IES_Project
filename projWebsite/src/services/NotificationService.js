@@ -7,8 +7,6 @@ const NOTIFICATIONS_REST_API_URL = "notifications/";
 class NotificationService {
 
     async getTop5Notifications() {
-        if (!current_home.current_home())
-            return [];
         const res = await fetch(baseURL + (current_home.current_home() + '/') + NOTIFICATIONS_REST_API_URL, {
             method: 'GET',
             mode: 'cors',
@@ -21,8 +19,6 @@ class NotificationService {
     }
 
     async getAllNotifications() {
-        if (!current_home.current_home())
-            return [];
         const res = await fetch(baseURL + (current_home.current_home() + '/') + NOTIFICATIONS_REST_API_URL + '?all=True', {
             method: 'GET',
             mode: 'cors',

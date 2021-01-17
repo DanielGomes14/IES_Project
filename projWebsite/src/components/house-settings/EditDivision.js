@@ -1,23 +1,13 @@
 import React from "react";
 import {
 	CardHeader,
-	ListGroup,
-	Container,
-	Row,
-	Col,
 	Card,
 	CardBody
 } from "shards-react";
 
 import { withStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import MaxWidthDialog from "./DialogDivision"
 import { Button } from "@material-ui/core";
 import {current_home} from './../../utils/auth';
 import { confirmAlert } from 'react-confirm-alert'; // Import
@@ -62,17 +52,18 @@ class EditDivision extends React.Component{
 
 	componentDidMount() {
 		this.setState({ loading: 1 });
-		DivisionService.getDivisions()
-			.then(data => { 
-				console.log(data);
-				this.setState({ 
-					loading: 0,
-					divisions: data
-				}) 
-			})
-			.catch(error => {
-				this.setState({ loading: 2 })
-			});
+		if (current_home.current_home())
+			DivisionService.getDivisions()
+				.then(data => { 
+					console.log(data);
+					this.setState({ 
+						loading: 0,
+						divisions: data
+					}) 
+				})
+				.catch(error => {
+					this.setState({ loading: 2 })
+				});
 	}
 	
 	getNumChecked(row) {

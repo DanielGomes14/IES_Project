@@ -7,6 +7,7 @@ import classNames from "classnames";
 import shortid from "shortid";
 import DivisionService from '../../services/DivisionService';
 import SensorService from '../../services/SensorService';
+import { current_home } from '../../utils/auth';
 
 export default class HouseStatistics extends React.Component{
     constructor(props) {
@@ -36,6 +37,7 @@ export default class HouseStatistics extends React.Component{
         this.humidity = [];
         this.luminosity = [];
         try {
+            if (current_home.current_home())
             DivisionService.getDivisions()
                 .then(data => {
                     const tmp_arr = [];
