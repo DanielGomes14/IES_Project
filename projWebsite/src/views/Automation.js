@@ -3,7 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import {
-    Container, Row
+    Container, Row, Button
 } from "shards-react";
 
 import AutomationTab from "../components/automation/AutomationTab";
@@ -17,8 +17,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
 
-// import NewConfiguration from "../components/automation/NewConfiguration";
-
+import {TransitionAlertTrigger} from "../components/common/TransitionAlertTrigger";
 
 
 function TabPanel(props) {

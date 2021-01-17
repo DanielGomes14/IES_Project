@@ -3,8 +3,9 @@ import { Container, Row, Col } from "shards-react";
 
 import PageTitle from "../components/common/PageTitle";
 import HouseSets from "../components/house-settings/HouseSets";
-import EditDivision from "../components/house-settings/EditDivision"
-import HouseMembers from "../components/house-settings/HouseMembers"
+import EditDivision from "../components/house-settings/EditDivision";
+import HouseMembers from "../components/house-settings/HouseMembers";
+
 
 const HouseSettings = () => (
   <Container fluid className="main-content-container px-4">

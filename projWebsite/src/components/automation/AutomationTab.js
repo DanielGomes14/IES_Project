@@ -10,6 +10,7 @@ import DivisionConfigService from "../../services/DivisionConfigService";
 import DeviceService from "../../services/DeviceService";
 import SensorService from "../../services/SensorService";
 
+import {pageLoading, pageError} from "../../components/common/Loading";
 
 
 class AutomationTab extends React.Component {
@@ -133,9 +134,9 @@ class AutomationTab extends React.Component {
     render() {
         switch (this.state.loading) {
             case 1:
-                return "Loading...";
+                return pageLoading;
             case 2:
-                return "Something went wrong...";
+                return pageError;
         }
 
         return !this.state.edit ? (
