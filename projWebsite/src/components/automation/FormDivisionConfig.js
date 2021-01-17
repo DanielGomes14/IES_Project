@@ -96,12 +96,11 @@ class FormDivisionConfig extends React.Component {
         else if (name === "delete")
             DivisionConfigService.deleteConfiguration(this.props.config.id)
                 .then((res) => {
-                    console.log(res.ok)
                     if (res.ok)
                         transitionAlertTrigger(
                             "Division configuration deleted with success.", "success")
                     else
-                        transitionAlertTrigger("Something went wrong.", "error", false)
+                        transitionAlertTrigger("Division already deleated.", "error", false)
                     });
         event.preventDefault();
     }
