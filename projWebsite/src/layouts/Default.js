@@ -22,23 +22,14 @@ class DefaultLayout extends React.Component {
       current_home: current_home.current_home(),
       refresh: false,
     }
-    this.loadFirstHome.bind(this);
   }
 
   componentDidMount() {
-    this.loadFirstHome();
-  }
-
-  loadFirstHome() {
-    if (!current_home.current_home())
-      LocalStorageService.get_first_home();
     this.setState({ current_home:  current_home.current_home(), refresh:true })
   }
+
   
 	render() {
-    if (this.current_home == null) {
-      LocalStorageService.get_first_home();
-    }
 		if (this.state.refresh == false){
       return (
         <Container fluid>

@@ -122,7 +122,7 @@ class EditDivision extends React.Component{
 				<CardBody className="p-0 pb-3">
 					<table className="table mb-0">
 						<tbody>
-							{this.state.divisions.map((e, index) => (
+							{this.state.divisions && this.state.divisions.map((e, index) => (
 								<tr key={index}>
 									<td>{e.name}</td>
 									<td style={{textAlign: "right"}}>

@@ -195,7 +195,7 @@ export default class SensorVis extends React.Component {
 
         const plot = (
             <div>
-            <FlexibleWidthXYPlot height={600} xType="time">
+            <FlexibleWidthXYPlot height={600} margin={{left:50, bottom:50}}>
                 <HorizontalGridLines />
                 <VerticalGridLines />
                 <XAxis tickFormat={function tickFormat(d){

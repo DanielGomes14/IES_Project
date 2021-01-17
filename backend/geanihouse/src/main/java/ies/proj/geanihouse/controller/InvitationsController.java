@@ -74,7 +74,7 @@ public class InvitationsController {
         if (inviter.getEmail().equals(invite_client.getEmail()))
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Can't invite yourself.");
 
-        List<Invite> check_invites = inviteRepository.findAllByInvclient_id(invite_client.getId());
+        List<Invite> check_invites = inviteRepository.findAllByInvclient_idAndHome_id(invite_client.getId(), home.getId());
         if (check_invites.size() > 0) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Already invited this user");
         }
@@ -132,7 +132,7 @@ public class InvitationsController {
         homeRepository.save(home);
         // delete the invite
         inviteRepository.delete(invite);
-        List<Invite> invites = inviteRepository.findAllByInvclient_id(accepter.getId());
+        List<Invite> invites = inviteRepository.findAllByInvclient_idAndHome_id(accepter.getId(), home.getId());
         return ResponseEntity.ok().body(invites);
 
     }
