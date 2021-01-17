@@ -3,6 +3,7 @@ import ies.proj.geanihouse.exception.ResourceNotFoundException;
 import ies.proj.geanihouse.model.*;
 import ies.proj.geanihouse.repository.*;
 import ies.proj.geanihouse.service.PermissionService;
+import ies.proj.geanihouse.service.SensorMessageService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,7 @@ public class DeviceController {
 
     
     @Autowired
-    Source source;
+    SensorMessageService sensorMessageService;
 
     @Autowired
     private PermissionService permissionService;
@@ -102,7 +103,7 @@ public class DeviceController {
             //publish to RabbitMQ the presence of a new Device
             LOG.info("ADDDEVICE, " + dev.getId() + ", " + dev.getType().getName());
             MQMessage msg = new MQMessage("ADDDEVICE",dev.getId(),dev.getType().getName(), 0);
-            source.output().send(MessageBuilder.withPayload(msg).build());
+            sensorMessageService.sendMessage(msg);
             
         }
         
@@ -126,12 +127,12 @@ public class DeviceController {
         DeviceLog log = new DeviceLog(d,timestamp,d.getState());
         deviceLogRepository.save(log);
 
-        //create notification
         if(d.getId() == 1){
-            System.out.println("Received message for light");
             MQMessage message = new MQMessage("DEVICE",1,null,d.getState());
-            source.output().send(MessageBuilder.withPayload(message).build());
+            sensorMessageService.sendMessage(message);
         }
+        //create notification
+
         Notification notf = new Notification(0,"Device State Update",
         "Device " + d.getName() + "is now " + state,
         new Timestamp(System.currentTimeMillis()),
@@ -144,7 +145,7 @@ public class DeviceController {
                     if (sensor.getType().getName() == d.getType().getName()) {
                         LOG.info("Updated State: START_CONF");
                         MQMessage msg = new MQMessage("START_CONF", sensor.getId(), sensor.getType().getName(), d.getState());
-                        source.output().send(MessageBuilder.withPayload(msg).build());
+                        sensorMessageService.sendMessage(msg);
                         break;
                     }
                 }
@@ -153,7 +154,7 @@ public class DeviceController {
                     if (sensor.getType().getName() == d.getType().getName()) {
                         LOG.info("Updated State: END_CONF");
                         MQMessage msg = new MQMessage("END_CONF", sensor.getId(), sensor.getType().getName(), d.getState());
-                        source.output().send(MessageBuilder.withPayload(msg).build());
+                        sensorMessageService.sendMessage(msg);
                         break;
                     }
                 }
