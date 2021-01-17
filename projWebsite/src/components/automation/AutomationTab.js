@@ -9,6 +9,7 @@ import EditDeviceConfigs from "./EditDeviceConfigs";
 import DivisionConfigService from "../../services/DivisionConfigService";
 import DeviceService from "../../services/DeviceService";
 import SensorService from "../../services/SensorService";
+import {transitionAlertTrigger} from "../common/TransitionAlertTrigger";
 
 import {pageLoading, pageError} from "../../components/common/Loading";
 
@@ -121,8 +122,8 @@ class AutomationTab extends React.Component {
     setDefault(){
         DivisionConfigService.addDefaultConfigurations(this.division.id)
 			.then((data) => {
-                console.log(data)
-				//window.location.reload();
+                transitionAlertTrigger(
+                    "Successfully added default divisions configurations.", "success");
 			})
 			.catch((error) => {
 				console.log(error);

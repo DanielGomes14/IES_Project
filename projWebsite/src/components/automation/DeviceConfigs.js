@@ -52,7 +52,7 @@ class DeviceConfigs extends React.Component {
                                 <Col>
                                     <h5>
                                         {timestampToHour(config.timeBegin)} {" to "}
-                                        {timestampToHour(config.timeEnd)} {" with "} {config.value}
+                                        {timestampToHour(config.timeEnd)} {config.device.type.name != "Eletronic" ? " with " + config.value : null}
                                     </h5>
                                 </Col>
                             </Row>
