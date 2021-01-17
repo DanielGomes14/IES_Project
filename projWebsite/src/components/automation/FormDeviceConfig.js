@@ -29,7 +29,7 @@ class FormDeviceConfig extends React.Component {
                 apply: true,
                 timeBegin: '00:00',
                 timeEnd: '00:00',
-                value: 0
+                value: 1
             }
         } else {
             throw new Error('Unexpected props');

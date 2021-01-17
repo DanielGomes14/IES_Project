@@ -8,6 +8,8 @@ from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime
 import RPi.GPIO as GPIO
 import time
+import requests
+import aiohttp
 
 
 # client, user and device details
@@ -21,64 +23,54 @@ receivedMessages = []
 
 class Generator:
     sigma = 0.1
-    time_per_pub = 5
+    time_per_pub = 60
 
     @classmethod
     async def send_shuffled(cls, sensor_data):
-        count = 0
-        await asyncio.sleep(0)
-        while sensor_data:
-            await asyncio.sleep(cls.time_per_pub/len(sensor_data))
-            sensor_id = list(sensor_data.keys())[count % len(sensor_data)]
+        try:
+            count = 0
+            await asyncio.sleep(0)
+            while sensor_data:
+                await asyncio.sleep(cls.time_per_pub/len(sensor_data))
+                sensor_id = list(sensor_data.keys())[count % len(sensor_data)]
 
-            value = sensor_data[sensor_id].pop(0)
-            print(cls.__name__, {
-                'method': 'SENSORDATA',
-                'id': sensor_id,
-                'type': str.lower(cls.__name__), 
-                'value': round(value, 2),
-                'timestamp': datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
-            })
-            # send data to rabbit
-            publish(topic=cls.__name__, message=json.dumps( {
-                'method': 'SENSORDATA',
-                'id': sensor_id,
-                'type': str.lower(cls.__name__), 
-                'value': round(value, 2),
-                'timestamp': datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
-            } ))
+                value = sensor_data[sensor_id].pop(0)
+                print(cls.__name__, {
+                    'method': 'SENSORDATA',
+                    'id': sensor_id,
+                    'type': str.lower(cls.__name__), 
+                    'value': round(value, 2),
+                    'timestamp': datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+                })
+                # send data to rabbit
+                publish(topic=cls.__name__, message=json.dumps( {
+                    'method': 'SENSORDATA',
+                    'id': sensor_id,
+                    'type': str.lower(cls.__name__), 
+                    'value': round(value, 2),
+                    'timestamp': datetime.now().strftime("%Y-%m-%dT%H:%M:%SZ")
+                } ))
 
-            if sensor_id not in cls.sensor_mu or not sensor_data[sensor_id]:
-                # deleted my rabbitMQ meanwhile or already empty
-                del sensor_data[sensor_id]
-            count += 1
+                if sensor_id not in cls.sensor_mu or not sensor_data[sensor_id]:
+                    # deleted my rabbitMQ meanwhile or already empty
+                    del sensor_data[sensor_id]
+                count += 1
+        except:
+            print("There was an error sending the message")
 
-
-class Sensor(Generator):
+class Device:
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)#Button to GPIO23
     GPIO.setup(24, GPIO.OUT)  #LED to GPIO24
     lit = False
 
     @classmethod
     def setLit(cls, value):
-        cls.lit = value
-        GPIO.output(24, value)
-    
-    @classmethod
-    def start(cls):
         try:
-            while True:
-                button_state = GPIO.input(23)
-                if button_state == False:
-                    cls.lit = not cls.lit
-                    GPIO.output(24, cls.lit)
-                    print('Button Pressed...')
-                    time.sleep(0.2)
+            print('Light on' if (value) else 'Light off')
+            cls.lit = value
+            GPIO.output(24, value) 
         except:
-            GPIO.cleanup()
-
-
+            print("Light error")
 
 class Temperature(Generator):
     sensor_mu = {}
@@ -171,77 +163,66 @@ class Humidity(Generator):
 def on_message(client, userdata, message):
     print("Received operation " + str(message.payload))
     
-    message = json.loads(message.payload.decode())
+    try:
+        message = json.loads(message.payload.decode())
 
-    method = message['method']
-    sensor_type = message['type'] 
-    sensor_id = message['id']
-    value = message['value']
-    # receive message from rabbit
-    if method == 'ADDSENSOR':
-        if sensor_type == 'Temperature':
-            #if Sensor.temperature_sensor == None:
-            #    Sensor.temperature_sensor = id
-            #else:
-            Temperature.sensor_mu[sensor_id] = [value,None]
-            print(sensor_id,sensor_type)
-        elif sensor_type == 'Humidity':
-            #if Sensor.humidity_sensor == None:
-            #    Sensor.humidity_sensor = id
-            #else:
-            Humidity.sensor_mu[sensor_id] = [value,None]
-        elif sensor_type == 'Luminosity':
-            Luminosity.sensor_mu[sensor_id] = [value,None]
+        method = message.get('method')
+        sensor_type = message.get('type') 
+        sensor_id = message.get('id')
+        value = message.get('value')
+        # receive message from rabbit
+        if method == 'ADDSENSOR':
+            if sensor_type == 'Temperature':
+                Temperature.sensor_mu[sensor_id] = [value,None]
+            elif sensor_type == 'Humidity':
+                Humidity.sensor_mu[sensor_id] = [value,None]
+            elif sensor_type == 'Luminosity':
+                Luminosity.sensor_mu[sensor_id] = [value,None]
 
-    elif method == 'REMOVESENSOR':
-        if Sensor.temperature_sensor == sensor_id:
-            Sensor.temperature_sensor = None
-        if Sensor.humidity_sensor == sensor_id:
-            Sensor.humidity_sensor = None
-        elif sensor_type == 'Temperature':
-            del Temperature.sensor_mu[sensor_id]
-        elif sensor_type == 'Humidity':
-            del Humidity.sensor_mu[sensor_id]
-        elif sensor_type == 'Luminosity':
-            del Luminosity.sensor_mu[sensor_id]        
-        
-    elif method == 'START_CONF':
-        #if Sensor.temperature_sensor == id:
-            #Sensor.temperature_config = value
-        #if Sensor.humidity_sensor == id:
-            #Sensor.humidity_config = value
-        if sensor_type == 'Temperature':
-            Temperature.sensor_mu[sensor_id][1] = value
-        elif sensor_type == 'Humidity':
-            Humidity.sensor_mu[sensor_id][1] = value
-        elif sensor_type == 'Luminosity':
-            Luminosity.sensor_mu[sensor_id][1] = value 
+        elif method == 'REMOVESENSOR':
+            if sensor_type == 'Temperature':
+                del Temperature.sensor_mu[sensor_id]
+            elif sensor_type == 'Humidity':
+                del Humidity.sensor_mu[sensor_id]
+            elif sensor_type == 'Luminosity':
+                del Luminosity.sensor_mu[sensor_id]        
+            
+        elif method == 'START_CONF':
+            if sensor_type == 'Temperature':
+                Temperature.sensor_mu[sensor_id][1] = value
+            elif sensor_type == 'Humidity':
+                Humidity.sensor_mu[sensor_id][1] = value
+            elif sensor_type == 'Luminosity':
+                Luminosity.sensor_mu[sensor_id][1] = value 
 
-    elif method == 'END_CONF':
-        if Sensor.temperature_sensor == id:
-            Sensor.temperature_config = value
-        if Sensor.humidity_sensor == id:
-            Sensor.humidity_config = value
-        elif sensor_type == 'Temperature':
-            Temperature.sensor_mu[sensor_id][1] = None
-        elif sensor_type == 'Humidity':
-            Humidity.sensor_mu[sensor_id][1] = None
-        elif sensor_type == 'Luminosity':
-            Luminosity.sensor_mu[sensor_id][1] = None 
+        elif method == 'END_CONF':
+            if sensor_type == 'Temperature':
+                Temperature.sensor_mu[sensor_id][1] = None
+            elif sensor_type == 'Humidity':
+                Humidity.sensor_mu[sensor_id][1] = None
+            elif sensor_type == 'Luminosity':
+                Luminosity.sensor_mu[sensor_id][1] = None 
 
-
+        elif method == "DEVICE":
+            Device.setLit(value > 0)
+    except:
+        print("There was an error")
 
 def publish(topic, message, waitForAck=False):
-    mid = client.publish(topic, message)[1]
-    if (waitForAck):
-        while mid not in receivedMessages:
-            time.sleep(0.25)
-
+    try:
+        mid = client.publish(topic, message)[1]
+        if (waitForAck):
+            while mid not in receivedMessages:
+                time.sleep(0.25)
+    except:
+        print("Error")
 
 def on_publish(client, userdata, mid):
     print('on_publish')
-    receivedMessages.append(mid)
-
+    try:
+        receivedMessages.append(mid)
+    except:
+        print("Error")
 
 # connect the client to Cumulocity IoT and register a device
 client = mqtt.Client(clientId)

@@ -8,6 +8,7 @@ import ies.proj.geanihouse.repository.DivisionRepository;
 import ies.proj.geanihouse.repository.SensorDataRepository;
 import ies.proj.geanihouse.repository.SensorRepository;
 import ies.proj.geanihouse.service.PermissionService;
+import ies.proj.geanihouse.service.SensorDataService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 @CrossOrigin(origins="*", allowedHeaders = "*")
@@ -34,7 +36,8 @@ public class SensorDataController {
     private SensorRepository sensorRepository;
     @Autowired
     private PermissionService permissionService;
-
+    @Autowired
+    private SensorDataService sensorDataService;
 
     //Division id! All sensordata in a division
     @GetMapping("divisions/{division_id}/sensordata")
@@ -45,69 +48,13 @@ public class SensorDataController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end_date
             )
             throws ResourceNotFoundException {
-
         Division d =this.divisionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Could not find home with id :: "+ id));
-
         UserDetails authenticateduser = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(!this.permissionService.checkClientDivision(d,authenticateduser)){
             return ResponseEntity.status(403).body("Cannot get Data from Sensors you don't have access");
         }
-
-        List<SensorData> sensorData_list = new ArrayList<>();
-
-        if(types != null && start_date != null){
-            Date start =  java.sql.Timestamp.valueOf(start_date);
-            Date end = null;
-
-            if( end_date != null ){
-                end = Timestamp.valueOf(end_date);
-            }
-            else {
-                // In case @param end_date is not passed as argument, then the end date will be the current time
-                LocalDateTime now = LocalDateTime.now();
-                end = java.sql.Timestamp.valueOf(now);
-            }
-              sensorData_list =  sensorDataRepository.findAllBySensor_Division_IdAndTimestampDateIsBetweenAndSensor_Type_NameIn(
-                        id,start,end,types
-                );
-        }
-        else if( types != null && end_date != null ){
-           Date end = Timestamp.valueOf(end_date);
-           sensorData_list = sensorDataRepository.findAllBySensor_Division_IdAndTimestampDateIsLessThanEqualAndSensor_Type_NameIn(
-                   id,end,types
-           );
-        }
-        else if (types != null){
-            sensorData_list = sensorDataRepository.findAllBySensor_Division_IdAndSensor_Type_NameIn(
-                    id,types
-            );
-        }
-        else if(start_date != null){
-            Date end = null;
-            if (end_date != null) {
-                end = Timestamp.valueOf(end_date);
-            }
-            else{
-                LocalDateTime now = LocalDateTime.now();
-                end = java.sql.Timestamp.valueOf(now);
-            }
-            Date start =  java.sql.Timestamp.valueOf(start_date);
-            sensorData_list = sensorDataRepository.findAllBySensor_Division_IdAndTimestampDateIsBetween(
-                    id,start,end
-            );
-        }
-        else if (end_date != null ) {
-           Date end = Timestamp.valueOf(end_date);
-           sensorData_list = sensorDataRepository.findAllBySensor_Division_IdAndTimestampDateIsLessThanEqual(
-                   id,end
-           );
-        }
-        else {
-            sensorData_list = sensorDataRepository.findAllBySensor_Division_Id(
-                    id
-            );
-        }
+        List<SensorData> sensorData_list = this.sensorDataService.filterData(id,types,start_date,end_date);
 
         return ResponseEntity.ok().body( sensorData_list);
     }
@@ -130,7 +77,6 @@ public class SensorDataController {
         }
         if(latest!=null && latest){
                 List<SensorData> sensorData = sensorDataRepository.findFirstBySensor_IdOrderByTimestampDateDesc(sensorid);
-                sensorData.forEach(sa -> LOG.debug(sa.getTimestampDate()));
                 return ResponseEntity.ok().body(sensorData);
         }
         else{

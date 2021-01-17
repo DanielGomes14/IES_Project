@@ -65,10 +65,10 @@ export default class HomeActions extends React.Component {
  
   ChangeHome(){
     this.current_home = this.selected_home;
+    current_home.change_home(this.current_home.id)
     this.setState({
       current_home: this.current_home
     })
-    current_home.change_home(this.current_home.id)
   }
 
 
@@ -88,9 +88,7 @@ export default class HomeActions extends React.Component {
 				content = "Ups! Something Went Wrong...";
 				break;
     }
-    if (content== undefined) {
-			this.loadData();
-		}
+
     return (
         <NavItem className="border-right" tag={Dropdown} caret toggle={this.toggleHomeActions}>
             <DropdownToggle caret tag={NavLink} className="text-nowrap px-3" style={{paddingTop: "20px"}}>

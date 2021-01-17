@@ -22,7 +22,7 @@ public interface SensorDataRepository extends JpaRepository<SensorData, Long>{
     List<SensorData>findAllBySensor_Division_IdAndTimestampDateIsBetweenAndSensor_Type_NameIn(long id,Date start ,Date end, List<String> types);
     List<SensorData>findAllBySensor_Division_IdAndTimestampDateIsLessThanEqualAndSensor_Type_NameIn(long id,Date end, List<String> types);
     List<SensorData>findAllBySensor_Division_IdAndTimestampDateIsLessThanEqual(long id,Date end);
-
+    List<SensorData>findAllBySensor_Division_IdAndTimestampDateIsGreaterThan(long id, Date end);
     List<SensorData>findAllBySensor_Division_IdAndSensor_Type_NameIn(long sensor_id, List<String> sensor_type_name);
     List<SensorData> findAllBySensor_Id(long id);
     List<SensorData> findFirstBySensor_IdOrderByTimestampDateDesc(long id);

@@ -9,14 +9,13 @@ import ies.proj.geanihouse.repository.DivisionRepository;
 import ies.proj.geanihouse.repository.SensorRepository;
 import ies.proj.geanihouse.repository.TypeRepository;
 import ies.proj.geanihouse.service.PermissionService;
-import org.apache.juli.logging.Log;
+import ies.proj.geanihouse.service.SensorMessageService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.messaging.Source;
 import org.springframework.http.ResponseEntity;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +27,6 @@ import java.util.Map;
 import java.util.Set;
 
 @CrossOrigin(origins={ "*" }, allowedHeaders = "*")
-@EnableBinding(Source.class)
 @RestController
 public class SensorController implements  java.io.Serializable {
     private static final Logger LOG = LogManager.getLogger(SensorController.class);
@@ -40,7 +38,7 @@ public class SensorController implements  java.io.Serializable {
     @Autowired
     private TypeRepository typeRepository;
     @Autowired
-    Source source;
+    SensorMessageService sensorMessageService;
     @Autowired
     private PermissionService permissionService;
     private  UserDetails authenticateduser;
@@ -78,7 +76,7 @@ public class SensorController implements  java.io.Serializable {
         //publish to RabbitMQ the presence of a new Sensor
         LOG.info("ADDSENSOR, " + s.getId() + ", " + s.getType().getName());
         MQMessage msg = new MQMessage("ADDSENSOR",s.getId(),s.getType().getName(),0);
-        source.output().send(MessageBuilder.withPayload(msg).build());
+        sensorMessageService.sendMessage(msg);
         return  ResponseEntity.ok().body("Successfully added new Sensor");
     }
 
@@ -101,7 +99,7 @@ public class SensorController implements  java.io.Serializable {
         LOG.info("REMOVESENSOR, " + sensor.getId() + ", " + sensor.getType().getName());
 
         MQMessage msg = new MQMessage("REMOVESENSOR",sensor.getId(),sensor.getType().getName(),0);
-        source.output().send(MessageBuilder.withPayload(msg).build());
+        sensorMessageService.sendMessage(msg);
         LOG.info("Sucessfully published  msg to remove sensor");
         sensorRepository.delete(sensor);
         response.put("deleted",Boolean.TRUE);

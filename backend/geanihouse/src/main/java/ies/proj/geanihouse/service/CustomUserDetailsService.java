@@ -26,7 +26,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         }else{
             throw new UsernameNotFoundException("Username Not Found: "+ username);
         }
-        System.out.println(ud.getPassword());
         return ud;
     }
 

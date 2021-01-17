@@ -9,6 +9,7 @@ import EditDeviceConfigs from "./EditDeviceConfigs";
 import DivisionConfigService from "../../services/DivisionConfigService";
 import DeviceService from "../../services/DeviceService";
 import SensorService from "../../services/SensorService";
+import {transitionAlertTrigger} from "../common/TransitionAlertTrigger";
 
 import {pageLoading, pageError} from "../../components/common/Loading";
 
@@ -95,6 +96,7 @@ class AutomationTab extends React.Component {
                 return false;
             })
             // remove options when there's no such sensor
+    
             exists &= this.state.sensors.some((opt) => {
                 if (remaining[i].id === opt.type.id)
                     return true;
@@ -120,8 +122,8 @@ class AutomationTab extends React.Component {
     setDefault(){
         DivisionConfigService.addDefaultConfigurations(this.division.id)
 			.then((data) => {
-                console.log(data)
-				//window.location.reload();
+                transitionAlertTrigger(
+                    "Successfully added default divisions configurations.", "success");
 			})
 			.catch((error) => {
 				console.log(error);
@@ -146,7 +148,8 @@ class AutomationTab extends React.Component {
                 <Row>
                     {this.state.divisionConfigs.map((config, index) => (
                         <Col key={index} lg="6" className="py-3">
-                            <DivisionConfig config={config} />
+                            <DivisionConfig sensor={this.state.sensors.find(
+                                (n) => n.type.id === config.type.id ) } config={config} />
                         </Col>
                     ))}
                 </Row>
