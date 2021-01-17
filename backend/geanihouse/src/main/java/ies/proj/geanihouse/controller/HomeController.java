@@ -2,19 +2,14 @@ package ies.proj.geanihouse.controller;
 import ies.proj.geanihouse.exception.ErrorDetails;
 import ies.proj.geanihouse.exception.ResourceNotFoundException;
 import ies.proj.geanihouse.model.Client;
-import ies.proj.geanihouse.model.Invite;
 import ies.proj.geanihouse.model.Home;
 import ies.proj.geanihouse.model.User;
 import ies.proj.geanihouse.repository.ClientRepository;
 import ies.proj.geanihouse.repository.HomeRepository;
-import ies.proj.geanihouse.repository.InviteRepository;
 import ies.proj.geanihouse.service.PermissionService;
-import org.apache.juli.logging.Log;
 
 import java.util.HashMap;
-import java.util.Set;
 import java.util.Map;
-import java.util.function.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +17,6 @@ import ies.proj.geanihouse.repository.UserRepository;
 
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +24,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin(origins="*", allowedHeaders = "*")
 @RestController
@@ -39,8 +31,7 @@ public class HomeController {
     private static final Logger LOG = LogManager.getLogger(HomeController.class);
     @Autowired
     private HomeRepository homeRepository;
-    @Autowired
-    private InviteRepository inviteRepository;
+
     @Autowired
     private UserRepository userRepository;
 

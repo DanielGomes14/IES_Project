@@ -70,7 +70,7 @@ public class DeviceConfController {
         }
         Timestamp begindate = deviceConf.getTimeBegin();
         Timestamp enddate = deviceConf.getTimeEnd();
-        if (!checkDates(deviceConf,begindate,enddate))  throw  new ErrorDetails("Invalid Scheduled Hours!");
+        if (!deviceConfigurationService.checkDates(deviceConf,begindate,enddate))  throw  new ErrorDetails("Invalid Scheduled Hours!");
 
         LOG.info("Success inserting new Configuration for this Device");
         deviceConf.setDevice(device);
@@ -113,7 +113,7 @@ public class DeviceConfController {
         saveddeviceConf.setTimeEnd(enddate);
         saveddeviceConf.setValue(deviceConf.getValue());
         
-        if (!checkDates(deviceConf,begindate,enddate))  throw  new ErrorDetails("Invalid Scheduled Hours!");
+        if (!deviceConfigurationService.checkDates(deviceConf,begindate,enddate))  throw  new ErrorDetails("Invalid Scheduled Hours!");
         final DeviceConf updatedConf = deviceConfRepository.save(saveddeviceConf);
 
         if(!updatedConf.getDevice().getType().equals("Eletronic")){
@@ -151,22 +151,4 @@ public class DeviceConfController {
         return response;
     }
 
-    public  boolean checkDates(DeviceConf updDeviceConf, Timestamp begindate,Timestamp enddate){
-        long deviceid = updDeviceConf.getDevice().getId();
-        List<DeviceConf> deviceConfList = deviceConfRepository.findAllByDevice_Id(deviceid);
-
-        for(DeviceConf deviceConf : deviceConfList){
-            if (deviceConf.getId() == updDeviceConf.getId())
-                continue;
-            if( ( deviceConf.getTimeBegin().getTime() <= begindate.getTime()) && (begindate.getTime() <= deviceConf.getTimeEnd().getTime())){
-                LOG.warn("Already a conf with this schedule! Invalid Start Date");
-                return  false;
-            }
-            else if(( deviceConf.getTimeBegin().getTime() <= enddate.getTime() ) &&  (enddate.getTime() <= deviceConf.getTimeEnd().getTime())){
-                LOG.warn("Already a conf with this schedule! Invalid End Date");
-                return  false;
-            }
-        }
-        return  true;
-    }
 }

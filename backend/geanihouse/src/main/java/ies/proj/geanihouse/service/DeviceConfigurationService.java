@@ -26,10 +26,7 @@ import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -49,6 +46,9 @@ public class DeviceConfigurationService {
 
     @Autowired
     DeviceLogRepository deviceLogRepository;
+
+    @Autowired
+    DeviceConfRepository deviceConfRepository;
 
     private final Map<Long, ScheduledFuture<?>> scheduledTasks = new IdentityHashMap<>();
     private static final Logger LOG = LogManager.getLogger(DeviceConfigurationService.class);
@@ -145,6 +145,25 @@ public class DeviceConfigurationService {
         task.cancel(true);
         scheduledTasks.remove(deviceConf.getId());
         LOG.info("Success Removing Schedule!");
+    }
+
+    public  boolean checkDates(DeviceConf updDeviceConf, Timestamp begindate,Timestamp enddate){
+        long deviceid = updDeviceConf.getDevice().getId();
+        List<DeviceConf> deviceConfList = deviceConfRepository.findAllByDevice_Id(deviceid);
+
+        for(DeviceConf deviceConf : deviceConfList){
+            if (deviceConf.getId() == updDeviceConf.getId())
+                continue;
+            if( ( deviceConf.getTimeBegin().getTime() <= begindate.getTime()) && (begindate.getTime() <= deviceConf.getTimeEnd().getTime())){
+                LOG.warn("Already a conf with this schedule! Invalid Start Date");
+                return  false;
+            }
+            else if(( deviceConf.getTimeBegin().getTime() <= enddate.getTime() ) &&  (enddate.getTime() <= deviceConf.getTimeEnd().getTime())){
+                LOG.warn("Already a conf with this schedule! Invalid End Date");
+                return  false;
+            }
+        }
+        return  true;
     }
 
 }
