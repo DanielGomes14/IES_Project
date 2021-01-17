@@ -53,16 +53,24 @@ class FormDeviceConfig extends React.Component {
         if (this.props.config)
             DeviceConfigService.updateConfiguration(
                 this.props.config.id, this.device.id, this.state.timeBegin, this.state.timeEnd, this.state.value
-            ).then(() => window.location.reload());
+            ).then(() => transitionAlertTrigger("Division configuration updated with success.", "success"));
         else
             DeviceConfigService.addConfiguration(
-                this.device.id, this.state.timeBegin, this.state.timeEnd, this.state.value
-            ).then(() => window.location.reload());
+                this.device.id, this.state.timeBegin, this.state.timeEnd, this.state.value)
+                .then(() => transitionAlertTrigger("Division configuration added with success.", "success"));
+            
         event.preventDefault();
 	}
 
     deleteConfig(){
-        DeviceConfigService.deleteConfiguration(this.props.config.id).then(() => window.location.reload());
+        DeviceConfigService.deleteConfiguration(this.props.config.id)
+            .then((res) => {
+                if (res.ok)
+                    transitionAlertTrigger(
+                        "Device configuration deleted with success.", "success")
+                else
+                    transitionAlertTrigger("Device already deleated.", "error", false)
+            });
     }
 
     render() {
