@@ -86,19 +86,16 @@ class FormDivisionConfig extends React.Component {
             if (this.props.config)
                 DivisionConfigService.updateConfiguration(
                         this.props.config.id, this.division.id, this.state.type.name, this.state.value[0], this.state.value[1])
-                    .then(() => transitionAlertTrigger(
-                        "Division configuration updated with success.", "success"));
+                    .then(() => window.location.reload());
             else
                 DivisionConfigService.addConfiguration(
                         this.division.id, this.state.type.name, this.state.value[0], this.state.value[1])
-                    .then(() => transitionAlertTrigger(
-                        "Division configuration created with success.", "success"));
+                    .then(() => window.location.reload());
         else if (name === "delete")
             DivisionConfigService.deleteConfiguration(this.props.config.id)
                 .then((res) => {
                     if (res.ok)
-                        transitionAlertTrigger(
-                            "Division configuration deleted with success.", "success")
+                        window.location.reload();
                     else
                         transitionAlertTrigger("Division already deleated.", "error", false)
                     });

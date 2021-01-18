@@ -111,7 +111,7 @@ class AutomationTab extends React.Component {
     
     toggleEdit() {
         if (this.state.edit)
-            window.location.reload();
+            window.history.go(0);
         this.setState({ edit: !this.state.edit });
     }
 

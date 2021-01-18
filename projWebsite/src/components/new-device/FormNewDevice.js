@@ -82,8 +82,7 @@ class FormNewDevice extends React.Component {
 		event.preventDefault();
 		this.setState({
 			new_device: true
-		})
-		
+		})	
 	}
 
 	render() {

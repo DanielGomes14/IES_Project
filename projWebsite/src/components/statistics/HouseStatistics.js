@@ -106,7 +106,7 @@ export default class HouseStatistics extends React.Component{
         }
         let avg = sum/this.temperature.length
         this.setState({
-            avg_tmp: avg
+            avg_tmp: Math.round((avg) * 100) / 100
         })
 
         sum=0;
@@ -115,7 +115,7 @@ export default class HouseStatistics extends React.Component{
         }
         avg = sum/this.humidity.length
         this.setState({
-            avg_hum: avg
+            avg_hum: Math.round((avg) * 100) / 100
         })
         sum=0;
         for(let i =0; i < this.luminosity.length;i ++){
@@ -123,7 +123,7 @@ export default class HouseStatistics extends React.Component{
         }
         avg = sum/this.luminosity.length
         this.setState({
-            avg_lum: avg
+            avg_lum: Math.round((avg) * 100) / 100
         })
     }
 

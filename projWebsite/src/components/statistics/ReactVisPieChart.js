@@ -12,6 +12,7 @@ CardFooter
 } from "shards-react";
 import Chart from "./../../utils/chart";
 import DeviceLogService from "../../services/DeviceLogService";
+import { current_home } from '../../utils/auth';
 
 
 export default class ReactVisPieChart extends React.Component {
@@ -27,7 +28,7 @@ export default class ReactVisPieChart extends React.Component {
     }
     
     componentDidMount() {
-        DeviceLogService.getDeviceLogs()
+        DeviceLogService.getDeviceLogs(current_home.current_home())
         .then(data => {
             this.setState({
                 loading: 0,

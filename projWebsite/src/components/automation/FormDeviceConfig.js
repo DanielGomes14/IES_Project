@@ -55,11 +55,11 @@ class FormDeviceConfig extends React.Component {
         if (this.props.config)
             DeviceConfigService.updateConfiguration(
                 this.props.config.id, this.device.id, this.state.timeBegin, this.state.timeEnd, this.state.value
-            ).then(() => transitionAlertTrigger("Division configuration updated with success.", "success"));
+            ).then(() => window.location.reload());
         else
             DeviceConfigService.addConfiguration(
                 this.device.id, this.state.timeBegin, this.state.timeEnd, this.state.value)
-                .then(() => transitionAlertTrigger("Division configuration added with success.", "success"));
+                .then(() => window.location.reload());
             
         event.preventDefault();
 	}
@@ -68,8 +68,7 @@ class FormDeviceConfig extends React.Component {
         DeviceConfigService.deleteConfiguration(this.props.config.id)
             .then((res) => {
                 if (res.ok)
-                    transitionAlertTrigger(
-                        "Device configuration deleted with success.", "success")
+                    window.location.reload()
                 else
                     transitionAlertTrigger("Device already deleated.", "error", false)
             });

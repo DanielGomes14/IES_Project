@@ -52,10 +52,10 @@ class HouseSets extends React.Component {
 
 	handleSubmit(event) {
 		if (!this.state.name.replace(/\s/g, '').length){
-            transitionAlertTrigger("Division's must have a name", "error", false)
+            transitionAlertTrigger("Division's must have a name", "error", false);
 		} else {
-			var response = DivisionService.addDivision(this.state.name);
-			EditDivision.ComponentDidMount();
+			DivisionService.addDivision(this.state.name)
+				.then(() => window.location.reload());
 			event.preventDefault();
 		}
 	}
