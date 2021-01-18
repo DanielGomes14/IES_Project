@@ -30,7 +30,7 @@ export const current_user = {
     localStorage.setItem('current_username', username);
   },
   getUsername() {
-    localStorage.getItem('current_username');
+    return localStorage.getItem('current_username');
   },
   logout() {
     localStorage.removeItem('current_user');

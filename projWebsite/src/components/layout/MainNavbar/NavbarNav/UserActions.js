@@ -16,11 +16,12 @@ export default class UserActions extends React.Component {
   constructor(props) {
     super(props);
 
+    this.username = current_user.getUsername();
     this.state = {
       visible: false,
-      username: current_user.getUsername(),
     };
     this.toggleUserActions = this.toggleUserActions.bind(this);
+
   }
 
   toggleUserActions() {
@@ -44,7 +45,7 @@ export default class UserActions extends React.Component {
             src={require("./../../../../images/avatars/default-profile-picture.jpg").default}
             alt="User Avatar"
           />
-          <span className="d-none d-md-inline-block">{this.state.username}</span>
+          <span className="d-none d-md-inline-block">{this.username}</span>
         </DropdownToggle>
         <Collapse tag={DropdownMenu} right small open={this.state.visible}>
           <DropdownItem tag={Link} to="account">

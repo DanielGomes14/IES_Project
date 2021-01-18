@@ -11,6 +11,8 @@ import {
 } from "shards-react";
 
 import AuthenticationService from "./../../services/AuthenticationService";
+import LocalStorageService from "./../../services/LocalStorageService";
+
 import { Redirect } from "react-router-dom";
 
 
@@ -52,7 +54,12 @@ class RegisterForm extends React.Component {
 			if (response.ok) {
 				console.log("Register successfull:");
 				localStorage.setItem('token', auth);
-				this.setState({loggedIn: true});
+				LocalStorageService.get_user(this.state.username)
+					.then((user_id) => {
+						localStorage.setItem('current_user', user_id);
+						localStorage.setItem('current_username', this.state.username);
+						this.setState({loggedIn: true});
+					})
 			} else if (response.status == "400") {
 				console.log("400: ");
 			}
