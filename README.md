@@ -112,6 +112,10 @@ RabbitMQ is going to receive the messages from the sensors and pass them to the 
 
 For the backend of our System, since we got to know the Spring framework from the practical classes of this course and it was highly recommended by the Teacher, we will use Spring.
 
+## Deployment Diagram
+
+![](./reports/deployment-diagram.png)
+
 ## Project Resources Bookmarks
 
 [Google Drive ](https://drive.google.com/drive/folders/1Nwdul_tBhj4nKEn1nzR1FGi_7EghT7Ay?usp=sharing )
