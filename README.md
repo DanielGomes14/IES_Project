@@ -95,7 +95,7 @@ The web app uses react since the syntax is similar to react native so that we ca
 
 #### Database:
 
-The database management system in use is MySQL. In the beginning we were thinking about a NoSQL database like Mongodb but since we don’t have much experience with this technology we opt for a relational database system. MySQL might have some scalability problems, however, MySQL has a really high performing database.
+The database management system in use is MySQL. In the beginning we were thinking about a NoSQL database like MongoDB but since we don’t have much experience with this technology we opt for a relational database system. MySQL might have some scalability problems, however, for our project it is more than enough.
 
 #### Relational schema
 
@@ -108,7 +108,7 @@ To access the data we decided to use the JPA, Java Persistence API, since we got
 
 RabbitMQ is going to receive the messages from the sensors and pass them to the backend. Our choice comes from the fact that rabbitMQ is one of the most used message brokers which makes it easy to find information about it and is easy to integrate in spring-boot.
 
-#### Services (API) + Business Logic
+#### Services (API) + Bizz Logic
 
 For the backend of our System, since we got to know the Spring framework from the practical classes of this course and it was highly recommended by the Teacher, we will use Spring.
 
