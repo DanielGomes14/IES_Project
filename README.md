@@ -108,3 +108,11 @@ For the backend of our System, since we got to know the Spring framework from th
 
 [Jira Backlog](https://geanihouse.atlassian.net/browse/GEAN)
 
+[API Documentation](http://34.89.75.14:9001/api/v1/swagger-ui.html)
+
+*Access credentials for API and application main account:*
+
+Username: chico
+
+Password: randomquerty
+
