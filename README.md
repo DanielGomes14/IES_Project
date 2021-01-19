@@ -9,6 +9,16 @@ The tool we used to actively manage the backlog was Jira. [https://geanihouse.at
 
 The idea of our project for the assignment of the Introduction to Software Engineering course, is the implementation of a system capable of monitoring, configuring a smart House and all its devices.  
 
+## Accesses
+
+- [App Link](http://34.89.75.14:9000)
+- [API Documentation](http://34.89.75.14:9001/api/v1/swagger-ui.html)
+
+| Username | Password     |
+| -------- | ------------ |
+| chico    | randomquerty |
+| dgomes   | randomquerty |
+
 ## Work  Methodology and Backlog Management
 
 The approach for this work will be the Scrum Agile Methods, where we will define to-do features for every member of the group. Every week we will discuss what needs to be done  and what was done, updating the backlog. To manage every sprint and the backlog we will use the Jira Software.
