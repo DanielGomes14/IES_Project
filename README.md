@@ -63,7 +63,7 @@ As Célia, I want to be able to use default configurations, so that the smart ho
 
 ## Architeture
 
-![](./architecture-diagram.png)
+![](./reports/architecture-diagram.png)
 
 ### Data Generation
 
@@ -89,7 +89,7 @@ The database management system in use is MySQL. In the beginning we were thinkin
 
 #### Relational schema
 
-![](./RelationalSchema.jpg)
+![](./reports/RelationalSchema.jpg)
 
 #### Data Access
 To access the data we decided to use the JPA, Java Persistence API, since we got to know it from the Practical Classes and it is  really useful to do SQL Queries, an important aspect because we are using a Relational Database, MySQL.
